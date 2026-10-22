@@ -1,0 +1,50 @@
+import { useEffect, useState } from 'react';
+import { getParts } from '../../services/parts/partsService';
+import { PartTableData } from '../types/Part';
+
+export const useFetchParts = (initialPage: number) => {
+  const [parts, setParts] = useState<PartTableData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(initialPage);
+  const [pagination, setPagination] = useState<{
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  } | null>(null);
+  const [search, setSearch] = useState<string>('');
+
+  // Reset to page 1 whenever search text changes
+  useEffect(() => {
+    if (search) setPage(1);
+  }, [search]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getParts(page, 15, search);
+        setParts(data.data);
+        setPagination(data.pagination);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [page, search]);
+
+  return {
+    parts,
+    loading,
+    error,
+    pagination,
+    page,
+    setPage,
+    search,
+    setSearch,
+  };
+};
