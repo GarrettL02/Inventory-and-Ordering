@@ -9,7 +9,7 @@ import { PaginationQuerySchema } from '../../common/schema/common.schema';
 export const PartDetailsDataSchema = z.object({
   id: z.number(),
   categoryId: z.number().nullable().optional(),
-  storageLocationId: z.number(),
+  storageLocationId: z.number().nullable(),
   name: z.string(),
   description: z.string(),
   comment: z.string().nullable().optional(),
@@ -17,13 +17,12 @@ export const PartDetailsDataSchema = z.object({
   minStockLevel: z.number(),
   averagePrice: z.string(),
   status: z.string().nullable().optional(),
-  needsReview: z.number(),
   partCondition: z.string().nullable().optional(),
   createdAt: z.date(),
   internalPartNumber: z.string().nullable().optional(),
   partURL: z.string().nullable().optional(),
   filename: z.string().nullable().optional(),
-  storageLocationName: z.string(),
+  storageLocationName: z.string().nullable(),
   manufacturerName: z.string().nullable().optional(),
   manufacturerPartNumber: z.string().nullable().optional(),
 });
@@ -43,7 +42,7 @@ export const GetAllPartsDataSchema = z.object({
   description: z.string(),
   comment: z.string().nullable().optional(),
   averagePrice: z.string(),
-  storageLocation: z.string(),
+  storageLocation: z.string().nullable(),
   stockLevel: z.number(),
 });
 

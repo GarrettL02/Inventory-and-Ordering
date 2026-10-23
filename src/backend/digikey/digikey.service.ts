@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
+import { DistributorSchema } from '../common/schema/distributor.schema';
 import {
   DigikeyPartNumberRowArraySchema,
   DigikeyProduct,
@@ -62,12 +63,11 @@ export class DigikeyService {
   /////////////////////////////////////////////////////////
   private async getDigikeyPartNumber(partId: number): Promise<string | null> {
     const rows = await this.db.query(
-      `SELECT pm.partNumber
-       FROM partManufacturers pm
-       JOIN manufacturers m ON m.id = pm.manufacturerId
-       WHERE pm.partId = ? AND m.name LIKE ?
+      `SELECT distributorPartNumber AS partNumber
+       FROM partDistributors
+       WHERE partId = ? AND distributor = ?
        LIMIT 1`,
-      [partId, '%digikey%'],
+      [partId, DistributorSchema.enum.digikey],
     );
     return (
       DigikeyPartNumberRowArraySchema.parse(rows)[0]?.partNumber?.trim() || null

@@ -11,7 +11,7 @@ export interface PartTableData {
 export interface PartDetails {
   id: number;
   categoryId?: number | null;
-  storageLocationId: number;
+  storageLocationId: number | null;
   name: string;
   description: string;
   comment?: string | null;
@@ -25,7 +25,7 @@ export interface PartDetails {
   createdAt?: string | null;
   partURL?: string | null;
   filename?: string | null;
-  storageLocationName: string;
+  storageLocationName: string | null;
   manufacturerName?: string | null;
   manufacturerPartNumber?: string | null;
 }
