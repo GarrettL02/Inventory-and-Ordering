@@ -10,8 +10,8 @@ export interface PartTableData {
 
 export interface PartDetails {
   id: number;
-  category_id?: number | null;
-  footprint_id?: string | null;
+  categoryId?: number | null;
+  storageLocationId: number;
   name: string;
   description: string;
   comment?: string | null;
@@ -22,11 +22,7 @@ export interface PartDetails {
   needsReview?: number | null;
   partCondition?: string | null;
   internalPartNumber?: string | null;
-  removals: number;
-  lowStock: number;
-  metaPart: number;
-  partUnit_id: number;
-  storageLocation_id: number;
+  createdAt?: string | null;
   partURL?: string | null;
   filename?: string | null;
   storageLocationName: string;

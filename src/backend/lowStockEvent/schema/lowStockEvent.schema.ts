@@ -3,14 +3,19 @@ import { z } from 'zod';
 ////////////////////////////////////////////////////////
 //
 // Low Stock Event Table Data Schema
+// (rows for the low stock table; new-part requests have partId 0)
 //
 ////////////////////////////////////////////////////////
 export const LowStockEventTableDataSchema = z.object({
   lowStockId: z.number(),
   stockLevel: z.number(),
   minStockLevel: z.number(),
+  quantity: z.number(),
+  urgency: z.number(),
+  requestedBy: z.string(),
   sent: z.number(),
   partId: z.number(),
+  isNewPart: z.number(),
   name: z.string(),
   description: z.string(),
   comment: z.string().nullable().optional(),
@@ -36,10 +41,17 @@ export const LowStockEventAllDataSchema = z.object({
   partId: z.number(),
   stockLevel: z.number(),
   minStockLevel: z.number(),
+  quantity: z.number(),
+  urgency: z.number(),
+  requestedBy: z.string(),
   triggeredAt: z.date(),
   sent: z.number(),
   ordered: z.number(),
   checked: z.number(),
+  newPartName: z.string().nullable().optional(),
+  newPartDescription: z.string().nullable().optional(),
+  newPartComment: z.string().nullable().optional(),
+  newPartURL: z.string().nullable().optional(),
 });
 
 export const LowStockEventAllDataRowArraySchema = z.array(
@@ -55,19 +67,10 @@ export type LowStockEventAllDataRows = z.infer<
 // Low Stock Event Data By ID Schema
 //
 ////////////////////////////////////////////////////////
-export const LowStockEventDataByIdSchema = z.object({
-  id: z.number(),
-  partId: z.number(),
-  stockLevel: z.number(),
-  minStockLevel: z.number(),
-  triggeredAt: z.date(),
-  sent: z.number(),
-  ordered: z.number(),
-  checked: z.number(),
-});
+export const LowStockEventDataByIdSchema = LowStockEventAllDataSchema;
 
 export const LowStockEventDataByIdRowArraySchema = z.array(
-  LowStockEventAllDataSchema,
+  LowStockEventDataByIdSchema,
 );
 
 export type LowStockEventDataByIdRows = z.infer<

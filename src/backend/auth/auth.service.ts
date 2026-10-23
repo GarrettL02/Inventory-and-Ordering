@@ -1,68 +1,69 @@
 import { Injectable } from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'crypto';
+import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import { SessionPayloadSchema } from './schema/auth.schema';
+import { burnPasswordCheck, verifyPassword } from './password';
 
 //Authentication type
-type AuthUser = {
+export type AuthUser = {
+  id: number;
   username: string;
-};
-
-type SessionPayload = {
-  username: string;
-  expiresAt: number;
 };
 
 @Injectable()
 export class AuthService {
-  //Validates user credentials by making a request to PartKeepr API with Basic Auth
+  constructor(private readonly db: InventoryDatabaseService) {}
+
+  ///////////////////////////////////////////////////////////
+  //
+  //  validateUser()
+  //  Check a username and password against the users table
+  //
+  ///////////////////////////////////////////////////////////
   async validateUser(
     username: string,
     plainPassword: string,
   ): Promise<AuthUser | null> {
-    const apiUrl = process.env.PARTKEEPR_API_URL;
+    const rows = await this.db.query(
+      `SELECT id, username, passwordHash
+       FROM users
+       WHERE username = ? AND isActive = 1
+       LIMIT 1`,
+      [username],
+    );
+    const user = rows[0];
 
-    try {
-      // Create Basic Auth header: base64 encode "username:password"
-      const credentials = Buffer.from(`${username}:${plainPassword}`).toString(
-        'base64',
-      );
-
-      //if the environemnt variable isnt configured then throw error
-      if (!apiUrl) {
-        throw new Error(
-          'PARTKEEPR_API_URL is not configured in environment variables.',
-        );
-      }
-
-      // Make request to PartKeepr API with Basic Auth
-      const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          Authorization: `Basic ${credentials}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // If PartKeepr validates successfully (200 status), return the user
-      if (response.ok) {
-        return { username };
-      }
-
-      return null;
-    } catch (error) {
+    // Unknown or disabled account - still do the hashing work so timing doesn't give it away
+    if (!user) {
+      await burnPasswordCheck(plainPassword);
       return null;
     }
+
+    const passwordMatches = await verifyPassword(
+      plainPassword,
+      user.passwordHash,
+    );
+    if (!passwordMatches) {
+      return null;
+    }
+
+    await this.db.run('UPDATE users SET lastLoginAt = NOW() WHERE id = ?', [
+      user.id,
+    ]);
+
+    return { id: user.id, username: user.username };
   }
 
-  //Creating the session token upos successful response
-  createSessionToken(username: string): string {
-    const durationSeconds = parseInt(
-      process.env.SESSION_DURATION_SECONDS || '43200',
-      10,
-    );
-    const payload: SessionPayload = {
-      username,
-      expiresAt: Math.floor(Date.now() / 1000) + durationSeconds,
+  getSessionDurationSeconds(): number {
+    return parseInt(process.env.SESSION_DURATION_SECONDS || '43200', 10);
+  }
+
+  //Creating the session token upon successful login
+  createSessionToken(user: AuthUser): string {
+    const payload = {
+      userId: user.id,
+      username: user.username,
+      expiresAt: Math.floor(Date.now() / 1000) + this.getSessionDurationSeconds(),
     };
     const encodedPayload = Buffer.from(JSON.stringify(payload)).toString(
       'base64url',
@@ -72,7 +73,8 @@ export class AuthService {
     return `${encodedPayload}.${signature}`;
   }
 
-  getSessionUsername(token: string): string | null {
+  //Returns the logged in user for a valid, unexpired session token - otherwise null
+  getSession(token: string): AuthUser | null {
     const [encodedPayload, signature] = token.split('.');
 
     if (!encodedPayload || !signature) {
@@ -93,7 +95,7 @@ export class AuthService {
     try {
       const payload = JSON.parse(
         Buffer.from(encodedPayload, 'base64url').toString('utf8'),
-      ) as SessionPayload;
+      );
 
       //Validate with ZOD schema
       const validatedPayload = SessionPayloadSchema.safeParse(payload);
@@ -104,7 +106,7 @@ export class AuthService {
       const validatedData = validatedPayload.data;
 
       return validatedData.expiresAt > Math.floor(Date.now() / 1000)
-        ? validatedData.username
+        ? { id: validatedData.userId, username: validatedData.username }
         : null;
     } catch {
       return null;

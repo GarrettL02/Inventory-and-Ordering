@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PartkeeprDatabaseService } from '../partkeeprDatabase/partkeeprDatabase.service';
+import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import {
   DigikeyProduct,
   DigikeyResponseSchema,
@@ -17,7 +17,7 @@ export class DigikeyService {
     { data: DigikeyProduct; expiresAt: number }
   >();
 
-  constructor(private readonly db: PartkeeprDatabaseService) {}
+  constructor(private readonly db: InventoryDatabaseService) {}
 
   private get baseUrl() {
     return process.env.DIGIKEY_API_URL ?? 'https://api.digikey.com';
@@ -62,9 +62,9 @@ export class DigikeyService {
   private async getDigikeyPartNumber(partId: number): Promise<string | null> {
     const rows = await this.db.query(
       `SELECT pm.partNumber
-       FROM PartManufacturer pm
-       JOIN Manufacturer m ON m.id = pm.manufacturer_id
-       WHERE pm.part_id = ? AND m.name LIKE ?
+       FROM partManufacturers pm
+       JOIN manufacturers m ON m.id = pm.manufacturerId
+       WHERE pm.partId = ? AND m.name LIKE ?
        LIMIT 1`,
       [partId, '%digikey%'],
     );
