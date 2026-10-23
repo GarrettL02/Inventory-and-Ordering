@@ -56,7 +56,7 @@ export function Header({ children, onHamburgerMenuClick }: HeaderProps) {
             }}
           />
           <h2 style={{ fontSize: '15px', paddingBottom: '15px' }}>
-            Part Ordering
+            Inventory Management System
           </h2>
         </div>
 

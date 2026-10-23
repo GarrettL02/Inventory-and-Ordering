@@ -79,7 +79,7 @@ export function PartDetailsPage() {
               </div>
               <div style={{ gridColumn: 2 }}>
                 <ReadOnlyInfoSection
-                  title={'Partkeepr Price'}
+                  title={'Average Price'}
                   information={`$${parts?.averagePrice} (1)`}
                 />
               </div>

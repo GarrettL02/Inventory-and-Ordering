@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { PartkeeprDatabaseService } from '../partkeeprDatabase/partkeeprDatabase.service';
 import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
+import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
+import {
+  AdjustStockDto,
+  AdjustStockResult,
   GetAllPartsDataRowArraySchema,
   PartDetailsDataRowArraySchema,
+  PartStockRowArraySchema,
 } from './schema/parts.schema';
+import { TotalRowSchema } from '../common/schema/common.schema';
 
 @Injectable()
 export class PartService {
-  constructor(private readonly db: PartkeeprDatabaseService) {}
+  constructor(
+    private readonly db: InventoryDatabaseService,
+    private readonly lowStockService: LowStockService,
+  ) {}
 
   ///////////////////////////////////////////////////////////
   //
@@ -20,7 +32,7 @@ export class PartService {
 
     // Base SQL string structures
     let whereClause = '';
-    const queryParams: any[] = [];
+    const queryParams: (string | number)[] = [];
 
     if (search && search.trim() !== '') {
       // 1. Split query by spaces and ignore extra whitespace
@@ -47,24 +59,25 @@ export class PartService {
     }
 
     const sql = `
-      SELECT p.id, p.name, p.description, p.comment, p.averagePrice, sl.name AS storageLocation, p.stockLevel 
-      FROM Part AS p 
-      JOIN StorageLocation sl ON sl.id = p.storageLocation_id
+      SELECT p.id, p.name, p.description, p.comment, p.averagePrice, sl.name AS storageLocation, p.stockLevel
+      FROM parts AS p
+      JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
+      ORDER BY p.id
       LIMIT ? OFFSET ?
     `;
 
     const countSql = `
-      SELECT COUNT(*) as total 
-      FROM Part AS p 
-      JOIN StorageLocation sl ON sl.id = p.storageLocation_id
+      SELECT COUNT(*) as total
+      FROM parts AS p
+      JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
     `;
 
     // Execute query with search params followed by pagination variables
     const rows = await this.db.query(sql, [...queryParams, limit, offset]);
-    const countResult: any[] = await this.db.query(countSql, queryParams);
-    const total: number = countResult[0]?.total || 0;
+    const countResult = await this.db.query(countSql, queryParams);
+    const total = TotalRowSchema.parse(countResult[0]).total;
 
     // Validate data with ZOD schema
     const validatedData = GetAllPartsDataRowArraySchema.parse(rows);
@@ -87,19 +100,23 @@ export class PartService {
   //
   /////////////////////////////////////////////////////////
   async getPartById(id: number) {
-    // Build SQL query to grab low stock part by its ID
+    // Primary attachment first, and the first manufacturer entry if there are several
     const sql = `
-    SELECT 
-      p.*, 
-      p.productionRemarks AS partURL,
-      (SELECT pa.filename FROM PartAttachment pa WHERE pa.part_id = p.id LIMIT 1) as filename, 
+    SELECT
+      p.*,
+      (SELECT pa.filename
+         FROM partAttachments pa
+         WHERE pa.partId = p.id
+         ORDER BY pa.isPrimary DESC, pa.id
+         LIMIT 1) AS filename,
       sl.name AS storageLocationName,
       m.name AS manufacturerName,
       pm.partNumber AS manufacturerPartNumber
-    FROM Part p
-    JOIN StorageLocation sl ON sl.id = p.storageLocation_id
-    LEFT JOIN PartManufacturer pm ON pm.part_id = p.id
-    LEFT JOIN Manufacturer m ON m.id = pm.manufacturer_id
+    FROM parts p
+    JOIN storageLocations sl ON sl.id = p.storageLocationId
+    LEFT JOIN partManufacturers pm
+      ON pm.id = (SELECT MIN(pm2.id) FROM partManufacturers pm2 WHERE pm2.partId = p.id)
+    LEFT JOIN manufacturers m ON m.id = pm.manufacturerId
     WHERE p.id = ?
   `;
 
@@ -111,5 +128,63 @@ export class PartService {
 
     // Return the row if possible, display null if not
     return validatedData[0] || null;
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  AdjustStock()
+  //  Change a part's stock by delta, log it in stockMovements, and create or
+  //  update the low stock event if the part is now below its minimum.
+  //  Everything happens in one transaction, so it all succeeds or none of it does.
+  //
+  /////////////////////////////////////////////////////////
+  async adjustStock(
+    partId: number,
+    userId: number | null,
+    input: AdjustStockDto,
+  ): Promise<AdjustStockResult> {
+    return this.db.transaction(async (tx) => {
+      // Lock the row so two changes at the same time can't overwrite each other
+      const rows = await tx.query(
+        'SELECT id, stockLevel, minStockLevel FROM parts WHERE id = ? FOR UPDATE',
+        [partId],
+      );
+      const part = PartStockRowArraySchema.parse(rows)[0];
+
+      if (!part) {
+        throw new NotFoundException(`Part ${partId} not found`);
+      }
+
+      const newStockLevel: number = part.stockLevel + input.delta;
+
+      if (newStockLevel < 0) {
+        throw new BadRequestException('Stock level cannot go below 0');
+      }
+
+      await tx.run('UPDATE parts SET stockLevel = ? WHERE id = ?', [
+        newStockLevel,
+        partId,
+      ]);
+
+      await tx.run(
+        `INSERT INTO stockMovements (partId, delta, stockLevelAfter, reason, userId)
+         VALUES (?, ?, ?, ?, ?)`,
+        [partId, input.delta, newStockLevel, input.reason, userId],
+      );
+
+      const lowStockEventId = await this.lowStockService.syncForPart(
+        tx,
+        partId,
+        newStockLevel,
+        part.minStockLevel,
+      );
+
+      return {
+        partId,
+        stockLevel: newStockLevel,
+        minStockLevel: part.minStockLevel,
+        lowStockEventId,
+      };
+    });
   }
 }

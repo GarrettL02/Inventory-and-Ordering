@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const PartViewSchema = z.object({
   id: z.number(),
   name: z.string(),
-  category_id: z.number().optional().nullable(),
-  footprint_id: z.string().optional().nullable(),
+  categoryId: z.number().optional().nullable(),
+  storageLocationId: z.number(),
   description: z.string(),
   comment: z.string().optional().nullable(),
   stockLevel: z.number(),
@@ -14,17 +14,12 @@ export const PartViewSchema = z.object({
   needsReview: z.number().optional().nullable(),
   partCondition: z.string().optional().nullable(),
   partURL: z.string().optional().nullable(),
-  createdDate: z.string().optional().nullable(),
+  createdAt: z.string().optional().nullable(),
   internalPartNumber: z
-    .any()
-    .transform((val) => String(val).trim())
-    .optional()
-    .nullable(),
-  removals: z.number(),
-  lowStock: z.number(),
-  metaPart: z.number(),
-  partUnit_id: z.number(),
-  storageLocation_id: z.number(),
+    .string()
+    .nullish()
+    .transform((val) => (val == null ? null : val.trim())),
+  filename: z.string().optional().nullable(),
   storageLocationName: z.string(),
   manufacturerName: z.string().optional().nullable(),
   manufacturerPartNumber: z.string().optional().nullable(),
