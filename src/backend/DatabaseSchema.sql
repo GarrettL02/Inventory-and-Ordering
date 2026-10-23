@@ -14,14 +14,13 @@ SET NAMES utf8mb4;
 -- Inventory
 -- ---------------------------------------------------------------------
 
+-- Flat, user-defined list (e.g. 'resistor - surface mount'). Categories are optional on a part.
+-- Names are unique, and because of the collation 'Resistor' and 'resistor' count as the same name.
 CREATE TABLE IF NOT EXISTS categories (
-  id       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  parentId INT UNSIGNED NULL,
-  name     VARCHAR(255) NOT NULL,
+  id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
-  KEY idx_categories_parentId (parentId),
-  CONSTRAINT fk_categories_parent
-    FOREIGN KEY (parentId) REFERENCES categories (id) ON DELETE SET NULL
+  UNIQUE KEY uq_categories_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS storageLocations (
@@ -31,17 +30,10 @@ CREATE TABLE IF NOT EXISTS storageLocations (
   UNIQUE KEY uq_storageLocations_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS manufacturers (
-  id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_manufacturers_name (name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS parts (
   id                 INT UNSIGNED NOT NULL AUTO_INCREMENT,
   categoryId         INT UNSIGNED NULL,
-  storageLocationId  INT UNSIGNED NOT NULL,
+  storageLocationId  INT UNSIGNED NULL,
   name               VARCHAR(255) NOT NULL,
   description        VARCHAR(255) NOT NULL DEFAULT '',
   comment            TEXT NULL,
@@ -49,34 +41,38 @@ CREATE TABLE IF NOT EXISTS parts (
   minStockLevel      INT NOT NULL DEFAULT 0,
   averagePrice       DECIMAL(12,4) NOT NULL DEFAULT 0.0000,
   internalPartNumber VARCHAR(255) NULL,
+  manufacturerName   VARCHAR(255) NULL,
+  -- manufacturerPartNumber (MPN) is what gets searched on the distributors' sites
+  manufacturerPartNumber VARCHAR(255) NULL,
   partURL            VARCHAR(2048) NULL,
   status             VARCHAR(64) NULL,
-  partCondition      VARCHAR(64) NULL,
   createdAt          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_parts_categoryId (categoryId),
   KEY idx_parts_storageLocationId (storageLocationId),
   KEY idx_parts_name (name),
+  KEY idx_parts_manufacturerPartNumber (manufacturerPartNumber),
   CONSTRAINT fk_parts_category
     FOREIGN KEY (categoryId) REFERENCES categories (id) ON DELETE SET NULL,
   CONSTRAINT fk_parts_storageLocation
     FOREIGN KEY (storageLocationId) REFERENCES storageLocations (id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Used by the Digikey lookup (finds the Digikey part number via the manufacturer name).
-CREATE TABLE IF NOT EXISTS partManufacturers (
-  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  partId         INT UNSIGNED NOT NULL,
-  manufacturerId INT UNSIGNED NOT NULL,
-  partNumber     VARCHAR(255) NULL,
+-- Where a part can be bought. distributor is a short code such as 'digikey' or 'mouser'.
+-- The list of supported distributors lives in the backend code (common/schema/distributor.schema.ts),
+-- not in the database, because each one needs its own API code anyway.
+CREATE TABLE IF NOT EXISTS partDistributors (
+  id                    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  partId                INT UNSIGNED NOT NULL,
+  distributor           VARCHAR(32) NOT NULL,
+  distributorPartNumber VARCHAR(255) NULL,
+  productUrl            VARCHAR(2048) NULL,
+  createdAt             DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  KEY idx_partManufacturers_partId (partId),
-  KEY idx_partManufacturers_manufacturerId (manufacturerId),
-  CONSTRAINT fk_partManufacturers_part
-    FOREIGN KEY (partId) REFERENCES parts (id) ON DELETE CASCADE,
-  CONSTRAINT fk_partManufacturers_manufacturer
-    FOREIGN KEY (manufacturerId) REFERENCES manufacturers (id) ON DELETE CASCADE
+  UNIQUE KEY uq_partDistributors_part_distributor (partId, distributor),
+  CONSTRAINT fk_partDistributors_part
+    FOREIGN KEY (partId) REFERENCES parts (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS partAttachments (

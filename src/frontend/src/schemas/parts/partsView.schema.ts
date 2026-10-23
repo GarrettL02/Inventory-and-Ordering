@@ -4,7 +4,7 @@ export const PartViewSchema = z.object({
   id: z.number(),
   name: z.string(),
   categoryId: z.number().optional().nullable(),
-  storageLocationId: z.number(),
+  storageLocationId: z.number().nullable(),
   description: z.string(),
   comment: z.string().optional().nullable(),
   stockLevel: z.number(),
@@ -20,7 +20,7 @@ export const PartViewSchema = z.object({
     .nullish()
     .transform((val) => (val == null ? null : val.trim())),
   filename: z.string().optional().nullable(),
-  storageLocationName: z.string(),
+  storageLocationName: z.string().nullable(),
   manufacturerName: z.string().optional().nullable(),
   manufacturerPartNumber: z.string().optional().nullable(),
 });

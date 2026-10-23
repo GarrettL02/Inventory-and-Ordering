@@ -61,7 +61,7 @@ export class PartService {
     const sql = `
       SELECT p.id, p.name, p.description, p.comment, p.averagePrice, sl.name AS storageLocation, p.stockLevel
       FROM parts AS p
-      JOIN storageLocations sl ON sl.id = p.storageLocationId
+      LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
       ORDER BY p.id
       LIMIT ? OFFSET ?
@@ -70,7 +70,7 @@ export class PartService {
     const countSql = `
       SELECT COUNT(*) as total
       FROM parts AS p
-      JOIN storageLocations sl ON sl.id = p.storageLocationId
+      LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
     `;
 
@@ -100,7 +100,8 @@ export class PartService {
   //
   /////////////////////////////////////////////////////////
   async getPartById(id: number) {
-    // Primary attachment first, and the first manufacturer entry if there are several
+    // All part columns (including manufacturerName / manufacturerPartNumber), plus the
+    // primary attachment's filename and the storage location's name
     const sql = `
     SELECT
       p.*,
@@ -109,14 +110,9 @@ export class PartService {
          WHERE pa.partId = p.id
          ORDER BY pa.isPrimary DESC, pa.id
          LIMIT 1) AS filename,
-      sl.name AS storageLocationName,
-      m.name AS manufacturerName,
-      pm.partNumber AS manufacturerPartNumber
+      sl.name AS storageLocationName
     FROM parts p
-    JOIN storageLocations sl ON sl.id = p.storageLocationId
-    LEFT JOIN partManufacturers pm
-      ON pm.id = (SELECT MIN(pm2.id) FROM partManufacturers pm2 WHERE pm2.partId = p.id)
-    LEFT JOIN manufacturers m ON m.id = pm.manufacturerId
+    LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
     WHERE p.id = ?
   `;
 
