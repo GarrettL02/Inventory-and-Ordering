@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
-import { SessionPayloadSchema } from './schema/auth.schema';
+import {
+  AuthUser,
+  SessionPayloadSchema,
+  UserLoginRowArraySchema,
+} from './schema/auth.schema';
 import { burnPasswordCheck, verifyPassword } from './password';
-
-//Authentication type
-export type AuthUser = {
-  id: number;
-  username: string;
-};
 
 @Injectable()
 export class AuthService {
@@ -31,7 +29,7 @@ export class AuthService {
        LIMIT 1`,
       [username],
     );
-    const user = rows[0];
+    const user = UserLoginRowArraySchema.parse(rows)[0];
 
     // Unknown or disabled account - still do the hashing work so timing doesn't give it away
     if (!user) {

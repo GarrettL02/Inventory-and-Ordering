@@ -7,9 +7,12 @@ import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.s
 import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
 import {
   AdjustStockDto,
+  AdjustStockResult,
   GetAllPartsDataRowArraySchema,
   PartDetailsDataRowArraySchema,
+  PartStockRowArraySchema,
 } from './schema/parts.schema';
+import { TotalRowSchema } from '../common/schema/common.schema';
 
 @Injectable()
 export class PartService {
@@ -29,7 +32,7 @@ export class PartService {
 
     // Base SQL string structures
     let whereClause = '';
-    const queryParams: any[] = [];
+    const queryParams: (string | number)[] = [];
 
     if (search && search.trim() !== '') {
       // 1. Split query by spaces and ignore extra whitespace
@@ -73,8 +76,8 @@ export class PartService {
 
     // Execute query with search params followed by pagination variables
     const rows = await this.db.query(sql, [...queryParams, limit, offset]);
-    const countResult: any[] = await this.db.query(countSql, queryParams);
-    const total: number = countResult[0]?.total || 0;
+    const countResult = await this.db.query(countSql, queryParams);
+    const total = TotalRowSchema.parse(countResult[0]).total;
 
     // Validate data with ZOD schema
     const validatedData = GetAllPartsDataRowArraySchema.parse(rows);
@@ -139,14 +142,14 @@ export class PartService {
     partId: number,
     userId: number | null,
     input: AdjustStockDto,
-  ) {
+  ): Promise<AdjustStockResult> {
     return this.db.transaction(async (tx) => {
       // Lock the row so two changes at the same time can't overwrite each other
       const rows = await tx.query(
         'SELECT id, stockLevel, minStockLevel FROM parts WHERE id = ? FOR UPDATE',
         [partId],
       );
-      const part = rows[0];
+      const part = PartStockRowArraySchema.parse(rows)[0];
 
       if (!part) {
         throw new NotFoundException(`Part ${partId} not found`);
@@ -179,7 +182,7 @@ export class PartService {
       return {
         partId,
         stockLevel: newStockLevel,
-        minStockLevel: part.minStockLevel as number,
+        minStockLevel: part.minStockLevel,
         lowStockEventId,
       };
     });

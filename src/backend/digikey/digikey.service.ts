@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import {
+  DigikeyPartNumberRowArraySchema,
   DigikeyProduct,
   DigikeyResponseSchema,
   DigikeyResult,
@@ -68,7 +69,9 @@ export class DigikeyService {
        LIMIT 1`,
       [partId, '%digikey%'],
     );
-    return rows[0]?.partNumber?.trim() || null;
+    return (
+      DigikeyPartNumberRowArraySchema.parse(rows)[0]?.partNumber?.trim() || null
+    );
   }
 
   /////////////////////////////////////////////////////////

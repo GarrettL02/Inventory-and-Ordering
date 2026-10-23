@@ -25,6 +25,20 @@ export const DigikeyResponseSchema = z.object({
   }),
 });
 
+////////////////////////////////////////////////////////
+//
+// DigiKey Part Number Row Schema
+// (the row getDigikeyPartNumber() reads from partManufacturers)
+//
+////////////////////////////////////////////////////////
+export const DigikeyPartNumberRowSchema = z.object({
+  partNumber: z.string().nullable(),
+});
+
+export const DigikeyPartNumberRowArraySchema = z.array(
+  DigikeyPartNumberRowSchema,
+);
+
 export type DigikeyProduct = {
   digikeyPartNumber: string;
   description: string | null;

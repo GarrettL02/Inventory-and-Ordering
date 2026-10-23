@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { LowStockService } from './lowStockEvent.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { parseOrBadRequest } from '../common/parseOrBadRequest';
+import { PaginationQuerySchema } from '../common/schema/common.schema';
 
 @Controller('lowstock')
 @UseGuards(AuthGuard)
@@ -20,13 +22,9 @@ export class LowStockController {
   }
 
   @Get('tabledata')
-  async getLowStockPartsTableData(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-  ) {
-    const pageNum = parseInt(page || '1', 10);
-    const limitNum = parseInt(limit || '15', 10);
-    return this.lowStockService.getLowStockPartTableData(pageNum, limitNum);
+  async getLowStockPartsTableData(@Query() query: unknown) {
+    const { page, limit } = parseOrBadRequest(PaginationQuerySchema, query);
+    return this.lowStockService.getLowStockPartTableData(page, limit);
   }
 
   @Get(':id')

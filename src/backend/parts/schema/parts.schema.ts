@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PaginationQuerySchema } from '../../common/schema/common.schema';
 
 ////////////////////////////////////////////////////////
 //
@@ -65,3 +66,43 @@ export const AdjustStockSchema = z.object({
 });
 
 export type AdjustStockDto = z.infer<typeof AdjustStockSchema>;
+
+////////////////////////////////////////////////////////
+//
+// Part Stock Row Schema
+// (the row adjustStock() reads and locks before changing stock)
+//
+////////////////////////////////////////////////////////
+export const PartStockRowSchema = z.object({
+  id: z.number(),
+  stockLevel: z.number(),
+  minStockLevel: z.number(),
+});
+
+export const PartStockRowArraySchema = z.array(PartStockRowSchema);
+
+////////////////////////////////////////////////////////
+//
+// Parts Query Schema
+// (?page=1&limit=15&search=resistor on GET /parts)
+//
+////////////////////////////////////////////////////////
+export const PartsQuerySchema = PaginationQuerySchema.extend({
+  search: z.string().optional(),
+});
+
+////////////////////////////////////////////////////////
+//
+// Adjust Stock Result Schema
+// (what adjustStock() returns; lowStockEventId is null when the part
+// isn't below its minimum)
+//
+////////////////////////////////////////////////////////
+export const AdjustStockResultSchema = z.object({
+  partId: z.number(),
+  stockLevel: z.number(),
+  minStockLevel: z.number(),
+  lowStockEventId: z.number().nullable(),
+});
+
+export type AdjustStockResult = z.infer<typeof AdjustStockResultSchema>;

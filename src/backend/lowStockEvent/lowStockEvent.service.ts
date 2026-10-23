@@ -7,7 +7,9 @@ import {
   LowStockEventTableDataRowArraySchema,
   LowStockEventAllDataRowArraySchema,
   LowStockEventDataByIdRowArraySchema,
+  OpenLowStockEventRowArraySchema,
 } from './schema/lowStockEvent.schema';
+import { TotalRowSchema } from '../common/schema/common.schema';
 
 @Injectable()
 export class LowStockService {
@@ -57,7 +59,7 @@ export class LowStockService {
 
     const rows = await this.db.query(sql, [limit, offset]);
     const countResult = await this.db.query(countSql);
-    const total: number = countResult[0]?.total || 0;
+    const total = TotalRowSchema.parse(countResult[0]).total;
 
     //Backend ZOD validation
     const validatedRows = LowStockEventTableDataRowArraySchema.parse(rows);
@@ -107,7 +109,7 @@ export class LowStockService {
       return null;
     }
 
-    const openEvents = await tx.query(
+    const openEventRows = await tx.query(
       `SELECT id FROM lowStockEvents
        WHERE partId = ? AND ordered = 0
        ORDER BY id DESC
@@ -115,12 +117,14 @@ export class LowStockService {
       [partId],
     );
 
-    if (openEvents[0]) {
+    const openEvent = OpenLowStockEventRowArraySchema.parse(openEventRows)[0];
+
+    if (openEvent) {
       await tx.run(
         'UPDATE lowStockEvents SET stockLevel = ?, minStockLevel = ? WHERE id = ?',
-        [stockLevel, minStockLevel, openEvents[0].id],
+        [stockLevel, minStockLevel, openEvent.id],
       );
-      return openEvents[0].id as number;
+      return openEvent.id;
     }
 
     const result = await tx.run(

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,8 +11,9 @@ import {
 import { PartService } from './parts.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
-import type { AuthUser } from '../auth/auth.service';
-import { AdjustStockSchema } from './schema/parts.schema';
+import type { AuthUser } from '../auth/schema/auth.schema';
+import { parseOrBadRequest } from '../common/parseOrBadRequest';
+import { AdjustStockSchema, PartsQuerySchema } from './schema/parts.schema';
 
 @Controller('parts')
 @UseGuards(AuthGuard)
@@ -21,14 +21,9 @@ export class PartController {
   constructor(private readonly partService: PartService) {}
 
   @Get()
-  async getAllParts(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('search') search?: string,
-  ) {
-    const pageNum = page ? parseInt(page, 10) : 1;
-    const limitNum = limit ? parseInt(limit, 10) : 15;
-    return this.partService.getAllParts(pageNum, limitNum, search);
+  async getAllParts(@Query() query: unknown) {
+    const { page, limit, search } = parseOrBadRequest(PartsQuerySchema, query);
+    return this.partService.getAllParts(page, limit, search);
   }
 
   @Get(':id')
@@ -43,14 +38,7 @@ export class PartController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ) {
-    const parsed = AdjustStockSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new BadRequestException(
-        parsed.error.issues.map((issue) => issue.message).join(', '),
-      );
-    }
-
-    return this.partService.adjustStock(id, user.id, parsed.data);
+    const input = parseOrBadRequest(AdjustStockSchema, body);
+    return this.partService.adjustStock(id, user.id, input);
   }
 }

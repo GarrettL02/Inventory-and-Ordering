@@ -11,12 +11,7 @@ import type { Response } from 'express';
 import type { Request } from 'express';
 import { AuthService } from './auth.service';
 import { SESSION_COOKIE_NAME, readSessionCookie } from './auth.constants';
-
-//type for the login request body
-type LoginRequest = {
-  username?: string;
-  password?: string;
-};
+import { LoginSchema } from './schema/auth.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -25,18 +20,19 @@ export class AuthController {
   //POST for the login
   @Post('login')
   async login(
-    @Body() body: LoginRequest,
+    @Body() body: unknown,
     @Res({ passthrough: true }) response: Response,
   ) {
-    //if there is no username or password in the body of the request throw error
-    if (!body.username || !body.password) {
+    //Validate the request body with the ZOD schema - same error as a wrong password so nothing is revealed
+    const parsedBody = LoginSchema.safeParse(body);
+    if (!parsedBody.success) {
       throw new UnauthorizedException('Invalid username or password');
     }
 
     // Verify the submitted password against the stored password hash.
     const user = await this.authService.validateUser(
-      body.username,
-      body.password,
+      parsedBody.data.username,
+      parsedBody.data.password,
     );
 
     // Reject missing or disabled accounts.

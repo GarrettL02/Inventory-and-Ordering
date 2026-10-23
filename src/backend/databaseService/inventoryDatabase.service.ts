@@ -6,9 +6,10 @@ import {
   ResultSetHeader,
 } from 'mysql2/promise';
 
-// Query helpers handed to the callback of transaction()
+// Query helpers handed to the callback of transaction().
+// Pass the row type to get typed rows back: tx.query<PartStockRow>(sql, params)
 export type DbTransaction = {
-  query: (sql: string, params?: any[]) => Promise<any[]>;
+  query: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   run: (sql: string, params?: any[]) => Promise<ResultSetHeader>;
 };
 
@@ -37,12 +38,13 @@ export class InventoryDatabaseService implements OnModuleDestroy {
   ///////////////////////////////////////////////////////////
   //
   //  query()
-  //  SELECT statements - returns the rows
+  //  SELECT statements - returns the rows.
+  //  Pass the row type for typed rows: this.db.query<PartTableDataRow>(sql, params)
   //
   ///////////////////////////////////////////////////////////
-  async query(sql: string, params?: any[]): Promise<any[]> {
+  async query<T = any>(sql: string, params?: any[]): Promise<T[]> {
     const [rows] = await this.getPool().execute(sql, params);
-    return rows as any[];
+    return rows as T[];
   }
 
   ///////////////////////////////////////////////////////////
@@ -73,11 +75,11 @@ export class InventoryDatabaseService implements OnModuleDestroy {
       await connection.beginTransaction();
 
       const result = await work({
-        query: async (sql, params) => {
+        query: async <R = any>(sql: string, params?: any[]): Promise<R[]> => {
           const [rows] = await connection.execute(sql, params);
-          return rows as any[];
+          return rows as R[];
         },
-        run: async (sql, params) => {
+        run: async (sql: string, params?: any[]) => {
           const [header] = await connection.execute<ResultSetHeader>(
             sql,
             params,

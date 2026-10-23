@@ -76,3 +76,17 @@ export const LowStockEventDataByIdRowArraySchema = z.array(
 export type LowStockEventDataByIdRows = z.infer<
   typeof LowStockEventDataByIdRowArraySchema
 >;
+
+////////////////////////////////////////////////////////
+//
+// Open Low Stock Event Row Schema
+// (the id syncForPart() looks up for a part's open event)
+//
+////////////////////////////////////////////////////////
+export const OpenLowStockEventRowSchema = z.object({
+  id: z.number(),
+});
+
+export const OpenLowStockEventRowArraySchema = z.array(
+  OpenLowStockEventRowSchema,
+);
