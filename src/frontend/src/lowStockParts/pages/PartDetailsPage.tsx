@@ -94,7 +94,6 @@ export function PartDetailsPage() {
           {parts?.manufacturerPartNumber && (
             <DistributorAccordian
               partId={parts.id}
-              partkeeprPrice={parts.averagePrice}
               partNumber={parts?.manufacturerPartNumber}
               distributorName={parts?.manufacturerName}
             />

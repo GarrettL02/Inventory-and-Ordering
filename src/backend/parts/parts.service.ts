@@ -70,7 +70,7 @@ export class PartService {
     const countSql = `
       SELECT COUNT(*) as total
       FROM parts AS p
-      LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
+      LEFT JOIN storagelocations sl ON sl.id = p.storageLocationId
       ${whereClause}
     `;
 
@@ -106,13 +106,13 @@ export class PartService {
     SELECT
       p.*,
       (SELECT pa.filename
-         FROM partAttachments pa
+         FROM partattachments pa
          WHERE pa.partId = p.id
          ORDER BY pa.isPrimary DESC, pa.id
          LIMIT 1) AS filename,
       sl.name AS storageLocationName
     FROM parts p
-    LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
+    LEFT JOIN storagelocations sl ON sl.id = p.storageLocationId
     WHERE p.id = ?
   `;
 

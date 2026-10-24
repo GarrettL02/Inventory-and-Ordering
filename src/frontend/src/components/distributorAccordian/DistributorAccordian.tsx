@@ -6,14 +6,12 @@ interface DistributorAccordianProps {
   partId: number;
   distributorName?: string | null;
   partNumber?: string | null;
-  partkeeprPrice: string;
 }
 
 export function DistributorAccordian({
   partId,
   distributorName,
   partNumber,
-  partkeeprPrice,
 }: DistributorAccordianProps) {
   const { digikeyData, loading, error } = useFetchDigikey(partId);
 
@@ -29,16 +27,25 @@ export function DistributorAccordian({
             rowGap: '40px',
           }}
         >
-          <ReadOnlyInfoSection title="Name" information={distributorName} />
-          <ReadOnlyInfoSection title="Part Number" information={partNumber} />
+          <ReadOnlyInfoSection
+            title="Manufacturer"
+            information={distributorName}
+          />
+          <ReadOnlyInfoSection
+            title="Manufacturer Part Number"
+            information={partNumber}
+          />
 
           {loading && <div>Loading DigiKey data...</div>}
           {error && <div>Could not load DigiKey data.</div>}
           {digikeyData?.state === 'unavailable' && (
             <div>{digikeyData.message}</div>
           )}
+          {digikeyData?.state === 'no-part-number' && (
+            <div>Add a manufacturer part number to see DigiKey data.</div>
+          )}
           {digikeyData?.state === 'not-found' && (
-            <div>DigiKey doesn't recognize this part number.</div>
+            <div>DigiKey has no exact match for this part number.</div>
           )}
           {digikeyData?.state === 'ok' && (
             <>
@@ -98,7 +105,7 @@ export function DistributorAccordian({
                 window.open(digikeyData.data.productUrl, '_blank')
               }
             >
-              {distributorName} Page
+              DigiKey Page
             </button>
             <button
               style={{
