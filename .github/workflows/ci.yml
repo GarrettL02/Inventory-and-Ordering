@@ -1,0 +1,117 @@
+name: CI
+
+# Runs on every push to main and on every pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel an older run of the same branch when a newer push arrives
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend - build and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm test -- --ci --coverage
+
+      - name: Save coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: coverage/
+          if-no-files-found: ignore
+
+  # Lint is its own job and is allowed to fail for now, because the existing
+  # code has never been linted in CI. Once it passes, delete the
+  # `continue-on-error` line so lint errors block merges.
+  # (Not `npm run lint`: that script uses --fix, which is pointless in CI.)
+  lint:
+    name: Backend - lint
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx eslint "{src/backend,test}/**/*.ts"
+
+  frontend:
+    name: Frontend - tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+
+      - run: npm ci
+      - name: Unit tests
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
+      - name: Production build
+        run: npm run build
+        env:
+          CI: false # with CI=true, Create React App turns every lint warning into a build failure
+
+  # Proves DatabaseSchema.sql creates a working database on a brand new MySQL
+  # server, and that running db:migrate a second time is a harmless no-op.
+  database:
+    name: Database - schema applies cleanly
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pci-root-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: ci-root-password
+      DB_NAME: inventorydb_ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --omit=dev
+      - name: Create the database from DatabaseSchema.sql
+        run: npm run db:migrate
+      - name: Run again (should say it is up to date)
+        run: npm run db:migrate
+      - run: npm run db:status
