@@ -4,6 +4,9 @@ import { SideMenu } from '../sidemenu/SideMenu';
 import { PartsOrderedIcon } from '../icons/PartsOrderedIcon';
 import { NeedOrderedIcon } from '../icons/NeedOrderedIcon';
 import { PartPagePartIcon } from '../icons/PartPagePartIcon';
+import { HomeIcon } from '../icons/HomeIcon';
+import { AssetsIcon } from '../icons/AssetsIcon';
+import { SettingsIcon } from '../icons/SettingsIcon';
 
 interface HeaderSidebarComponentProps {
   children: React.ReactNode;
@@ -16,22 +19,40 @@ export function HeaderSidebarComponent({
 
   const sideMenuLinks = [
     {
+      name: 'Home',
+      location: '/home',
+      icon: <HomeIcon />,
+      lineBreak: true,
+    },
+    {
+      name: 'Part Search',
+      location: '/inventory',
+      icon: <PartPagePartIcon />,
+      lineBreak: false,
+    },
+    {
+      name: 'Assets',
+      location: '/assets',
+      icon: <AssetsIcon />,
+      lineBreak: true,
+    },
+    {
       name: 'Low Stock',
-      location: '/parts/unordered',
+      location: '/lowstock',
       icon: <NeedOrderedIcon />,
       lineBreak: false,
     },
     {
       name: 'Ordered',
-      location: '/parts/ordered',
+      location: '/ordered',
       icon: <PartsOrderedIcon />,
       lineBreak: true,
     },
     {
-      name: 'Part Search',
-      location: '/parts/partlookup',
-      icon: <PartPagePartIcon />,
-      lineBreak: true,
+      name: 'Settings',
+      location: '/settings',
+      icon: <SettingsIcon />,
+      lineBreak: false,
     },
   ];
 

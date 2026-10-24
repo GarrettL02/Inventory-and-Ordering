@@ -13,7 +13,7 @@ export function LowStockKebabMenu({ partId, partURL }: LowStockKebabMenuProps) {
       items={[
         {
           label: 'View Part Details',
-          onClick: () => nav(`/parts/unordered/${partId}`),
+          onClick: () => nav(`/inventory/${partId}`),
         },
         ...(partURL
           ? [

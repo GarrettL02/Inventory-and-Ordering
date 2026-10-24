@@ -45,6 +45,9 @@ lerna-debug.log*
 # Claude markdown instructions
 claude.md
 
+# public files in frontend
+/src/frontend/public
+
 # temp directory
 .temp
 .tmp
