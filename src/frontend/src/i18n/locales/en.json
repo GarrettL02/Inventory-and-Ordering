@@ -1,0 +1,165 @@
+{
+  "app": {
+    "documentTitle": "Fastec: Part Ordering",
+    "headerTitle": "Inventory Management System",
+    "headerLogoAlt": "Fastec Services"
+  },
+
+  "auth": {
+    "checking": "Checking authentication...",
+    "login": {
+      "logoAlt": "Fastec Services Logo",
+      "subtitle": "Sign in to your Partkeepr account",
+      "usernamePlaceholder": "Username",
+      "passwordPlaceholder": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "failed": "Login failed"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid username or password"
+    },
+    "account": {
+      "guest": "Guest",
+      "signOut": "Sign Out"
+    }
+  },
+
+  "nav": {
+    "lowStock": "Low Stock",
+    "ordered": "Ordered",
+    "partSearch": "Part Search"
+  },
+
+  "common": {
+    "actions": {
+      "back": "← Back",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "open": "Open",
+      "close": "Close",
+      "previous": "← Previous",
+      "next": "Next →",
+      "openFullPage": "Open full page"
+    },
+    "search": {
+      "placeholder": "Search..."
+    },
+    "status": {
+      "loadingData": "Loading Data.....",
+      "errorLoadingData": "Error Loading Data.....",
+      "nothingToDisplay": "There is Nothing to Display!",
+      "notAvailable": "N/A"
+    },
+    "pagination": {
+      "summary": "Page {{page}} of {{totalPages}} ({{total}} total items)"
+    },
+    "fileDrop": {
+      "dropping": "Drop files here...",
+      "idle": "Drag & drop files here, or click to browse"
+    },
+    "lightbox": {
+      "counter": "{{current}} / {{total}}"
+    },
+    "errorPage": {
+      "heading": "Oops! {{status}}",
+      "defaultStatus": "Error",
+      "defaultMessage": "Something went wrong."
+    },
+    "dataWrapper": {
+      "loading": "Job Details Loading",
+      "error": "Error loading Job Details: {{error}}"
+    }
+  },
+
+  "errors": {
+    "http": "HTTP error {{status}}"
+  },
+
+  "fields": {
+    "partName": "Part Name",
+    "partNumber": "Part Number",
+    "description": "Description",
+    "comments": "Comments",
+    "currentStockLevel": "Current Stock Level",
+    "minimumStockLevel": "Minimum Stock Level",
+    "price": "Price",
+    "averagePrice": "Average Price",
+    "storageLocation": "Storage Location",
+    "manufacturer": "Manufacturer",
+    "manufacturerPartNumber": "Manufacturer Part Number",
+    "images": "Images"
+  },
+
+  "table": {
+    "columns": {
+      "partName": "Part Name",
+      "description": "Description",
+      "comments": "Comments",
+      "stockLevel": "Stock Level",
+      "minStockLevel": "Min Stock Level",
+      "price": "Price",
+      "distributor": "Distributor",
+      "storageLocation": "Storage Location"
+    },
+    "sourceChip": "Partkeepr"
+  },
+
+  "lowStock": {
+    "title": "Need Ordered",
+    "addPartRequest": "Add Part Request",
+    "addToCart": "Add to Cart",
+    "cart": {
+      "title": "Current Cart"
+    },
+    "menu": {
+      "viewDetails": "View Part Details",
+      "goToStorePage": "Go to Store Page",
+      "deletePart": "Delete Part"
+    }
+  },
+
+  "ordered": {
+    "title": "Ordered"
+  },
+
+  "partLookup": {
+    "title": "Part Search",
+    "searchPlaceholder": "Search for part..."
+  },
+
+  "partRequest": {
+    "loading": "Loading part data..."
+  },
+
+  "partCard": {
+    "loading": "Loading part details...",
+    "error": "Error loading part details: {{error}}",
+    "manufacturerPage": "{{name}} Page",
+    "manufacturerFallback": "Manufacturer",
+    "removeStock": "Remove Stock",
+    "addStock": "Add Stock"
+  },
+
+  "partDetails": {
+    "sections": {
+      "partInformation": "Part Information",
+      "attachments": "Attachments"
+    }
+  },
+
+  "distributor": {
+    "title": "Distributor Information",
+    "loading": "Loading DigiKey data...",
+    "loadError": "Could not load DigiKey data.",
+    "unavailable": "DigiKey data is unavailable right now.",
+    "noPartNumber": "Add a manufacturer part number to see DigiKey data.",
+    "notFound": "DigiKey has no exact match for this part number.",
+    "status": "Status (DigiKey)",
+    "quantityAvailable": "Qty Available (DigiKey)",
+    "price": "Price (DigiKey)",
+    "links": "Links",
+    "digikeyPage": "DigiKey Page",
+    "datasheet": "{{partNumber}} Datasheet"
+  }
+}

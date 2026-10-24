@@ -15,7 +15,7 @@ const DigikeyProductSchema = z.object({
 
 export const DigikeyResultSchema = z.discriminatedUnion('state', [
   z.object({ state: z.literal('ok'), data: DigikeyProductSchema }),
-  z.object({ state: z.literal('no-digikey-entry') }),
+  z.object({ state: z.literal('no-part-number') }),
   z.object({ state: z.literal('not-found') }),
   z.object({ state: z.literal('unavailable'), message: z.string() }),
 ]);
