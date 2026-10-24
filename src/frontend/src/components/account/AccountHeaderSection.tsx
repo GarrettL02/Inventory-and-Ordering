@@ -64,15 +64,15 @@ export function AccountHeaderSection() {
           cursor: 'pointer',
           borderRadius: '4px',
           transition: 'background-color 0.2s',
-          backgroundColor: '#141414e5',
+          backgroundColor: '#292929e5',
           paddingInline: '20px',
           paddingBlock: '8px',
         }}
         onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = '#292929e5')
+          (e.currentTarget.style.backgroundColor = '#141414e5')
         }
         onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = '#141414e5')
+          (e.currentTarget.style.backgroundColor = '#292929e5')
         }
       >
         <div

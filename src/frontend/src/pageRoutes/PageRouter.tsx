@@ -29,33 +29,48 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      // Redirect root to /parts/unordered
+      // Redirect root to /home
       {
         path: '/',
-        element: <Navigate to="/parts/unordered" replace />,
+        element: <Navigate to="/home" replace />,
+      },
+      // --------------- Routes for home -------------
+      {
+        path: '/home',
+        element: <PartLookupPage />,
       },
       // --------------- Routes for parts -----------------
       {
-        path: '/parts/unordered',
+        path: '/lowstock',
         element: <LowStockPage />,
       },
       {
-        path: '/parts/ordered',
+        path: '/ordered',
         element: <OrderedPartsPage />,
       },
+      // --------------- Routes for inventory -----------------
       {
-        path: '/parts/unordered/:id',
+        path: '/inventory',
+        element: <PartLookupPage />,
+      },
+      {
+        path: '/inventory/:id',
         loader: ({ params }) => ({ partId: params.id }),
         element: <PartDetailsPage />,
       },
-      // --------------- Routes for part Lookup -----------------
+      // --------------- Routes for assets -----------------
       {
-        path: '/parts/partlookup',
+        path: '/assets',
+        element: <PartLookupPage />,
+      },
+      // --------------- Routes for settings -----------------
+      {
+        path: '/settings',
         element: <PartLookupPage />,
       },
       //--------------- Routes for forms -----------------
       {
-        path: '/parts/partRequest',
+        path: '/partRequest',
         element: <PartRequestForm />,
       },
     ],

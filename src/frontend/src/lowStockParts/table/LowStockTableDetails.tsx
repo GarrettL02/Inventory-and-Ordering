@@ -72,7 +72,7 @@ export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
       {/* Footer Navigation Buttons */}
       <div style={{ display: 'flex', gap: '16px' }}>
         <button
-          onClick={() => nav(`/parts/unordered/${partId}`)}
+          onClick={() => nav(`/inventory${partId}`)}
           style={{
             background: 'transparent',
             border: 'none',

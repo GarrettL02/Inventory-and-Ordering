@@ -16,7 +16,7 @@ export function LoginPage() {
   }
 
   if (user) {
-    return <Navigate to="/parts/unordered" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -28,7 +28,7 @@ export function LoginPage() {
       await login(username, password);
       const from = (location.state as { from?: { pathname?: string } } | null)
         ?.from?.pathname;
-      navigate(from || '/parts/unordered', { replace: true });
+      navigate(from || '/home', { replace: true });
     } catch (loginError) {
       setError(
         loginError instanceof Error ? loginError.message : 'Login failed',

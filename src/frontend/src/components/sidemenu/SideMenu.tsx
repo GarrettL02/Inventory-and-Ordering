@@ -6,6 +6,7 @@ interface SideMenuLinks {
   location: string;
   icon: React.ReactNode;
   lineBreak: boolean;
+  mountedToBottom?: boolean;
 }
 
 interface SideMenuProps {
