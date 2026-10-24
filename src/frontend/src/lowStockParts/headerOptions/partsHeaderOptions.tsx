@@ -20,11 +20,11 @@ export function PartsHeaderOptions() {
           marginInline: '100px',
         }}
       >
-        <NavLink to="/parts/unordered" style={linkStyle}>
+        <NavLink to="/lowstock" style={linkStyle}>
           Low Stock
         </NavLink>
 
-        <NavLink to="/parts/ordered" style={linkStyle}>
+        <NavLink to="/ordered" style={linkStyle}>
           Ordered
         </NavLink>
       </div>

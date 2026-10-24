@@ -28,7 +28,7 @@ export function PartLookupPage() {
 
   // Sync URL when page changes
   useEffect(() => {
-    setSearchParams({ page: page.toString(), limit: '15' });
+    setSearchParams({ page: page.toString() });
   }, [page, setSearchParams]);
 
   // Sync page state with URL on mount
@@ -85,7 +85,7 @@ export function PartLookupPage() {
       >
         <div style={{ marginBottom: '20px' }}>
           <h2 style={{ marginBottom: '-12px', marginLeft: '50px' }}>
-            Part Search
+            Inventory
           </h2>
           <div
             style={{ color: '#580909ff', marginLeft: '50px', fontWeight: 700 }}
