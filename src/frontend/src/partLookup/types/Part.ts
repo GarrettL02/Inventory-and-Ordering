@@ -29,3 +29,17 @@ export interface PartDetails {
   manufacturerName?: string | null;
   manufacturerPartNumber?: string | null;
 }
+
+export type AddNewPartFormData = {
+  name: string;
+  description: string;
+  comment?: string | null;
+  averagePrice?: string;
+  partURL: string;
+  manufacturerName: string;
+  manufacturerPartNumber: string;
+  stockLevel: number;
+  minStockLevel: number;
+  categoryId?: number | null;
+  storageLocationId?: number | null;
+};

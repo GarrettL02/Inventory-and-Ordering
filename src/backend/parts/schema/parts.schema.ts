@@ -105,3 +105,57 @@ export const AdjustStockResultSchema = z.object({
 });
 
 export type AdjustStockResult = z.infer<typeof AdjustStockResultSchema>;
+
+////////////////////////////////////////////////////////
+//
+// Create Part Request Schema
+// (body of POST /parts - the Add New Part form)
+// internalPartNumber is NOT accepted from the client: the service sets it
+// to the manufacturer part number. Unknown keys are stripped by zod.
+//
+////////////////////////////////////////////////////////
+const optionalId = z
+  .number()
+  .int()
+  .positive()
+  .nullable()
+  .optional()
+  .transform((value) => value ?? null);
+
+export const CreatePartSchema = z.object({
+  name: z.string().trim().min(1, 'name is required').max(255),
+  description: z.string().trim().min(1, 'description is required').max(255),
+  comment: z
+    .string()
+    .trim()
+    .nullable()
+    .optional()
+    .transform((value) => value || null),
+  stockLevel: z.number().int().min(0, 'stockLevel cannot be negative'),
+  minStockLevel: z.number().int().min(0, 'minStockLevel cannot be negative'),
+  // The form sends the price as a string and an empty box as '' - both become a number
+  averagePrice: z.coerce
+    .number()
+    .min(0, 'averagePrice cannot be negative')
+    .max(99999999, 'averagePrice is too large')
+    .default(0),
+  manufacturerName: z
+    .string()
+    .trim()
+    .min(1, 'manufacturerName is required')
+    .max(255),
+  manufacturerPartNumber: z
+    .string()
+    .trim()
+    .min(1, 'manufacturerPartNumber is required')
+    .max(255),
+  partURL: z
+    .string()
+    .trim()
+    .max(2048)
+    .regex(/^https?:\/\/\S+$/i, 'partURL must start with http:// or https://'),
+  categoryId: optionalId,
+  storageLocationId: optionalId,
+});
+
+export type CreatePartDto = z.infer<typeof CreatePartSchema>;

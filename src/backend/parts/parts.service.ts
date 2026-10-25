@@ -8,6 +8,7 @@ import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
 import {
   AdjustStockDto,
   AdjustStockResult,
+  CreatePartDto,
   GetAllPartsDataRowArraySchema,
   PartDetailsDataRowArraySchema,
   PartStockRowArraySchema,
@@ -182,5 +183,91 @@ export class PartService {
         lowStockEventId,
       };
     });
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  CreatePart()
+  //  Add a new part (the Add New Part form). In one transaction:
+  //    - insert the part (internalPartNumber = manufacturerPartNumber)
+  //    - log the starting stock in stockMovements (if > 0)
+  //    - open a low stock event if it starts below its minimum
+  //  Returns the created part in the same shape as getPartById().
+  //
+  /////////////////////////////////////////////////////////
+  async createPart(userId: number | null, input: CreatePartDto) {
+    const newPartId = await this.db.transaction(async (tx) => {
+      // Check the ids up front so the user gets a clear 400 instead of a foreign key error
+
+      //If there is storageLocation selected, see if it exists in db. If not, throw a BadRequestException.
+      if (input.storageLocationId !== null) {
+        const rows = await tx.query(
+          'SELECT id FROM storageLocations WHERE id = ?',
+          [input.storageLocationId],
+        );
+        if (rows.length === 0) {
+          throw new BadRequestException(
+            `Storage location ${input.storageLocationId} does not exist`,
+          );
+        }
+      }
+
+      //If there is categoryId selected, see if it exists in db. If not, throw a BadRequestException.
+      if (input.categoryId !== null) {
+        const rows = await tx.query('SELECT id FROM categories WHERE id = ?', [
+          input.categoryId,
+        ]);
+        if (rows.length === 0) {
+          throw new BadRequestException(
+            `Category ${input.categoryId} does not exist`,
+          );
+        }
+      }
+
+      //take results of form data and insert into parts table. Then check if part is below minimum stock level and create lowStockEvent if necessary.
+      const result = await tx.run(
+        `INSERT INTO parts
+           (categoryId, storageLocationId, name, description, comment,
+            stockLevel, minStockLevel, averagePrice, internalPartNumber,
+            manufacturerName, manufacturerPartNumber, partURL)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          input.categoryId,
+          input.storageLocationId,
+          input.name,
+          input.description,
+          input.comment,
+          input.stockLevel,
+          input.minStockLevel,
+          input.averagePrice,
+          input.manufacturerPartNumber, // internal part number = manufacturer part number
+          input.manufacturerName,
+          input.manufacturerPartNumber,
+          input.partURL,
+        ],
+      );
+      const partId = result.insertId;
+
+      // If stockLevel > 0, insert into stockMovements table.
+      if (input.stockLevel > 0) {
+        await tx.run(
+          `INSERT INTO stockMovements (partId, delta, stockLevelAfter, reason, userId)
+           VALUES (?, ?, ?, ?, ?)`,
+          [partId, input.stockLevel, input.stockLevel, 'initial stock', userId],
+        );
+      }
+
+      // Returns null (and does nothing) when the part isn't below its minimum
+      await this.lowStockService.syncForPart(
+        tx,
+        partId,
+        input.stockLevel,
+        input.minStockLevel,
+      );
+
+      return partId;
+    });
+
+    return this.getPartById(newPartId);
   }
 }

@@ -6,10 +6,12 @@ import { TableDataError } from '../../components/table/TableDataError';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { useFetchParts } from '../hooks/useFetchParts';
 import { PartTableCard } from '../table/PartTableCard';
+import { AddNewPartForm } from '../forms/AddNewPartForm';
 
 export function PartLookupPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Get page from URL, default to 1
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
@@ -24,6 +26,7 @@ export function PartLookupPage() {
     pagination,
     search,
     setSearch,
+    refetch,
   } = useFetchParts(pageFromUrl);
 
   // Sync URL when page changes
@@ -76,6 +79,12 @@ export function PartLookupPage() {
         paddingTop: '40px', //Needed on all pages to offset header
       }}
     >
+      {modalOpen && (
+        <AddNewPartForm
+          onClose={() => setModalOpen(false)}
+          onCreated={refetch}
+        />
+      )}
       <div
         style={{
           display: 'flex',
@@ -93,7 +102,28 @@ export function PartLookupPage() {
             ___
           </div>
         </div>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => setModalOpen(true)}
+            style={{
+              backgroundColor: '#3a0e03',
+              color: 'white',
+              border: '1px solid #bdbdbd',
+              borderRadius: '10px',
+              padding: '10px 20px',
+              fontSize: '12px',
+              fontWeight: 550,
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#4e0909')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = '#3a0e03')
+            }
+          >
+            Add New Part
+          </button>
           <input
             placeholder="Search for part..."
             value={inputValue}
