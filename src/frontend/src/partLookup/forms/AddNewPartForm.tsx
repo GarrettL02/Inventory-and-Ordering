@@ -1,14 +1,20 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Modal } from '../../components/modal/Modal';
-import { FormInputs, FormInputOption } from '../../components/form/FormInputProps';
+import {
+  FormInputs,
+  FormInputOption,
+} from '../../components/form/FormInputProps';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { AddNewPartFormData } from '../types/Part';
+import { useAddNewPart } from '../hooks/useAddNewPart';
 
 const FORM_ID = 'add-new-part-form';
 
 export interface AddNewPartFormProps {
   onClose: () => void;
+  // Called after the part was saved, so the page can refresh its table
+  onCreated?: () => void;
   // Dropdown choices. Pass these in from the parent once the backend has
   // endpoints that list storage locations / categories.
   storageLocations?: FormInputOption[];
@@ -42,13 +48,16 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export function AddNewPartForm({
   onClose,
+  onCreated,
   storageLocations = [],
   categories = [],
 }: AddNewPartFormProps) {
+  const { addNewPart, loading: saving, error: submitError } = useAddNewPart();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<AddNewPartFormData>({
     defaultValues: {
@@ -66,15 +75,13 @@ export function AddNewPartForm({
     },
   });
 
-  // TODO: POST to the backend once a create-part endpoint exists
   const onSubmit: SubmitHandler<AddNewPartFormData> = async (data) => {
-    // Internal part number is always the manufacturer part number
-    const payload = {
-      ...data,
-      internalPartNumber: data.manufacturerPartNumber,
-    };
-    console.log('Submitting New Part:', payload);
+    const created = await addNewPart(data);
+    // null means it failed - stay open with what the user typed, the hook has the error
+    if (!created) return;
+
     reset();
+    onCreated?.();
     onClose();
   };
 
@@ -88,8 +95,8 @@ export function AddNewPartForm({
           <GeneralButton
             type="submit"
             form={FORM_ID}
-            buttonText={isSubmitting ? 'Saving...' : 'Add Part'}
-            disabled={isSubmitting}
+            buttonText={saving ? 'Saving...' : 'Add Part'}
+            disabled={saving}
           />
         </>
       }
@@ -107,6 +114,22 @@ export function AddNewPartForm({
           boxSizing: 'border-box',
         }}
       >
+        {submitError && (
+          <div
+            role="alert"
+            style={{
+              gridColumn: 'span 2',
+              color: '#ff6b6b',
+              border: '1px solid #4f0000',
+              borderRadius: '5px',
+              padding: '8px',
+              fontSize: '12px',
+            }}
+          >
+            {submitError}
+          </div>
+        )}
+
         {/* ---------- Essentials ---------- */}
         <SectionTitle>Basics</SectionTitle>
         <div style={{ gridColumn: 'span 2' }}>
@@ -208,7 +231,9 @@ export function AddNewPartForm({
               required: 'Manufacturer name is required',
             }),
           }}
-          inputErrors={<FieldError message={errors.manufacturerName?.message} />}
+          inputErrors={
+            <FieldError message={errors.manufacturerName?.message} />
+          }
         />
         <FormInputs
           label="Manufacturer Part Number (also used as internal part number)"

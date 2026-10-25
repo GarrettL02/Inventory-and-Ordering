@@ -26,6 +26,7 @@ export function PartLookupPage() {
     pagination,
     search,
     setSearch,
+    refetch,
   } = useFetchParts(pageFromUrl);
 
   // Sync URL when page changes
@@ -78,7 +79,12 @@ export function PartLookupPage() {
         paddingTop: '40px', //Needed on all pages to offset header
       }}
     >
-      {modalOpen && <AddNewPartForm onClose={() => setModalOpen(false)} />}
+      {modalOpen && (
+        <AddNewPartForm
+          onClose={() => setModalOpen(false)}
+          onCreated={refetch}
+        />
+      )}
       <div
         style={{
           display: 'flex',

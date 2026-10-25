@@ -14,6 +14,8 @@ export const useFetchParts = (initialPage: number) => {
     totalPages: number;
   } | null>(null);
   const [search, setSearch] = useState<string>('');
+  // Bumping this re-runs the fetch below (used after a part is added)
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Reset to page 1 whenever search text changes
   useEffect(() => {
@@ -35,7 +37,7 @@ export const useFetchParts = (initialPage: number) => {
       }
     };
     fetchData();
-  }, [page, search]);
+  }, [page, search, refreshKey]);
 
   return {
     parts,
@@ -46,5 +48,6 @@ export const useFetchParts = (initialPage: number) => {
     setPage,
     search,
     setSearch,
+    refetch: () => setRefreshKey((key) => key + 1),
   };
 };
