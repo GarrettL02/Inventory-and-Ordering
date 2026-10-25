@@ -154,7 +154,15 @@ export function PartLookupPage() {
             !error &&
             parts.length > 0 &&
             parts.map((part) => (
-              <PartTableCard key={part.id} partData={part} />
+              <PartTableCard
+                key={part.id}
+                partData={part}
+                onDeleted={() => {
+                  // Deleted the last row on this page -> go back a page (that triggers a fetch)
+                  if (parts.length === 1 && page > 1) setPage(page - 1);
+                  else refetch();
+                }}
+              />
             ))}
         </Table>
         {showPagination && (

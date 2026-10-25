@@ -1,14 +1,19 @@
+import { useState } from 'react';
 import { partTableGrid } from '../../components/table/Table';
 import { PartTableData } from '../types/Part';
 import { LowStockKebabMenu } from '../../lowStockParts/kebabMenuActions/LowStockKebabMenu';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { PartCardDetails } from './PartTableDetails';
+import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;
+  // Called after this part was deleted, so the page can refresh its table
+  onDeleted?: () => void;
 }
 
-export function PartTableCard({ partData }: LowStockTableCardProps) {
+export function PartTableCard({ partData, onDeleted }: LowStockTableCardProps) {
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const overflowSectionStyle = {
     paddingInline: '2%',
     overflow: 'hidden',
@@ -88,7 +93,19 @@ export function PartTableCard({ partData }: LowStockTableCardProps) {
             }}
           >
             <div onClick={(e) => e.stopPropagation()}>
-              <LowStockKebabMenu partId={partData.id} partURL={''} />
+              <LowStockKebabMenu
+                partId={partData.id}
+                partURL={''}
+                onDelete={() => setConfirmDeleteOpen(true)}
+              />
+              {confirmDeleteOpen && (
+                <ConfirmDeletePartModal
+                  partId={partData.id}
+                  partName={partData.name}
+                  onClose={() => setConfirmDeleteOpen(false)}
+                  onDeleted={onDeleted}
+                />
+              )}
             </div>
           </td>
         </>
