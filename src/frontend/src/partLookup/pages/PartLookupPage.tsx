@@ -78,9 +78,7 @@ export function PartLookupPage() {
         paddingTop: '40px', //Needed on all pages to offset header
       }}
     >
-      {modalOpen && (
-        <AddNewPartForm isOpen={modalOpen} setIsOpen={setModalOpen} />
-      )}
+      {modalOpen && <AddNewPartForm onClose={() => setModalOpen(false)} />}
       <div
         style={{
           display: 'flex',
@@ -98,7 +96,7 @@ export function PartLookupPage() {
             ___
           </div>
         </div>
-        <div style={{ gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={() => setModalOpen(true)}
             style={{

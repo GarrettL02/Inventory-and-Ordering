@@ -1,27 +1,54 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
-import { Modal } from '../../components/modal/Modal';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { FormInputs } from '../../components/form/FormInputProps';
+import { Modal } from '../../components/modal/Modal';
+import { FormInputs, FormInputOption } from '../../components/form/FormInputProps';
+import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
+import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { AddNewPartFormData } from '../types/Part';
 
+const FORM_ID = 'add-new-part-form';
+
 export interface AddNewPartFormProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
+  // Dropdown choices. Pass these in from the parent once the backend has
+  // endpoints that list storage locations / categories.
+  storageLocations?: FormInputOption[];
+  categories?: FormInputOption[];
 }
 
-export function AddNewPartForm({ isOpen, setIsOpen }: AddNewPartFormProps) {
-  const nav = useNavigate();
+// Empty select -> null, otherwise a number (select values come back as strings)
+const toIdOrNull = (value: unknown) =>
+  value === '' || value === null || value === undefined ? null : Number(value);
 
-  //scroll page to top
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+const FieldError = ({ message }: { message?: string }) =>
+  message ? <span style={{ color: '#ff6b6b' }}>{message}</span> : null;
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        gridColumn: 'span 2',
+        fontSize: '13px',
+        fontWeight: 700,
+        color: '#c9c9c9',
+        borderBottom: '1px solid #4a4a4a',
+        paddingBottom: '4px',
+        marginTop: '8px',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function AddNewPartForm({
+  onClose,
+  storageLocations = [],
+  categories = [],
+}: AddNewPartFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<AddNewPartFormData>({
     defaultValues: {
@@ -39,177 +66,203 @@ export function AddNewPartForm({ isOpen, setIsOpen }: AddNewPartFormProps) {
     },
   });
 
-  // Form submit handler
-  const onSubmit: SubmitHandler<AddNewPartFormData> = (data) => {
-    console.log('Submitting Part Request:', data);
-    reset(); // Clear the form
-    setIsOpen(false);
+  // TODO: POST to the backend once a create-part endpoint exists
+  const onSubmit: SubmitHandler<AddNewPartFormData> = async (data) => {
+    // Internal part number is always the manufacturer part number
+    const payload = {
+      ...data,
+      internalPartNumber: data.manufacturerPartNumber,
+    };
+    console.log('Submitting New Part:', payload);
+    reset();
+    onClose();
   };
 
-  return isOpen ? (
-    <Modal modalTitle="Add New Part">
+  return (
+    <Modal
+      modalTitle="Add New Part"
+      onClose={onClose}
+      footer={
+        <>
+          <CancelButton onClick={onClose} />
+          <GeneralButton
+            type="submit"
+            form={FORM_ID}
+            buttonText={isSubmitting ? 'Saving...' : 'Add Part'}
+            disabled={isSubmitting}
+          />
+        </>
+      }
+    >
       <form
+        id={FORM_ID}
         onSubmit={handleSubmit(onSubmit)}
+        noValidate
         style={{
           width: '100%',
           display: 'grid',
           gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
           gap: '16px',
           paddingInline: '10px',
+          boxSizing: 'border-box',
         }}
       >
-        <FormInputs
-          label={'Part Name'}
-          inputParams={{
-            ...register('name', { required: 'Part name is required' }),
-          }}
-          inputErrors={
-            errors.name && (
-              <span style={{ color: 'red' }}>{errors.name.message}</span>
-            )
-          }
-        />
-        <FormInputs
-          label={'Price'}
-          inputType="number"
-          inputParams={{
-            ...register('averagePrice', {
-              required: 'Part price is required',
-            }),
-          }}
-          inputErrors={
-            errors.averagePrice && (
-              <span style={{ color: 'red' }}>
-                {errors.averagePrice.message}
-              </span>
-            )
-          }
-        />
+        {/* ---------- Essentials ---------- */}
+        <SectionTitle>Basics</SectionTitle>
         <div style={{ gridColumn: 'span 2' }}>
           <FormInputs
+            label="Part Name"
+            required
+            inputWidth={90}
+            inputParams={{
+              ...register('name', {
+                required: 'Part name is required',
+                setValueAs: (v: string) => v.trim(),
+              }),
+            }}
+            inputErrors={<FieldError message={errors.name?.message} />}
+          />
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <FormInputs
+            label="Description"
+            required
             inputType="textarea"
-            label={'Description'}
+            inputWidth={90}
+            inputHeight={70}
             inputParams={{
               ...register('description', {
                 required: 'Part description is required',
+                maxLength: { value: 255, message: 'Max 255 characters' },
               }),
             }}
-            inputWidth={90}
-            inputHeight={100}
-            inputErrors={
-              errors.description && (
-                <span style={{ color: 'red' }}>
-                  {errors.description.message}
-                </span>
-              )
-            }
+            inputErrors={<FieldError message={errors.description?.message} />}
           />
         </div>
-        <div style={{ gridColumn: 'span 2', marginBottom: '30px' }}>
-          <FormInputs
-            inputType="textarea"
-            label={'Comments'}
-            inputParams={{
-              ...register('comment'),
-            }}
-            inputWidth={90}
-            inputHeight={100}
-          />
-        </div>
+
+        {/* ---------- Stock ---------- */}
+        <SectionTitle>Stock</SectionTitle>
         <FormInputs
-          label={'Category'}
-          inputParams={{ ...register('categoryId') }}
+          label="Starting Stock"
+          required
+          inputType="number"
+          min={0}
+          step={1}
+          inputWidth={40}
+          inputParams={{
+            ...register('stockLevel', {
+              valueAsNumber: true,
+              required: 'Starting stock is required',
+              min: { value: 0, message: 'Cannot be negative' },
+              validate: (v) => Number.isInteger(v) || 'Must be a whole number',
+            }),
+          }}
+          inputErrors={<FieldError message={errors.stockLevel?.message} />}
         />
         <FormInputs
-          label={'Storage Location'}
-          inputParams={{ ...register('storageLocationId') }}
+          label="Minimum Stock (low-stock alert level)"
+          required
+          inputType="number"
+          min={0}
+          step={1}
+          inputWidth={40}
+          inputParams={{
+            ...register('minStockLevel', {
+              valueAsNumber: true,
+              required: 'Minimum stock is required',
+              min: { value: 0, message: 'Cannot be negative' },
+              validate: (v) => Number.isInteger(v) || 'Must be a whole number',
+            }),
+          }}
+          inputErrors={<FieldError message={errors.minStockLevel?.message} />}
         />
         <FormInputs
-          label={'Manufacturer Name'}
+          label="Storage Location"
+          inputType="select"
+          options={storageLocations}
+          placeholderOption="Not set"
+          inputWidth={90}
+          inputParams={{
+            ...register('storageLocationId', { setValueAs: toIdOrNull }),
+          }}
+        />
+        <FormInputs
+          label="Category"
+          inputType="select"
+          options={categories}
+          placeholderOption="None"
+          inputWidth={90}
+          inputParams={{
+            ...register('categoryId', { setValueAs: toIdOrNull }),
+          }}
+        />
+
+        {/* ---------- Optional details ---------- */}
+        <SectionTitle>Part Details</SectionTitle>
+        <FormInputs
+          label="Manufacturer Name"
+          required
+          inputWidth={90}
           inputParams={{
             ...register('manufacturerName', {
               required: 'Manufacturer name is required',
             }),
           }}
-          inputErrors={
-            errors.manufacturerName && (
-              <span style={{ color: 'red' }}>
-                {errors.manufacturerName.message}
-              </span>
-            )
-          }
+          inputErrors={<FieldError message={errors.manufacturerName?.message} />}
         />
         <FormInputs
-          label={'Manufacturer Part Number'}
+          label="Manufacturer Part Number (also used as internal part number)"
+          required
+          inputWidth={90}
           inputParams={{
             ...register('manufacturerPartNumber', {
               required: 'Manufacturer part number is required',
             }),
           }}
           inputErrors={
-            errors.manufacturerPartNumber && (
-              <span style={{ color: 'red' }}>
-                {errors.manufacturerPartNumber.message}
-              </span>
-            )
+            <FieldError message={errors.manufacturerPartNumber?.message} />
           }
         />
         <div style={{ gridColumn: 'span 2' }}>
           <FormInputs
-            label={'Manufacturer URL'}
+            label="Product URL"
+            required
+            inputWidth={90}
             inputParams={{
               ...register('partURL', {
-                required: 'Manufacturer URL is required',
+                required: 'Product URL is required',
+                pattern: {
+                  value: /^https?:\/\/\S+$/i,
+                  message: 'Must start with http:// or https://',
+                },
               }),
             }}
-            inputWidth={90}
-            inputErrors={
-              errors.partURL && (
-                <span style={{ color: 'red' }}>{errors.partURL.message}</span>
-              )
-            }
+            inputErrors={<FieldError message={errors.partURL?.message} />}
           />
         </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: '17px',
-            marginTop: '24px',
-            boxSizing: 'border-box',
-            gridColumn: 'span 2',
+        <FormInputs
+          label="Price (each, optional)"
+          inputType="number"
+          min={0}
+          step="any"
+          inputWidth={40}
+          inputParams={{
+            ...register('averagePrice', {
+              min: { value: 0, message: 'Cannot be negative' },
+            }),
           }}
-        >
-          <button
-            type="button"
-            style={{
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              color: '#676767',
-            }}
-            onClick={() => setIsOpen(false)}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            style={{
-              padding: '5px',
-              cursor: 'pointer',
-              borderRadius: '7px',
-              backgroundColor: '#3b0000',
-              border: '1px solid #a3a3a3',
-              color: '#bab9b9',
-              paddingInline: '5px',
-            }}
-          >
-            Submit Request
-          </button>
+          inputErrors={<FieldError message={errors.averagePrice?.message} />}
+        />
+        <div style={{ gridColumn: 'span 2' }}>
+          <FormInputs
+            label="Comments"
+            inputType="textarea"
+            inputWidth={90}
+            inputHeight={60}
+            inputParams={{ ...register('comment') }}
+          />
         </div>
       </form>
     </Modal>
-  ) : (
-    <></>
   );
 }

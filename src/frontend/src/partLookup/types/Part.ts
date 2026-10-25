@@ -34,9 +34,8 @@ export type AddNewPartFormData = {
   name: string;
   description: string;
   comment?: string | null;
-  averagePrice: string;
-  internalPartNumber?: string;
-  partURL?: string | null;
+  averagePrice?: string;
+  partURL: string;
   manufacturerName: string;
   manufacturerPartNumber: string;
   stockLevel: number;

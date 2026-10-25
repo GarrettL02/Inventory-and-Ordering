@@ -1,13 +1,40 @@
-import { BackButton } from '../buttons/backButton/BackButton';
+import { useEffect } from 'react';
 
 export interface ModalProps {
   modalTitle: string;
   children: React.ReactNode;
+  /** When provided, enables the X button, Escape key and backdrop-click to close. */
+  onClose?: () => void;
+  /** Pinned below the scrolling body, so action buttons are always visible. */
+  footer?: React.ReactNode;
 }
 
-export function Modal({ modalTitle, children }: ModalProps) {
+export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
+  // Close on Escape
+  useEffect(() => {
+    if (!onClose) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
+  // Lock page scroll while the modal is open
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
   return (
     <div
+      onMouseDown={(e) => {
+        // Only close when the backdrop itself is clicked, not the panel
+        if (onClose && e.target === e.currentTarget) onClose();
+      }}
       style={{
         position: 'fixed',
         top: 0,
@@ -23,14 +50,13 @@ export function Modal({ modalTitle, children }: ModalProps) {
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={modalTitle}
         style={{
-          backdropFilter: 'blur(5px)',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          zIndex: 1000,
-          backgroundColor: 'linear-gradient(135deg, #1e1e1e 0%, #303030 100%)',
+          background: 'linear-gradient(135deg, #1e1e1e 0%, #303030 100%)',
           minHeight: '100px',
           minWidth: '50%',
           maxWidth: '90%',
@@ -42,7 +68,32 @@ export function Modal({ modalTitle, children }: ModalProps) {
           gap: '20px',
         }}
       >
-        <h2>{modalTitle}</h2>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <h2 style={{ margin: 0 }}>{modalTitle}</h2>
+          {onClose && (
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={onClose}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#a7a7a7',
+                cursor: 'pointer',
+                fontSize: '22px',
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+          )}
+        </div>
         <div
           style={{
             width: '100%',
@@ -53,6 +104,20 @@ export function Modal({ modalTitle, children }: ModalProps) {
         >
           {children}
         </div>
+        {footer && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: '10px',
+              paddingTop: '12px',
+              borderTop: '1px solid #4a4a4a',
+            }}
+          >
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

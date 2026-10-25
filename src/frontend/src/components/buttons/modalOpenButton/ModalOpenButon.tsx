@@ -11,27 +11,30 @@ export function ModalOpenButton({
 }: ModalOpenButtonProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  {
-    modalOpen && { modalInfoComponent };
-  }
-
   return (
-    <button
-      onClick={() => setModalOpen(true)}
-      style={{
-        backgroundColor: '#3a0e03',
-        color: 'white',
-        border: '1px solid #bdbdbd',
-        borderRadius: '10px',
-        padding: '10px 20px',
-        fontSize: '12px',
-        fontWeight: 550,
-        cursor: 'pointer',
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#4e0909')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#3a0e03')}
-    >
-      {buttonText}
-    </button>
+    <>
+      <button
+        onClick={() => setModalOpen(true)}
+        style={{
+          backgroundColor: '#3a0e03',
+          color: 'white',
+          border: '1px solid #bdbdbd',
+          borderRadius: '10px',
+          padding: '10px 20px',
+          fontSize: '12px',
+          fontWeight: 550,
+          cursor: 'pointer',
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = '#4e0909')
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = '#3a0e03')
+        }
+      >
+        {buttonText}
+      </button>
+      {modalOpen && modalInfoComponent}
+    </>
   );
 }
