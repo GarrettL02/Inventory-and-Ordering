@@ -9,6 +9,16 @@ import { PartTableDataSchema } from '../../schemas/parts/parts.schema';
 
 const BASE_URL = '/api/parts';
 
+// Build an Error from a failed response, using the message the Nest backend sends
+// ({ message: '...' } for a 400 / 404), or a generic HTTP error if there isn't one
+const responseError = async (res: Response): Promise<Error> => {
+  const body = await res.json().catch(() => null);
+  const message = Array.isArray(body?.message)
+    ? body.message.join(', ')
+    : body?.message;
+  return new Error(message ?? `HTTP error ${res.status}`);
+};
+
 export const getParts = async (
   page: number = 1,
   limit: number = 15,
@@ -68,15 +78,19 @@ export const submitNewPartData = async (
   });
 
   //if the server rejected it, throw its message so the form can show it
-  if (!res.ok) {
-    // Nest sends { message: '...' } for a 400 (validation / bad id)
-    const body = await res.json().catch(() => null);
-    const message = Array.isArray(body?.message)
-      ? body.message.join(', ')
-      : body?.message;
-    throw new Error(message ?? `HTTP error ${res.status}`);
-  }
+  if (!res.ok) throw await responseError(res);
 
   //Else the part was created - validate the returned part with the part ZOD schema
   return PartViewSchema.parse(await res.json());
+};
+
+// Permanently delete a part. The backend answers 204 (no body) when it worked.
+export const deletePartById = async (id: number): Promise<void> => {
+  const res = await fetch(`${BASE_URL}/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  //if the server rejected it (404 = already gone), throw its message
+  if (!res.ok) throw await responseError(res);
 };

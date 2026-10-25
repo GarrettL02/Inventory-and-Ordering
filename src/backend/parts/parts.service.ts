@@ -270,4 +270,34 @@ export class PartService {
 
     return this.getPartById(newPartId);
   }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  DeletePart()
+  //  Permanently delete a part. In one transaction:
+  //    - delete the part's open low stock events (ordered = 0). lowStockEvents has
+  //      no foreign key on purpose (partId 0 = new-part request), so the database
+  //      won't clean these up and they would show up as blank rows
+  //    - delete the part. partDistributors, partAttachments and stockMovements
+  //      are removed automatically (ON DELETE CASCADE)
+  //  Throws 404 if the part doesn't exist.
+  //
+  /////////////////////////////////////////////////////////
+  async deletePart(partId: number): Promise<void> {
+    await this.db.transaction(async (tx) => {
+      //Looks in Low Stock parts to see if part ID is linked, removes from there
+      await tx.run(
+        'DELETE FROM lowStockEvents WHERE partId = ? AND ordered = 0',
+        [partId],
+      );
+
+      //result is query to delete the part from the parts table. this includes attachments and stock movements because of ON delete cascade.
+      const result = await tx.run('DELETE FROM parts WHERE id = ?', [partId]);
+
+      // Nothing was deleted -> no such part. Throwing rolls back the event delete too
+      if (result.affectedRows === 0) {
+        throw new NotFoundException(`Part ${partId} not found`);
+      }
+    });
+  }
 }

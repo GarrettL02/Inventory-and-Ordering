@@ -4,9 +4,15 @@ import { KebabPopUpMenu } from '../../components/kebabMenu/KebabPopUpMenu';
 interface LowStockKebabMenuProps {
   partId: number;
   partURL?: string | null;
+  // When given, 'Delete Part' calls this (e.g. to open a confirm dialog)
+  onDelete?: () => void;
 }
 
-export function LowStockKebabMenu({ partId, partURL }: LowStockKebabMenuProps) {
+export function LowStockKebabMenu({
+  partId,
+  partURL,
+  onDelete,
+}: LowStockKebabMenuProps) {
   const nav = useNavigate();
   return (
     <KebabPopUpMenu
@@ -25,7 +31,8 @@ export function LowStockKebabMenu({ partId, partURL }: LowStockKebabMenuProps) {
           : []),
         {
           label: 'Delete Part',
-          onClick: () => console.log('delete', partId),
+          onClick: () =>
+            onDelete ? onDelete() : console.log('delete', partId),
         },
       ]}
       partId={partId}
