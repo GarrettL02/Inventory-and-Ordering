@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getParts } from '../../services/parts/partsService';
 import { PartTableData } from '../types/Part';
 
@@ -14,8 +14,12 @@ export const useFetchParts = (initialPage: number) => {
     totalPages: number;
   } | null>(null);
   const [search, setSearch] = useState<string>('');
-  // Bumping this re-runs the fetch below (used after a part is added)
+  // Bumping this re-runs the fetch below (used after a part is added, deleted
+  // or has its stock changed)
   const [refreshKey, setRefreshKey] = useState(0);
+  // True when the next fetch is a refetch(): keep the rows on screen instead of
+  // showing the loading state, so expanded rows stay open
+  const silentRefresh = useRef(false);
 
   // Reset to page 1 whenever search text changes
   useEffect(() => {
@@ -24,7 +28,8 @@ export const useFetchParts = (initialPage: number) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      if (!silentRefresh.current) setLoading(true);
+      silentRefresh.current = false;
       setError(null);
       try {
         const data = await getParts(page, 15, search);
@@ -48,6 +53,9 @@ export const useFetchParts = (initialPage: number) => {
     setPage,
     search,
     setSearch,
-    refetch: () => setRefreshKey((key) => key + 1),
+    refetch: () => {
+      silentRefresh.current = true;
+      setRefreshKey((key) => key + 1);
+    },
   };
 };
