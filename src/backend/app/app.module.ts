@@ -7,6 +7,7 @@ import { PartModule } from '../parts/parts.module';
 import { AuthModule } from '../auth/auth.module';
 import { DigikeyModule } from '../digikey/digikey.module';
 import { StockMovementsModule } from '../stockMovements/stockMovements.module';
+import { StorageLocationsModule } from '../storageLocations/storageLocations.module';
 
 const frontendBuildPath =
   process.env.FRONTEND_BUILD_PATH ??
@@ -26,6 +27,7 @@ console.log('Serving static from:', frontendBuildPath);
     AuthModule,
     DigikeyModule,
     StockMovementsModule,
+    StorageLocationsModule,
   ],
 })
 export class AppModule {}

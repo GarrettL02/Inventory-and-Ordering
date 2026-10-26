@@ -11,7 +11,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
 import type { AuthUser } from '../auth/schema/auth.schema';
 import { parseOrBadRequest } from '../common/parseOrBadRequest';
-import { StockMovementsService } from './stockMovements.services';
+import { StockMovementsService } from './stockMovements.service';
 import { AdjustStockSchema } from './schema/stockMovements.schema';
 
 @Controller('stockmovements')

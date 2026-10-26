@@ -1,5 +1,4 @@
 import z from 'zod';
-import { PartTableDataSchema } from '../../schemas/parts/parts.schema';
 import { StockMovementsData } from '../../types/stockMovements/stockMovements';
 import {
   AdjustStockResult,
