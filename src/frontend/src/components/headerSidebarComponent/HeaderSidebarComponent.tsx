@@ -48,12 +48,6 @@ export function HeaderSidebarComponent({
       icon: <PartsOrderedIcon />,
       lineBreak: true,
     },
-    {
-      name: 'Settings',
-      location: '/settings',
-      icon: <SettingsIcon />,
-      lineBreak: false,
-    },
   ];
 
   return (
