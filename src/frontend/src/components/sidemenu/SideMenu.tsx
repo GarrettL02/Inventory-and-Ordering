@@ -1,5 +1,6 @@
 import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import { NavLink } from 'react-router';
+import { SettingsIcon } from '../icons/SettingsIcon';
 
 interface SideMenuLinks {
   name: string;
@@ -75,6 +76,7 @@ export function SideMenu({
           alignItems: 'center',
           paddingTop: '100px',
           gap: 30,
+          marginBottom: '5px',
         }}
       >
         {menuLinks.map((link) => (
@@ -115,6 +117,40 @@ export function SideMenu({
             </>
           </>
         ))}
+        <NavLink
+          to="/settings"
+          style={({ isActive }) => ({
+            ...linkStyle({ isActive }),
+            position: 'absolute',
+            bottom: 0,
+          })}
+        >
+          <>
+            <span
+              style={{
+                width: isExpanded ? 'auto' : 0,
+                paddingRight: isExpanded ? '10px' : 0,
+                minWidth: 0,
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                display: 'inline-block',
+                transition: 'width 0.3s ease, padding-right 0.3s ease',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  transform: isExpanded ? 'translateX(0)' : 'translateX(-100%)',
+                  opacity: isExpanded ? 1 : 0,
+                  transition: 'transform 0.3s ease, opacity 0.2s ease',
+                }}
+              >
+                Settings
+              </span>
+            </span>
+            <SettingsIcon />
+          </>
+        </NavLink>
       </div>
     </div>
   );
