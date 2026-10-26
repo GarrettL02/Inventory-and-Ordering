@@ -41,7 +41,7 @@ export function PartDetailsPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr .5fr ',
+                gridTemplateColumns: '1fr .7fr',
                 gap: '20px',
               }}
             >

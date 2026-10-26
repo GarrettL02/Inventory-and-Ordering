@@ -47,82 +47,105 @@ export function StockHistorySection({
   );
 
   return (
+    // Wrapper takes part in the grid layout but contributes only a minimum
+    // height, so the neighbouring column decides how tall the row is
     <div
       style={{
-        border: '2px solid #ccc',
-        borderRadius: '10px',
-        backgroundColor: '#212121',
-        padding: '20px',
+        position: 'relative',
+        minHeight: '400px',
         marginBlock: '30px',
       }}
     >
+      {/* Inner box fills the wrapper exactly; only the table scrolls inside it */}
       <div
         style={{
+          position: 'absolute',
+          inset: 0,
           display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: '18px',
-          fontWeight: 500,
-          marginBottom: '12px',
+          flexDirection: 'column',
+          border: '2px solid #ccc',
+          borderRadius: '10px',
+          backgroundColor: '#212121',
+          padding: '20px',
         }}
       >
-        Stock History
-        <StockChangeComponent
-          partId={partId}
-          stockLevel={stockLevel}
-          onChanged={() => {
-            refetch(); // the history table below
-            onStockChanged?.(); // the part's stock level on the page
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '18px',
+            fontWeight: 500,
+            marginBottom: '12px',
+            flexShrink: 0,
           }}
-        />
-      </div>
-
-      {loading && <div>Loading...</div>}
-      {error && <div style={{ color: '#ff6b6b' }}>{error}</div>}
-      {!loading && !error && movements.length === 0 && (
-        <div>No stock changes yet.</div>
-      )}
-
-      {movements.length > 0 && (
-        <div style={{ maxHeight: '320px', overflow: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th style={headerCell}>Date</th>
-                <th style={headerCell}>Changed By</th>
-                <th style={{ ...headerCell, textAlign: 'right' }}>Change</th>
-                <th style={{ ...headerCell, textAlign: 'right' }}>
-                  Resulting Stock
-                </th>
-                <th style={headerCell}>Reason</th>
-              </tr>
-            </thead>
-            <tbody>
-              {movements.map((movement) => (
-                <tr key={movement.id}>
-                  <td style={{ ...cell, whiteSpace: 'nowrap' }}>
-                    {formatDate(movement.createdAt)}
-                  </td>
-                  <td style={cell}>{movement.userName ?? 'System'}</td>
-                  <td
-                    style={{
-                      ...cell,
-                      textAlign: 'right',
-                      fontWeight: 600,
-                      color: movement.delta > 0 ? '#5fd38d' : '#ff6b6b',
-                    }}
-                  >
-                    {formatDelta(movement.delta)}
-                  </td>
-                  <td style={{ ...cell, textAlign: 'right' }}>
-                    {movement.stockLevelAfter}
-                  </td>
-                  <td style={cell}>{movement.reason}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        >
+          Stock History
+          <StockChangeComponent
+            partId={partId}
+            stockLevel={stockLevel}
+            onChanged={() => {
+              refetch(); // the history table below
+              onStockChanged?.(); // the part's stock level on the page
+            }}
+          />
         </div>
-      )}
+
+        {loading && <div>Loading...</div>}
+        {error && <div style={{ color: '#ff6b6b' }}>{error}</div>}
+        {!loading && !error && movements.length === 0 && (
+          <div>No stock changes yet.</div>
+        )}
+
+        {movements.length > 0 && (
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto',
+              overflowX: 'hidden',
+            }}
+          >
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={headerCell}>Date</th>
+                  <th style={headerCell}>Changed By</th>
+                  <th style={{ ...headerCell, textAlign: 'right' }}>Change</th>
+                  <th style={{ ...headerCell, textAlign: 'right' }}>
+                    Resulting Stock
+                  </th>
+                  <th style={headerCell}>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                {movements.map((movement) => (
+                  <tr key={movement.id}>
+                    <td style={cell}>{formatDate(movement.createdAt)}</td>
+                    <td style={cell}>{movement.userName ?? 'System'}</td>
+                    <td
+                      style={{
+                        ...cell,
+                        textAlign: 'right',
+                        fontWeight: 600,
+                        color: movement.delta > 0 ? '#5fd38d' : '#ff6b6b',
+                      }}
+                    >
+                      {formatDelta(movement.delta)}
+                    </td>
+                    <td style={{ ...cell, textAlign: 'right' }}>
+                      {movement.stockLevelAfter}
+                    </td>
+                    {/* Date and reason can wrap; the other columns stay on one line */}
+                    <td style={{ ...cell, overflowWrap: 'anywhere' }}>
+                      {movement.reason}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

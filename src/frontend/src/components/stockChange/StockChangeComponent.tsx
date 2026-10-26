@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAdjustStock } from '../../hooks/stockMovements/useAdjustStock';
+import { useToast } from '../toast/ToastProvider';
 
 export interface StockChangeComponentProps {
   partId: number;
@@ -44,6 +45,7 @@ export function StockChangeComponent({
   const [reason, setReason] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
   const { adjustStock, loading, error } = useAdjustStock();
+  const { showToast } = useToast();
 
   const amount = Number(stockAmount);
   const validAmount = Number.isInteger(amount) && amount >= 1;
@@ -65,6 +67,11 @@ export function StockChangeComponent({
 
     setStockAmount('1');
     setReason('');
+    showToast(
+      direction === 1
+        ? `Added ${amount} to stock`
+        : `Removed ${amount} from stock`,
+    );
     if (result.lowStockEventId !== null) {
       setNotice(
         `Below minimum stock (${result.minStockLevel}) - this part is on the low stock list.`,
