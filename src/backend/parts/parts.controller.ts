@@ -17,7 +17,6 @@ import { CurrentUser } from '../auth/currentUser.decorator';
 import type { AuthUser } from '../auth/schema/auth.schema';
 import { parseOrBadRequest } from '../common/parseOrBadRequest';
 import {
-  AdjustStockSchema,
   CreatePartSchema,
   PartsQuerySchema,
 } from './schema/parts.schema';
@@ -45,17 +44,6 @@ export class PartController {
   @Get(':id')
   async getPartById(@Param('id', ParseIntPipe) id: number) {
     return this.partService.getPartById(id);
-  }
-
-  // Body: { "delta": -2, "reason": "used on job" }  (reason is optional)
-  @Post(':id/stock')
-  async adjustStock(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ) {
-    const input = parseOrBadRequest(AdjustStockSchema, body);
-    return this.partService.adjustStock(id, user.id, input);
   }
 
   // Permanently deletes the part (and its stock history, attachments, open low stock events)

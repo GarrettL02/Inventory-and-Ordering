@@ -5,13 +5,11 @@ import {
 } from '@nestjs/common';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
+import { StockMovementsService } from '../stockMovements/stockMovements.services';
 import {
-  AdjustStockDto,
-  AdjustStockResult,
   CreatePartDto,
   GetAllPartsDataRowArraySchema,
   PartDetailsDataRowArraySchema,
-  PartStockRowArraySchema,
 } from './schema/parts.schema';
 import { TotalRowSchema } from '../common/schema/common.schema';
 
@@ -20,6 +18,7 @@ export class PartService {
   constructor(
     private readonly db: InventoryDatabaseService,
     private readonly lowStockService: LowStockService,
+    private readonly stockMovementsService: StockMovementsService,
   ) {}
 
   ///////////////////////////////////////////////////////////
@@ -129,64 +128,6 @@ export class PartService {
 
   /////////////////////////////////////////////////////////
   //
-  //  AdjustStock()
-  //  Change a part's stock by delta, log it in stockMovements, and create or
-  //  update the low stock event if the part is now below its minimum.
-  //  Everything happens in one transaction, so it all succeeds or none of it does.
-  //
-  /////////////////////////////////////////////////////////
-  async adjustStock(
-    partId: number,
-    userId: number | null,
-    input: AdjustStockDto,
-  ): Promise<AdjustStockResult> {
-    return this.db.transaction(async (tx) => {
-      // Lock the row so two changes at the same time can't overwrite each other
-      const rows = await tx.query(
-        'SELECT id, stockLevel, minStockLevel FROM parts WHERE id = ? FOR UPDATE',
-        [partId],
-      );
-      const part = PartStockRowArraySchema.parse(rows)[0];
-
-      if (!part) {
-        throw new NotFoundException(`Part ${partId} not found`);
-      }
-
-      const newStockLevel: number = part.stockLevel + input.delta;
-
-      if (newStockLevel < 0) {
-        throw new BadRequestException('Stock level cannot go below 0');
-      }
-
-      await tx.run('UPDATE parts SET stockLevel = ? WHERE id = ?', [
-        newStockLevel,
-        partId,
-      ]);
-
-      await tx.run(
-        `INSERT INTO stockMovements (partId, delta, stockLevelAfter, reason, userId)
-         VALUES (?, ?, ?, ?, ?)`,
-        [partId, input.delta, newStockLevel, input.reason, userId],
-      );
-
-      const lowStockEventId = await this.lowStockService.syncForPart(
-        tx,
-        partId,
-        newStockLevel,
-        part.minStockLevel,
-      );
-
-      return {
-        partId,
-        stockLevel: newStockLevel,
-        minStockLevel: part.minStockLevel,
-        lowStockEventId,
-      };
-    });
-  }
-
-  /////////////////////////////////////////////////////////
-  //
   //  CreatePart()
   //  Add a new part (the Add New Part form). In one transaction:
   //    - insert the part (internalPartNumber = manufacturerPartNumber)
@@ -248,13 +189,15 @@ export class PartService {
       );
       const partId = result.insertId;
 
-      // If stockLevel > 0, insert into stockMovements table.
+      // If stockLevel > 0, log the starting stock in the stock history.
       if (input.stockLevel > 0) {
-        await tx.run(
-          `INSERT INTO stockMovements (partId, delta, stockLevelAfter, reason, userId)
-           VALUES (?, ?, ?, ?, ?)`,
-          [partId, input.stockLevel, input.stockLevel, 'initial stock', userId],
-        );
+        await this.stockMovementsService.record(tx, {
+          partId,
+          delta: input.stockLevel,
+          stockLevelAfter: input.stockLevel,
+          reason: 'initial stock',
+          userId,
+        });
       }
 
       // Returns null (and does nothing) when the part isn't below its minimum

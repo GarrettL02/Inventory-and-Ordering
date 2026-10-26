@@ -1,16 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import { useFetchPartsById } from '../hooks/useFetchPartsById';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
-import { useState } from 'react';
+import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 
 export interface PartCardDetailsProps {
   partId: number;
+  // Called after this part's stock was changed, so the page can refresh the table row
+  onStockChanged?: () => void;
 }
 
-export function PartCardDetails({ partId }: PartCardDetailsProps) {
-  const { parts, loading, error } = useFetchPartsById(partId);
+export function PartCardDetails({
+  partId,
+  onStockChanged,
+}: PartCardDetailsProps) {
+  const { parts, loading, error, refetch } = useFetchPartsById(partId);
   const nav = useNavigate();
-  const [stockAmount, setStockAmount] = useState('1');
 
   if (loading)
     return <div style={{ fontSize: '13px' }}>Loading part details...</div>;
@@ -67,75 +71,14 @@ export function PartCardDetails({ partId }: PartCardDetailsProps) {
         <div style={{ gridColumn: 'span 3' }}>
           <TableDataDropFields label="Comments" value={parts.comment} />
         </div>
-        <div
-          style={{
-            gridColumn: 'span 2',
-            display: 'flex',
-            gap: '10px',
-            height: '20px',
+        <StockChangeComponent
+          partId={partId}
+          stockLevel={parts.stockLevel}
+          onChanged={() => {
+            refetch(); // the numbers in this details panel
+            onStockChanged?.(); // the Stock Level column in the table row
           }}
-        >
-          <input
-            type="number"
-            min={1}
-            max={parts.stockLevel}
-            step={1}
-            style={{
-              borderRadius: '5px',
-              paddingInline: '6px',
-              width: '60px',
-              fontSize: '12px',
-            }}
-            value={stockAmount}
-            onChange={(e) => setStockAmount(e.target.value)}
-            onBlur={() => {
-              // If they clear it or type something invalid, snap back to 1
-              if (
-                !stockAmount ||
-                Number(stockAmount) < 1 ||
-                Number(stockAmount) > parts.stockLevel
-              )
-                setStockAmount('1');
-            }}
-          />
-          <button
-            disabled={parts.stockLevel === 0}
-            style={{
-              borderRadius: '5px',
-              paddingInline: '6px',
-              fontSize: '12px',
-              cursor: 'pointer',
-              color: '#000000',
-              backgroundColor: '#e1e1e1',
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#8c8c8c')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = '#e1e1e1')
-            }
-          >
-            Remove Stock
-          </button>
-          <button
-            style={{
-              borderRadius: '5px',
-              paddingInline: '6px',
-              fontSize: '12px',
-              cursor: 'pointer',
-              color: '#000000',
-              backgroundColor: '#e1e1e1',
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#8c8c8c')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = '#e1e1e1')
-            }
-          >
-            Add Stock
-          </button>
-        </div>
+        />
       </div>
 
       {/* Footer Navigation Buttons */}

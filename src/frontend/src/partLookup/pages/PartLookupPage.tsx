@@ -157,6 +157,7 @@ export function PartLookupPage() {
               <PartTableCard
                 key={part.id}
                 partData={part}
+                onStockChanged={refetch}
                 onDeleted={() => {
                   // Deleted the last row on this page -> go back a page (that triggers a fetch)
                   if (parts.length === 1 && page > 1) setPage(page - 1);

@@ -10,9 +10,15 @@ export interface LowStockTableCardProps {
   partData: PartTableData;
   // Called after this part was deleted, so the page can refresh its table
   onDeleted?: () => void;
+  // Called after this part's stock was changed, so the page can refresh its table
+  onStockChanged?: () => void;
 }
 
-export function PartTableCard({ partData, onDeleted }: LowStockTableCardProps) {
+export function PartTableCard({
+  partData,
+  onDeleted,
+  onStockChanged,
+}: LowStockTableCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const overflowSectionStyle = {
     paddingInline: '2%',
@@ -110,7 +116,12 @@ export function PartTableCard({ partData, onDeleted }: LowStockTableCardProps) {
           </td>
         </>
       }
-      expandedContent={<PartCardDetails partId={partData.id} />}
+      expandedContent={
+        <PartCardDetails
+          partId={partData.id}
+          onStockChanged={onStockChanged}
+        />
+      }
     />
   );
 }

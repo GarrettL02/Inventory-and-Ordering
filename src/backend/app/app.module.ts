@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PartModule } from '../parts/parts.module';
 import { AuthModule } from '../auth/auth.module';
 import { DigikeyModule } from '../digikey/digikey.module';
+import { StockMovementsModule } from '../stockMovements/stockMovements.module';
 
 const frontendBuildPath =
   process.env.FRONTEND_BUILD_PATH ??
@@ -24,6 +25,7 @@ console.log('Serving static from:', frontendBuildPath);
     PartModule,
     AuthModule,
     DigikeyModule,
+    StockMovementsModule,
   ],
 })
 export class AppModule {}
