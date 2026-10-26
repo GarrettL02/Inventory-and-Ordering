@@ -13,6 +13,7 @@ import { ErrorPage } from '../components/errorPage/ErrorPage';
 import { AuthGate } from '../auth/AuthGate';
 import { LoginPage } from '../auth/LoginPage';
 import { PartLookupPage } from '../partLookup/pages/PartLookupPage';
+import { SettingsPage } from '../settings/SettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
       // --------------- Routes for settings -----------------
       {
         path: '/settings',
-        element: <PartLookupPage />,
+        element: <SettingsPage />,
       },
       //--------------- Routes for forms -----------------
       {
