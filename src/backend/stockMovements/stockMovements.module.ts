@@ -1,9 +1,9 @@
 import { AuthModule } from '../auth/auth.module';
 import { DatabaseModule } from '../databaseService/database.module';
 import { LowStockModule } from '../lowStockEvent/lowStockEvent.module';
-import { StockMovementsService } from './stockMovements.services';
 import { StockMovementsController } from './stockMovements.controller';
 import { Module } from '@nestjs/common';
+import { StockMovementsService } from './stockMovements.service';
 
 @Module({
   //specify the controllers that will be used for PartModule specifies the routes and functions to get to the data

@@ -1,9 +1,10 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Modal } from '../../components/modal/Modal';
 import {
   FormInputs,
   FormInputOption,
 } from '../../components/form/FormInputProps';
+import { SearchableSelect } from '../../components/formInputs/SearchableSelect';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { AddNewPartFormData } from '../types/Part';
@@ -56,6 +57,7 @@ export function AddNewPartForm({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -199,15 +201,22 @@ export function AddNewPartForm({
           }}
           inputErrors={<FieldError message={errors.minStockLevel?.message} />}
         />
-        <FormInputs
-          label="Storage Location"
-          inputType="select"
-          options={storageLocations}
-          placeholderOption="Not set"
-          inputWidth={90}
-          inputParams={{
-            ...register('storageLocationId', { setValueAs: toIdOrNull }),
-          }}
+        {/* Type to filter the locations. Controller connects it to the form,
+            since it isn't a plain <input> that register() can attach to */}
+        <Controller
+          name="storageLocationId"
+          control={control}
+          render={({ field }) => (
+            <SearchableSelect
+              label="Storage Location"
+              options={storageLocations}
+              placeholderOption="Not set"
+              inputWidth={90}
+              value={field.value}
+              onChange={field.onChange}
+              required={true}
+            />
+          )}
         />
         <FormInputs
           label="Category"

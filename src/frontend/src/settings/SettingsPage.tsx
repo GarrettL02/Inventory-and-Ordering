@@ -1,4 +1,5 @@
 import { AccordianMenu } from '../components/accordianMenu/AccordianMenu';
+import { StorageLocationListComponent } from './components/StorageLocationListComponent';
 
 export function SettingsPage() {
   return (
@@ -23,7 +24,7 @@ export function SettingsPage() {
         <div style={{ gridColumn: 'span 2' }}>
           <AccordianMenu title={'Notification Settings'}>data</AccordianMenu>
         </div>
-        <AccordianMenu title={'Storage Locations'}>data</AccordianMenu>
+        <StorageLocationListComponent />
         <AccordianMenu title={'Categories'}>data</AccordianMenu>
       </div>
     </div>

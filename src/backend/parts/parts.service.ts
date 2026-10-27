@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
-import { StockMovementsService } from '../stockMovements/stockMovements.services';
+import { StockMovementsService } from '../stockMovements/stockMovements.service';
 import {
   CreatePartDto,
   GetAllPartsDataRowArraySchema,
