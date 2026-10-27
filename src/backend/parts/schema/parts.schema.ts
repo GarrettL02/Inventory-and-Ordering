@@ -44,6 +44,7 @@ export const GetAllPartsDataSchema = z.object({
   averagePrice: z.string(),
   storageLocation: z.string().nullable(),
   stockLevel: z.number(),
+  minStockLevel: z.number(),
 });
 
 export const GetAllPartsDataRowArraySchema = z.array(GetAllPartsDataSchema);

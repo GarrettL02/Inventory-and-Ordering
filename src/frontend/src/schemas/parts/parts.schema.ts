@@ -9,6 +9,7 @@ export const PartTableDataSchema = z.object({
   averagePrice: z.string(),
   storageLocation: z.string().optional().nullable(),
   stockLevel: z.number(),
+  minStockLevel: z.number(),
 });
 
 export type Part = z.infer<typeof PartTableDataSchema>;

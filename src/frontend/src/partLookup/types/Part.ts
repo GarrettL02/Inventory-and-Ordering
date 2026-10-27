@@ -6,6 +6,7 @@ export interface PartTableData {
   averagePrice: string;
   storageLocation?: string | null;
   stockLevel: number;
+  minStockLevel: number;
 }
 
 export interface PartDetails {

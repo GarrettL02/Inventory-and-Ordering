@@ -5,6 +5,7 @@ import { LowStockKebabMenu } from '../../lowStockParts/kebabMenuActions/LowStock
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { PartCardDetails } from './PartTableDetails';
 import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
+import { WarningIcon } from '../../components/icons/WarningIcon';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;
@@ -45,9 +46,22 @@ export function PartTableCard({
             <td
               style={{
                 borderLeft: '2px solid transparent',
+                display: 'flex',
+                alignItems: 'center',
                 ...overflowSectionStyle,
               }}
             >
+              {partData.stockLevel < partData.minStockLevel && (
+                <span
+                  style={{
+                    color: 'rgb(255, 114, 33)',
+                    fontWeight: 'bold',
+                    marginRight: '6px',
+                  }}
+                >
+                  <WarningIcon />
+                </span>
+              )}
               {partData.name}
             </td>
           </div>
@@ -117,10 +131,7 @@ export function PartTableCard({
         </>
       }
       expandedContent={
-        <PartCardDetails
-          partId={partData.id}
-          onStockChanged={onStockChanged}
-        />
+        <PartCardDetails partId={partData.id} onStockChanged={onStockChanged} />
       }
     />
   );
