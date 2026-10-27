@@ -4,11 +4,16 @@ import { GeneralButton } from '../../components/buttons/generalButton/GeneralBut
 import { useToast } from '../../components/toast/ToastProvider';
 import { useAddStorageLocation } from '../../hooks/storageLocation/useAddStorageLocation';
 import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
+import { StorageLocationData } from '../../types/storageLocation/storageLocation';
+import { TrashRemoveIcon } from '../../components/icons/TrashRemoveIcon';
+import { ConfirmDeleteStorageLocationModal } from './ConfirmDeleteStorageLocationModal';
 
 // Hover highlight can't be done with inline styles, so it lives in a tiny <style>
 const LIST_CSS = `
   .storage-location-row { transition: background-color 0.15s ease; }
   .storage-location-row:hover { background-color: #ffffff14; }
+  .storage-location-delete { color: #a7a7a7; transition: color 0.15s ease; }
+  .storage-location-delete:hover { color: #ff6b6b; }
 `;
 
 const messageStyle = {
@@ -31,6 +36,10 @@ export function StorageLocationListComponent() {
 
   // What the user is typing in the "add" box
   const [newName, setNewName] = useState('');
+
+  // The location whose delete confirmation is open (null = no modal)
+  const [locationToDelete, setLocationToDelete] =
+    useState<StorageLocationData | null>(null);
 
   // A-Z, with numbers sorted as numbers so "Bin 2" comes before "Bin 10"
   const sortedLocations = useMemo(
@@ -58,6 +67,12 @@ export function StorageLocationListComponent() {
     refetch(); // reload the list so the new location shows up
   };
 
+  // Called by the modal after the delete went through
+  const handleDeleted = (name: string) => {
+    showToast(`Deleted storage location "${name}"`);
+    refetch(); // reload the list so the location disappears
+  };
+
   return (
     <AccordianMenu
       title="Storage Locations"
@@ -65,6 +80,15 @@ export function StorageLocationListComponent() {
       closedExtraText={!loading && !error ? countLabel : undefined}
     >
       <style>{LIST_CSS}</style>
+
+      {locationToDelete && (
+        <ConfirmDeleteStorageLocationModal
+          storageLocationId={locationToDelete.id}
+          storageLocationName={locationToDelete.name}
+          onClose={() => setLocationToDelete(null)}
+          onDeleted={() => handleDeleted(locationToDelete.name)}
+        />
+      )}
 
       {/* ---------- Add a location ---------- */}
       <form
@@ -172,6 +196,25 @@ export function StorageLocationListComponent() {
                   }}
                 />
                 {location.name}
+                <button
+                  type="button"
+                  className="storage-location-delete"
+                  aria-label={`Delete storage location ${location.name}`}
+                  title="Delete"
+                  onClick={() => setLocationToDelete(location)}
+                  style={{
+                    marginLeft: 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    background: 'transparent',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                >
+                  <TrashRemoveIcon />
+                </button>
               </li>
             ))}
           </ul>

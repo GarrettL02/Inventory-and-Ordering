@@ -59,3 +59,20 @@ export const createStorageLocation = async (
   const json = await res.json();
   return StorageLocationDataSchema.parse(json.data);
 };
+
+export const deleteStorageLocation = async (
+  storageLocationId: number,
+): Promise<void> => {
+  const res = await fetch(`${BASE_URL}/${storageLocationId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    // 404 (not found) and 409 (parts still stored there) come with a message from the backend
+    const body = await res.json().catch(() => null);
+    const message = Array.isArray(body?.message)
+      ? body.message.join(', ')
+      : body?.message;
+    throw new Error(message ?? `HTTP error ${res.status}`);
+  }
+};

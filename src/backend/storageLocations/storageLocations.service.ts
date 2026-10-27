@@ -101,4 +101,42 @@ export class StorageLocationsService {
 
     return this.getStorageLocationById(newId);
   }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  DeleteStorageLocation()
+  //  Permanently delete a storage location. In one transaction:
+  //    - delete the part's open low stock events (ordered = 0). lowStockEvents has
+  //      no foreign key on purpose (partId 0 = new-part request), so the database
+  //      won't clean these up and they would show up as blank rows
+  //    - delete the storage location. related entries are removed automatically (ON DELETE CASCADE)
+  //  Throws 404 if the storage location doesn't exist.
+  //
+  /////////////////////////////////////////////////////////
+  async deleteStorageLocation(storageLocationId: number): Promise<void> {
+    await this.db.transaction(async (tx) => {
+      // Count parts still using this location
+      const rows = await tx.query(
+        'SELECT COUNT(*) AS total FROM parts WHERE storageLocationId = ?',
+        [storageLocationId],
+      );
+      const total = Number(rows[0].total);
+
+      if (total > 0) {
+        throw new ConflictException(
+          `Can't delete this storage location: ${total} part${total === 1 ? ' is' : 's are'} still stored there. Move them first.`,
+        );
+      }
+
+      const result = await tx.run('DELETE FROM storageLocations WHERE id = ?', [
+        storageLocationId,
+      ]);
+
+      if (result.affectedRows === 0) {
+        throw new NotFoundException(
+          `Storage location ${storageLocationId} not found`,
+        );
+      }
+    });
+  }
 }

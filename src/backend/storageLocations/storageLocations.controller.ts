@@ -6,6 +6,9 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { StorageLocationsService } from './storageLocations.service';
 import { AuthGuard } from '../auth/auth.guard';
@@ -43,5 +46,15 @@ export class StorageLocationsController {
     return this.storageLocationService.getStorageLocationById(
       storageLocationId,
     );
+  }
+
+  // Permanently deletes the storage location
+  // -> 204 No Content, or 404 if there is no such storage location
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteStorageLocation(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    await this.storageLocationService.deleteStorageLocation(id);
   }
 }
