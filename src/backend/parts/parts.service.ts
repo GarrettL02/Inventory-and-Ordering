@@ -59,7 +59,7 @@ export class PartService {
     }
 
     const sql = `
-      SELECT p.id, p.name, p.description, p.comment, p.averagePrice, sl.name AS storageLocation, p.stockLevel
+      SELECT p.id, p.name, p.description, p.comment, p.averagePrice, sl.name AS storageLocation, p.stockLevel, p.minStockLevel
       FROM parts AS p
       LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
