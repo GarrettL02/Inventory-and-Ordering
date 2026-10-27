@@ -1,12 +1,16 @@
 import {
+  Body,
   Controller,
   UseGuards,
   Get,
   Param,
   ParseIntPipe,
+  Post,
 } from '@nestjs/common';
 import { StorageLocationsService } from './storageLocations.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { parseOrBadRequest } from '../common/parseOrBadRequest';
+import { CreateStorageLocationSchema } from './schema/storageLocations.schema';
 
 @Controller('storagelocations')
 @UseGuards(AuthGuard)
@@ -21,6 +25,16 @@ export class StorageLocationsController {
     return this.storageLocationService.getAllStorageLocations();
   }
 
+  // Add a new storage location. Body: { "name": "Shelf A - Bin 3" }
+  // -> 201 with { data: { id, name } }
+  // -> 400 if the name is missing / empty / too long, 409 if the name already exists
+  @Post()
+  async createStorageLocation(@Body() body: unknown) {
+    // Check the body is what we expect (throws a 400 if not), then hand it to the service
+    const input = parseOrBadRequest(CreateStorageLocationSchema, body);
+    return this.storageLocationService.createStorageLocation(input);
+  }
+
   // Get a storage location by its ID
   @Get(':id')
   async getStorageLocationsById(
@@ -30,18 +44,4 @@ export class StorageLocationsController {
       storageLocationId,
     );
   }
-
-  // Add or remove stock for a part (id = the part's id).
-  // Body: { "delta": -2, "reason": "used on job" }
-  //   delta > 0 adds stock, delta < 0 removes it, reason is optional
-  // -> 201 with { partId, stockLevel, minStockLevel, lowStockEventId }
-  //   @Post(':id')
-  //   async adjustStock(
-  //     @Param('id', ParseIntPipe) partId: number,
-  //     @Body() body: unknown,
-  //     @CurrentUser() user: AuthUser,
-  //   ) {
-  //     const input = parseOrBadRequest(AdjustStockSchema, body);
-  //     return this.stockMovementsService.adjustStock(partId, user.id, input);
-  //   }
 }

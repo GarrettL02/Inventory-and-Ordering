@@ -12,3 +12,21 @@ export const StorageLocationDataSchema = z.object({
   id: z.number(),
   name: z.string(),
 });
+
+////////////////////////////////////////////////////////
+//
+// Create Storage Location Request Schema
+// (body of POST /storagelocations - just the name)
+//
+////////////////////////////////////////////////////////
+export const CreateStorageLocationSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, 'name is required')
+    .max(255, 'name must be 255 characters or less'),
+});
+
+export type CreateStorageLocationDto = z.infer<
+  typeof CreateStorageLocationSchema
+>;

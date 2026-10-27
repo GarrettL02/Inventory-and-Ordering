@@ -7,6 +7,8 @@ import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { useFetchParts } from '../hooks/useFetchParts';
 import { PartTableCard } from '../table/PartTableCard';
 import { AddNewPartForm } from '../forms/AddNewPartForm';
+import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
+import { FormInputOption } from '../../components/form/FormInputProps';
 
 export function PartLookupPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +30,14 @@ export function PartLookupPage() {
     setSearch,
     refetch,
   } = useFetchParts(pageFromUrl);
+
+  // Storage locations for the Add New Part form's dropdown
+  const { storageLocationData } = useFetchAllStorageLocations();
+
+  // The dropdown wants { value, label }, the API gives { id, name }
+  const storageLocationOptions: FormInputOption[] = storageLocationData.map(
+    (location) => ({ value: location.id, label: location.name }),
+  );
 
   // Sync URL when page changes
   useEffect(() => {
@@ -83,6 +93,7 @@ export function PartLookupPage() {
         <AddNewPartForm
           onClose={() => setModalOpen(false)}
           onCreated={refetch}
+          storageLocations={storageLocationOptions}
         />
       )}
       <div

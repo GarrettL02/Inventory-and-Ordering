@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { getstorageLocationDataById } from '../../services/storageLocation/storageLocationService';
+import { getStorageLocationDataById } from '../../services/storageLocation/storageLocationService';
 import { StorageLocationData } from '../../types/storageLocation/storageLocation';
 
 export const useFetchStorageLocationDataById = (storageLocationId: number) => {
-  const [storageLocationData, setStorageLocationData] = useState<
-    StorageLocationData[]
-  >([]);
+  // One location (the backend returns a single object for this endpoint), or null until loaded
+  const [storageLocationData, setStorageLocationData] =
+    useState<StorageLocationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // Bumping this re-runs the fetch below (used after the stock is changed)
@@ -20,7 +20,7 @@ export const useFetchStorageLocationDataById = (storageLocationId: number) => {
       silentRefresh.current = false;
       setError(null);
       try {
-        const data = await getstorageLocationDataById(storageLocationId);
+        const data = await getStorageLocationDataById(storageLocationId);
         setStorageLocationData(data.data);
       } catch (err: any) {
         setError(err.message);
