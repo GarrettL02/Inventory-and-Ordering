@@ -56,8 +56,8 @@ export function LowStockPage() {
   return (
     <div
       style={{
-        width: isCartExpanded ? '68%' : '90%',
-        maxWidth: '90%',
+        width: isCartExpanded ? '68%' : '88%',
+        maxWidth: '88%',
         transition: 'width 0.3s ease',
         boxSizing: 'border-box',
         overflow: 'hidden',
