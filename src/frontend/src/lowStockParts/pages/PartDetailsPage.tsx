@@ -8,6 +8,7 @@ import { ReadOnlyInfoSection } from '../../components/readOnly/ReadOnlyInfoSecti
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { DistributorAccordian } from '../../components/distributorAccordian/DistributorAccordian';
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
+import { PartImageSection } from '../../partLookup/components/PartImageSection';
 
 export function PartDetailsPage() {
   const { partId } = useLoaderData() as { partId: number };
@@ -108,18 +109,13 @@ export function PartDetailsPage() {
                     distributorName={parts?.manufacturerName}
                   />
                 )}
-                <AccordianMenu title="Attachments" shrinkable>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '4fr',
-                    }}
-                  >
-                    <div style={{ gridColumn: 1 }}>
-                      <ReadOnlyInfoSection title={'Images'} information={''} />
-                    </div>
-                  </div>
-                </AccordianMenu>
+
+                <PartImageSection
+                  partId={partId}
+                  partName={parts?.name ?? ''}
+                  filename={parts?.filename}
+                  onChanged={refetch}
+                />
               </div>
               <StockHistorySection
                 partId={partId}

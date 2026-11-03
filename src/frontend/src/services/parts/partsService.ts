@@ -94,3 +94,39 @@ export const deletePartById = async (id: number): Promise<void> => {
   //if the server rejected it (404 = already gone), throw its message
   if (!res.ok) throw await responseError(res);
 };
+
+// URL of a part's picture, for an <img src>. Pass the part's `filename` as the
+// version: the file name changes on every upload, so a replaced picture isn't
+// shown from the browser cache. Only use it when the part has a picture
+// (filename is set), otherwise the request is a 404.
+export const partImageUrl = (partId: number, filename?: string | null) =>
+  `${BASE_URL}/${partId}/image${filename ? `?v=${encodeURIComponent(filename)}` : ''}`;
+
+// Upload or replace a part's picture. The file is sent as the raw request body
+// (no FormData) with its own Content-Type; the file name goes in a header.
+export const uploadPartImage = async (
+  partId: number,
+  file: File,
+): Promise<void> => {
+  const res = await fetch(`${BASE_URL}/${partId}/image`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type,
+      'X-File-Name': encodeURIComponent(file.name),
+    },
+    credentials: 'include',
+    body: file,
+  });
+
+  if (!res.ok) throw await responseError(res);
+};
+
+// Remove a part's picture. The backend answers 204 (no body) when it worked.
+export const deletePartImage = async (partId: number): Promise<void> => {
+  const res = await fetch(`${BASE_URL}/${partId}/image`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!res.ok) throw await responseError(res);
+};

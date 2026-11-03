@@ -145,6 +145,19 @@
     "sections": {
       "partInformation": "Part Information",
       "attachments": "Attachments"
+    },
+    "image": {
+      "alt": "Image of {{name}}",
+      "none": "No image yet",
+      "upload": "Upload Image",
+      "replace": "Replace Image",
+      "remove": "Remove Image",
+      "saving": "Saving...",
+      "errors": {
+        "type": "Only JPEG, PNG and WebP images are allowed",
+        "tooLarge": "Image must be 5 MB or smaller",
+        "saveFailed": "Could not save the image"
+      }
     }
   },
 
