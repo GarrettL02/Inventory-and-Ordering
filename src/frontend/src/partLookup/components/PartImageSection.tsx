@@ -4,6 +4,7 @@ import { Lightbox } from '../../components/lightBox/LightBox';
 import { partImageUrl } from '../../services/parts/partsService';
 import { usePartImage } from '../hooks/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
+import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 
 interface PartImageSectionProps {
   partId: number;
@@ -41,7 +42,42 @@ export function PartImageSection({
   };
 
   return (
-    <AccordianMenu title="Attachments" shrinkable>
+    <AccordianMenu
+      title="Attachments"
+      shrinkable
+      sideTitleSection={
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            style={{
+              background: 'none',
+              color: '#9c9c9c',
+              cursor: 'pointer',
+            }}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={saving}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+          >
+            {saving ? 'Saving...' : hasImage ? 'Replace Image' : 'Upload Image'}
+          </button>
+          {hasImage && (
+            <button
+              style={{
+                background: 'none',
+                color: '#9c9c9c',
+                cursor: 'pointer',
+              }}
+              onClick={removeImage}
+              disabled={saving}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+            >
+              Remove Image
+            </button>
+          )}
+        </div>
+      }
+    >
       <div
         style={{
           display: 'grid',
@@ -50,66 +86,11 @@ export function PartImageSection({
       >
         <div style={{ gridColumn: 1 }}>
           <div style={{ fontFamily: 'Arial, sans-serif', fontSize: '12px' }}>
-            {hasImage ? (
-              <img
-                src={src}
-                alt={`Image of ${partName}`}
-                onClick={() => setLightboxOpen(true)}
-                style={{
-                  display: 'block',
-                  maxWidth: '220px',
-                  maxHeight: '220px',
-                  objectFit: 'contain',
-                  borderRadius: '6px',
-                  border: '1px solid #4a4a4a',
-                  cursor: 'zoom-in',
-                  marginBottom: '12px',
-                }}
-              />
-            ) : (
-              <div style={{ color: '#bbb9b9', marginBottom: '12px' }}>
-                No image yet
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                style={{
-                  background: 'none',
-                  color: '#9c9c9c',
-                  cursor: 'pointer',
-                }}
-                onClick={() => fileInputRef.current?.click()}
-                disabled={saving}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
-              >
-                {saving
-                  ? 'Saving...'
-                  : hasImage
-                    ? 'Replace Image'
-                    : 'Upload Image'}
-              </button>
-              {hasImage && (
-                <button
-                  style={{
-                    background: 'none',
-                    color: '#9c9c9c',
-                    cursor: 'pointer',
-                  }}
-                  onClick={removeImage}
-                  disabled={saving}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = '#ffffff')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = '#9c9c9c')
-                  }
-                >
-                  Remove Image
-                </button>
-              )}
-            </div>
+            <ImageLightboxComponent
+              imageSrc={src}
+              imageAlt={`Image of ${partName}`}
+              filename={filename}
+            />
 
             {/* Hidden input, opened by the button above. Only the types the backend accepts. */}
             <input
@@ -125,12 +106,6 @@ export function PartImageSection({
                 {error}
               </div>
             )}
-
-            <Lightbox
-              open={lightboxOpen}
-              images={hasImage ? [{ src, title: partName }] : []}
-              onClose={() => setLightboxOpen(false)}
-            />
           </div>
         </div>
       </div>
