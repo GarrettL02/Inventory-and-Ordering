@@ -26,6 +26,30 @@ export type StockMovementDataRows = z.infer<
 
 ////////////////////////////////////////////////////////
 //
+// Recent Stock Movement Data Schema
+// (one row of the stock history list)
+// userName is null when the movement has no user (made by the system,
+// or the user was deleted) - that's why the query uses a LEFT JOIN.
+//
+////////////////////////////////////////////////////////
+export const RecentStockMovementDataSchema = z.object({
+  delta: z.number(),
+  reason: z.string(),
+  createdAt: z.date(),
+  userName: z.string().nullable(),
+  partName: z.string().nullable(),
+});
+
+export const RecentStockMovementDataRowArraySchema = z.array(
+  RecentStockMovementDataSchema,
+);
+
+export type RecentStockMovementDataRows = z.infer<
+  typeof RecentStockMovementDataRowArraySchema
+>;
+
+////////////////////////////////////////////////////////
+//
 // Stock Movements Query Schema
 // (?partId=12&page=1&limit=15 on GET /stock-movements)
 // partId is optional: leave it out to get movements for every part.

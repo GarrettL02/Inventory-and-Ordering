@@ -1,8 +1,12 @@
 import z from 'zod';
-import { StockMovementsData } from '../../types/stockMovements/stockMovements';
+import {
+  RecentStockMovementsData,
+  StockMovementsData,
+} from '../../types/stockMovements/stockMovements';
 import {
   AdjustStockResult,
   AdjustStockResultSchema,
+  RecentStockMovementsDataSchema,
   StockMovementsDataSchema,
 } from '../../schemas/stockMovements/stockMovements.schema';
 
@@ -35,6 +39,27 @@ export const getStockMovementsData = async (
   const data = await res.json();
   // Validate only the data array with your existing schema
   const validatedData = z.array(StockMovementsDataSchema).parse(data.data);
+  // Return the full response structure
+  return { data: validatedData };
+};
+
+export const getRecentStockMovementsData = async (): Promise<{
+  data: RecentStockMovementsData[];
+}> => {
+  // Construct the URL dynamically with query params
+  let url = `${BASE_URL}/recent`;
+
+  //Response is the fetched data from api url
+  const res = await fetch(url);
+
+  //if there isn't data or is no good - send HTTP error
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  //Else the data is good
+  const data = await res.json();
+  // Validate only the data array with your existing schema
+  const validatedData = z
+    .array(RecentStockMovementsDataSchema)
+    .parse(data.data);
   // Return the full response structure
   return { data: validatedData };
 };

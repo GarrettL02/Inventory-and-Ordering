@@ -19,6 +19,12 @@ import { AdjustStockSchema } from './schema/stockMovements.schema';
 export class StockMovementsController {
   constructor(private readonly stockMovementsService: StockMovementsService) {}
 
+  // Recent Stock history for one part (id = the part's id)
+  @Get('recent')
+  async getRecentStockMovements() {
+    return this.stockMovementsService.getRecentStockMovements();
+  }
+
   // Stock history for one part (id = the part's id)
   @Get(':id')
   async getStockDataById(@Param('id', ParseIntPipe) partId: number) {

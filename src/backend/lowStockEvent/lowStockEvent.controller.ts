@@ -27,6 +27,11 @@ export class LowStockController {
     return this.lowStockService.getLowStockPartTableData(page, limit);
   }
 
+  @Get('recent')
+  async getRecentLowStockParts(@Query() query: unknown) {
+    return this.lowStockService.getRecentLowStockParts();
+  }
+
   @Get(':id')
   async getLowStockPartById(@Param('id', ParseIntPipe) id: number) {
     return this.lowStockService.getLowStockPartById(id);

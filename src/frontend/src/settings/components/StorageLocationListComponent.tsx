@@ -136,7 +136,6 @@ export function StorageLocationListComponent() {
         </p>
       )}
 
-      {/* ---------- The list ---------- */}
       {loading && <p style={messageStyle}>Loading...</p>}
 
       {error && (

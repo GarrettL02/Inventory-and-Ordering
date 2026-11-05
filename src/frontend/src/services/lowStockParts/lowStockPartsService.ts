@@ -2,8 +2,12 @@ import z from 'zod';
 import {
   LowStockPart,
   LowStockTableRow,
+  RecentLowStockPart,
 } from '../../lowStockParts/types/lowStockParts';
-import { LowStockPartsSchema } from '../../lowStockParts/schema/lowStockParts.schema';
+import {
+  LowStockPartsSchema,
+  RecentLowStockPartsSchema,
+} from '../../lowStockParts/schema/lowStockParts.schema';
 import { LowStockTableRowSchema } from '../../lowStockParts/schema/lowStockPartsTableRow.schema';
 
 const BASE_URL = '/api/lowstock';
@@ -54,4 +58,17 @@ export const getLowStockTableData = async (
     data: validatedData,
     pagination: response.pagination,
   };
+};
+
+export const getRecentLowStockParts = async (): Promise<
+  RecentLowStockPart[]
+> => {
+  //Response is the fetched data from api url
+  const res = await fetch(`${BASE_URL}/recent`);
+  //if there isn't data or is no good - send HTTP error
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  //Else the data is good
+  const data = await res.json();
+  //return the data - passing the data through the low stock part zod schema
+  return z.array(RecentLowStockPartsSchema).parse(data);
 };

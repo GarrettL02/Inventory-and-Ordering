@@ -19,3 +19,9 @@ export type LowStockPart = {
   triggeredAt: string;
   sent: number;
 };
+
+export type RecentLowStockPart = {
+  name: string;
+  description: string;
+  triggeredAt: string;
+};
