@@ -25,7 +25,7 @@ export function HeaderSidebarComponent({
       lineBreak: true,
     },
     {
-      name: 'Part Search',
+      name: 'Inventory',
       location: '/inventory',
       icon: <PartPagePartIcon />,
       lineBreak: false,
