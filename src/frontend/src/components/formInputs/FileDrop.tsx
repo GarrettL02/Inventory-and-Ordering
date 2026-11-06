@@ -4,20 +4,31 @@ interface FileDropProps {
   inputTitle: string;
   onFilesChange: (files: File[]) => void;
   id: string;
+  // Defaults to true. With false the drop zone holds one file; choosing another replaces it
+  multiple?: boolean;
+  // Optional file types for the browse dialog, e.g. 'image/png,image/jpeg'
+  accept?: string;
 }
 
-export function FileDrop({ inputTitle, onFilesChange, id }: FileDropProps) {
+export function FileDrop({
+  inputTitle,
+  onFilesChange,
+  id,
+  multiple = true,
+  accept,
+}: FileDropProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [dragging, setDragging] = useState(false);
 
   const addFiles = useCallback(
     (incoming: FileList | null) => {
       if (!incoming) return;
-      const merged = [...files, ...Array.from(incoming)];
+      const picked = Array.from(incoming);
+      const merged = multiple ? [...files, ...picked] : picked.slice(0, 1);
       setFiles(merged);
       onFilesChange(merged);
     },
-    [files, onFilesChange],
+    [files, onFilesChange, multiple],
   );
 
   const removeFile = (index: number) => {
@@ -64,9 +75,14 @@ export function FileDrop({ inputTitle, onFilesChange, id }: FileDropProps) {
         <input
           id={id}
           type="file"
-          multiple
+          multiple={multiple}
+          accept={accept}
           style={{ display: 'none' }}
-          onChange={(e) => addFiles(e.target.files)}
+          onChange={(e) => {
+            addFiles(e.target.files);
+            // Clear it so choosing the same file again still fires onChange
+            e.target.value = '';
+          }}
         />
       </div>
 

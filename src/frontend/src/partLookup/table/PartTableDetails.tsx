@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useFetchPartsById } from '../hooks/useFetchPartsById';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
+import { partImageUrl } from '../../services/parts/partsService';
+import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 
 export interface PartCardDetailsProps {
   partId: number;
@@ -14,6 +16,7 @@ export function PartCardDetails({
   onStockChanged,
 }: PartCardDetailsProps) {
   const { parts, loading, error, refetch } = useFetchPartsById(partId);
+  const partImgSrc = partImageUrl(partId, parts?.filename);
   const nav = useNavigate();
 
   if (loading)
@@ -79,6 +82,13 @@ export function PartCardDetails({
             onStockChanged?.(); // the Stock Level column in the table row
           }}
         />
+        {partImgSrc && (
+          <ImageLightboxComponent
+            imageSrc={partImgSrc}
+            imageAlt={`Image of ${parts.name}`}
+            filename={parts.filename}
+          />
+        )}
       </div>
 
       {/* Footer Navigation Buttons */}
