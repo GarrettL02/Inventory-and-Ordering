@@ -52,6 +52,9 @@ claude.md
 .temp
 .tmp
 
+# uploaded part pictures (stored on disk, not in git)
+/uploads
+
 # Runtime data
 pids
 *.pid

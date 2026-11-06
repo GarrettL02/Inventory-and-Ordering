@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Modal } from '../../components/modal/Modal';
 import {
@@ -9,6 +10,10 @@ import { GeneralButton } from '../../components/buttons/generalButton/GeneralBut
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { AddNewPartFormData } from '../types/Part';
 import { useAddNewPart } from '../hooks/useAddNewPart';
+import { FileDrop } from '../../components/formInputs/FileDrop';
+import { useToast } from '../../components/toast/ToastProvider';
+import { uploadPartImage } from '../../services/parts/partsService';
+import { validatePartImage } from '../functions/partImageRules';
 
 const FORM_ID = 'add-new-part-form';
 
@@ -54,6 +59,13 @@ export function AddNewPartForm({
   categories = [],
 }: AddNewPartFormProps) {
   const { addNewPart, loading: saving, error: submitError } = useAddNewPart();
+  const { showToast } = useToast();
+
+  // The optional picture. It is uploaded right after the part has been saved,
+  // because the picture needs the new part's id.
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const {
     register,
@@ -77,12 +89,36 @@ export function AddNewPartForm({
     },
   });
 
+  // FileDrop hands over the list of files it holds (0 or 1 here)
+  const handleImageChange = (files: File[]) => {
+    const file = files[0] ?? null;
+    setImageFile(file);
+    setImageError(file ? validatePartImage(file) : null);
+  };
+
   const onSubmit: SubmitHandler<AddNewPartFormData> = async (data) => {
+    // A picture the backend would reject: stay open, the user removes it or picks another
+    if (imageError) return;
+
     const created = await addNewPart(data);
     // null means it failed - stay open with what the user typed, the hook has the error
     if (!created) return;
 
+    // The part is saved now. If only the picture fails, don't keep the form open (saving
+    // again would add the part twice) - tell the user, they can add it on the details page
+    if (imageFile) {
+      setUploadingImage(true);
+      try {
+        await uploadPartImage(created.id, imageFile);
+      } catch {
+        showToast('Part added, but the image could not be uploaded', 'error');
+      } finally {
+        setUploadingImage(false);
+      }
+    }
+
     reset();
+    setImageFile(null);
     onCreated?.();
     onClose();
   };
@@ -97,8 +133,8 @@ export function AddNewPartForm({
           <GeneralButton
             type="submit"
             form={FORM_ID}
-            buttonText={saving ? 'Saving...' : 'Add Part'}
-            disabled={saving}
+            buttonText={saving || uploadingImage ? 'Saving...' : 'Add Part'}
+            disabled={saving || uploadingImage}
           />
         </>
       }
@@ -295,6 +331,19 @@ export function AddNewPartForm({
             inputHeight={60}
             inputParams={{ ...register('comment') }}
           />
+        </div>
+
+        {/* ---------- Picture ---------- */}
+        <SectionTitle>Picture</SectionTitle>
+        <div style={{ gridColumn: 'span 2' }}>
+          <FileDrop
+            id="add-new-part-image"
+            inputTitle="Part picture (optional)"
+            multiple={false}
+            accept="image/jpeg,image/png,image/webp"
+            onFilesChange={handleImageChange}
+          />
+          <FieldError message={imageError ?? undefined} />
         </div>
       </form>
     </Modal>

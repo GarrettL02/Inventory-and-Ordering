@@ -6,6 +6,7 @@ import {
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
 import { LowStockService } from '../lowStockEvent/lowStockEvent.service';
 import { StockMovementsService } from '../stockMovements/stockMovements.service';
+import { PartImagesService } from '../partImages/partImages.service';
 import {
   CreatePartDto,
   GetAllPartsDataRowArraySchema,
@@ -19,6 +20,7 @@ export class PartService {
     private readonly db: InventoryDatabaseService,
     private readonly lowStockService: LowStockService,
     private readonly stockMovementsService: StockMovementsService,
+    private readonly partImagesService: PartImagesService,
   ) {}
 
   ///////////////////////////////////////////////////////////
@@ -70,7 +72,7 @@ export class PartService {
     const countSql = `
       SELECT COUNT(*) as total
       FROM parts AS p
-      LEFT JOIN storagelocations sl ON sl.id = p.storageLocationId
+      LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
       ${whereClause}
     `;
 
@@ -106,13 +108,13 @@ export class PartService {
     SELECT
       p.*,
       (SELECT pa.filename
-         FROM partattachments pa
+         FROM partAttachments pa
          WHERE pa.partId = p.id
          ORDER BY pa.isPrimary DESC, pa.id
          LIMIT 1) AS filename,
       sl.name AS storageLocationName
     FROM parts p
-    LEFT JOIN storagelocations sl ON sl.id = p.storageLocationId
+    LEFT JOIN storageLocations sl ON sl.id = p.storageLocationId
     WHERE p.id = ?
   `;
 
@@ -227,6 +229,11 @@ export class PartService {
   //
   /////////////////////////////////////////////////////////
   async deletePart(partId: number): Promise<void> {
+    // Get the part's image file names first - the cascade below deletes the rows
+    // but not the files, so they are removed from disk once the delete has worked
+    const imageFilenames =
+      await this.partImagesService.getFilenamesForPart(partId);
+
     await this.db.transaction(async (tx) => {
       //Looks in Low Stock parts to see if part ID is linked, removes from there
       await tx.run(
@@ -242,5 +249,8 @@ export class PartService {
         throw new NotFoundException(`Part ${partId} not found`);
       }
     });
+
+    // The part is gone from the database, so now delete its image file(s) from disk
+    await this.partImagesService.removeFiles(imageFilenames);
   }
 }
