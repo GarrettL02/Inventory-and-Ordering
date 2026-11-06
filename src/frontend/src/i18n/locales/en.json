@@ -125,7 +125,12 @@
 
   "partLookup": {
     "title": "Inventory",
-    "searchPlaceholder": "Search for part..."
+    "searchPlaceholder": "Search for part...",
+    "newPartImage": {
+      "section": "Picture",
+      "label": "Part picture (optional)",
+      "uploadFailed": "Part added, but the image could not be uploaded"
+    }
   },
 
   "partRequest": {

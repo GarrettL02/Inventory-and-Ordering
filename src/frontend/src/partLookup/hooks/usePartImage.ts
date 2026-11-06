@@ -3,11 +3,7 @@ import {
   deletePartImage,
   uploadPartImage,
 } from '../../services/parts/partsService';
-
-// Same limits as the backend (MAX_IMAGE_BYTES and the allowed types). They are checked
-// here too only so the user gets an instant message instead of waiting for an upload.
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+import { validatePartImage } from '../functions/partImageRules';
 
 // Upload / replace / remove the picture of one part and track the request's
 // saving / error state, the same way useAddNewPart does.
@@ -39,12 +35,9 @@ export function usePartImage(partId: number, onChanged: () => void) {
 
   const uploadImage = useCallback(
     async (file: File) => {
-      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        setError('Only JPEG, PNG and WebP images are allowed');
-        return;
-      }
-      if (file.size > MAX_IMAGE_BYTES) {
-        setError('Image must be 5 MB or smaller');
+      const problem = validatePartImage(file);
+      if (problem) {
+        setError(problem);
         return;
       }
       await run(() => uploadPartImage(partId, file));
