@@ -15,6 +15,7 @@ export function AccordianMenu({
   shrinkable,
   closedExtraText,
   initiallyShrunk,
+  sideTitleSection,
 }: AccordionMenuProps) {
   const [isOpen, setIsOpen] = useState(initiallyShrunk ? false : true);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -64,6 +65,7 @@ export function AccordianMenu({
           {title}
         </div>
         {!isOpen && closedExtraText}
+        {isOpen && sideTitleSection && sideTitleSection}
       </div>
 
       <div

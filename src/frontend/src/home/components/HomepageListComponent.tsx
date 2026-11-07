@@ -41,7 +41,7 @@ export function HomepageListComponent({
   return (
     <AccordianMenu
       title={title}
-      openExtraText={
+      sideTitleSection={
         redirectPage && (
           <button
             style={{
