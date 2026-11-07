@@ -1,4 +1,4 @@
-import { useFetchDigikey } from '../../partLookup/hooks/useFetchDigikey';
+import { useFetchDigikey } from '../../hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../readOnly/ReadOnlyInfoSection';
 

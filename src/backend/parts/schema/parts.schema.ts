@@ -114,3 +114,12 @@ export const CreatePartSchema = z.object({
 });
 
 export type CreatePartDto = z.infer<typeof CreatePartSchema>;
+
+////////////////////////////////////////////////////////
+//
+// Part Valuation Schema
+//
+////////////////////////////////////////////////////////
+export const PartValuationSchema = z.object({
+  totalValuation: z.string(),
+});

@@ -11,6 +11,7 @@ import {
   CreatePartDto,
   GetAllPartsDataRowArraySchema,
   PartDetailsDataRowArraySchema,
+  PartValuationSchema,
 } from './schema/parts.schema';
 import { TotalRowSchema } from '../common/schema/common.schema';
 
@@ -126,6 +127,31 @@ export class PartService {
 
     // Return the row if possible, display null if not
     return validatedData[0] || null;
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  GetPartById()
+  //  From all parts - Get a part by its ID
+  //
+  /////////////////////////////////////////////////////////
+  async getPartValuation() {
+    // All part columns (including manufacturerName / manufacturerPartNumber), plus the
+    // primary attachment's filename and the storage location's name
+    const sql = `
+    SELECT SUM(stockLevel * averagePrice) AS totalValuation
+    FROM parts
+    WHERE stockLevel > 0 AND averagePrice > 0
+    `;
+
+    // Create rows to store rows that match the query
+    const rows = await this.db.query(sql);
+
+    //Validate with ZOD schema
+    const validatedData = PartValuationSchema.parse(rows[0]);
+
+    // Return the row if possible, display null if not
+    return validatedData || null;
   }
 
   /////////////////////////////////////////////////////////

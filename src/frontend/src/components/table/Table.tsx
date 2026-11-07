@@ -14,31 +14,43 @@ export const overflowSectionStyle = {
 
 export function Table({ children, labels, tableType }: TableProps) {
   return (
+    // Same card look as the homepage panels (see home/components/HomeCard)
     <div
       style={{
-        backgroundColor: '#181818ff',
-        paddingBlock: '6px',
-        overflowX: 'hidden',
+        backgroundColor: '#242424',
+        border: '1px solid #333333',
+        borderRadius: '12px',
+        overflow: 'hidden',
         maxWidth: '100%',
       }}
     >
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead style={{ backgroundColor: '#303030ff' }}>
+      <table
+        style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          // Hides the last row's divider so it doesn't double up with the card border
+          marginBottom: '-1px',
+        }}
+      >
+        <thead>
           <tr
             style={{
               display: 'grid',
               gridTemplateColumns: partTableGrid,
-              borderBottom: '1px solid #3f3f3f',
+              borderBottom: '1px solid #333333',
             }}
           >
-            {labels.map((label) => (
+            {labels.map((label, index) => (
               <th
-                key={label}
+                key={`${label}-${index}`}
                 style={{
                   textAlign: 'left',
-                  padding: '0.3rem',
-                  borderLeft: '2px solid #474747ff',
-                  fontSize: '12px',
+                  padding: '12px 2%',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: '#8a8a8a',
                 }}
               >
                 {label}

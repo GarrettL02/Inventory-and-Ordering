@@ -13,3 +13,9 @@ export const PartTableDataSchema = z.object({
 });
 
 export type Part = z.infer<typeof PartTableDataSchema>;
+
+export const PartValuationSchema = z.object({
+  totalValuation: z.string(),
+});
+
+export type PartValuation = z.infer<typeof PartTableDataSchema>;

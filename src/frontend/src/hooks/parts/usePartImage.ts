@@ -3,7 +3,7 @@ import {
   deletePartImage,
   uploadPartImage,
 } from '../../services/parts/partsService';
-import { validatePartImage } from '../functions/partImageRules';
+import { validatePartImage } from '../../partLookup/functions/partImageRules';
 
 // Upload / replace / remove the picture of one part and track the request's
 // saving / error state, the same way useAddNewPart does.

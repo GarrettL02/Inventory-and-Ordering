@@ -8,6 +8,7 @@ import {
   LowStockEventAllDataRowArraySchema,
   LowStockEventDataByIdRowArraySchema,
   OpenLowStockEventRowArraySchema,
+  RecentLowStockEventDataRowArraySchema,
 } from './schema/lowStockEvent.schema';
 import { TotalRowSchema } from '../common/schema/common.schema';
 
@@ -73,6 +74,17 @@ export class LowStockService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  async getRecentLowStockParts() {
+    const sql = `SELECT p.name, p.description, lsp.triggeredAt, COUNT(*) OVER() AS totalRows FROM lowStockEvents lsp LEFT JOIN parts p ON p.id = lsp.partId LIMIT 5`;
+    const rows = await this.db.query(sql);
+
+    //Backend ZOD validation
+    const validatedRows = RecentLowStockEventDataRowArraySchema.parse(rows);
+
+    //Return Vaidated rows
+    return validatedRows;
   }
 
   //From low stock parts - Get a part by its ID

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { LowStockTableCard } from '../table/LowStockTableCard';
 import { Table } from '../../components/table/Table';
 import { TableNoData } from '../../components/table/TableNoData';
-import { useFetchLowStockPartsTableData } from '../hooks/useFetchLowStockPartTableData';
+import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLowStockPartTableData';
 import { useSearchParams } from 'react-router-dom';
 import { TableDataError } from '../../components/table/TableDataError';
 import { TableDataLoading } from '../../components/table/TableDataLoading';

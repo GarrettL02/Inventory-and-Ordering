@@ -10,6 +10,17 @@ export const StockMovementsDataSchema = z.object({
   userName: z.string().nullable(),
 });
 
+export const RecentStockMovementsDataSchema = z.object({
+  delta: z.number(),
+  createdAt: z.coerce.date(), // JSON sends a date string, coerce turns it into a Date
+  reason: z.string(),
+  userName: z.string().nullable(),
+  partName: z.string(),
+});
+
+export type RecentStockMovement = z.infer<
+  typeof RecentStockMovementsDataSchema
+>;
 export type StockMovement = z.infer<typeof StockMovementsDataSchema>;
 
 // What POST /stockmovements/:id returns after adding / removing stock.

@@ -14,6 +14,7 @@ import { AuthGate } from '../auth/AuthGate';
 import { LoginPage } from '../auth/LoginPage';
 import { PartLookupPage } from '../partLookup/pages/PartLookupPage';
 import { SettingsPage } from '../settings/SettingsPage';
+import { HomePage } from '../home/pages/Homepage';
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
       // --------------- Routes for home -------------
       {
         path: '/home',
-        element: <PartLookupPage />,
+        element: <HomePage />,
       },
       // --------------- Routes for parts -----------------
       {

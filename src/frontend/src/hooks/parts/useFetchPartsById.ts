@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getPartById } from '../../services/parts/partsService';
-import { PartDetails } from '../types/Part';
+import { PartDetails } from '../../types/parts/Part';
 
 export const useFetchPartsById = (id: number) => {
   const [parts, setParts] = useState<PartDetails>();

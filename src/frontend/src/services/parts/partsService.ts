@@ -4,8 +4,12 @@ import {
   AddNewPartFormData,
   PartDetails,
   PartTableData,
-} from '../../partLookup/types/Part';
-import { PartTableDataSchema } from '../../schemas/parts/parts.schema';
+  PartValuation,
+} from '../../types/parts/Part';
+import {
+  PartTableDataSchema,
+  PartValuationSchema,
+} from '../../schemas/parts/parts.schema';
 
 const BASE_URL = '/api/parts';
 
@@ -61,6 +65,17 @@ export const getPartById = async (id: number): Promise<PartDetails> => {
   const data = await res.json();
   //return the data and validate it with the part ZOD schema
   return PartViewSchema.parse(data);
+};
+
+export const getPartValuation = async (): Promise<PartValuation> => {
+  //Response is the fetched data from api url and the give ID of the part
+  const res = await fetch(`${BASE_URL}/valuation`);
+  //if there isn't data or is no good - send HTTP error
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  //Else the data is good
+  const data = await res.json();
+  //return the data and validate it with the part ZOD schema
+  return PartValuationSchema.parse(data);
 };
 
 // Create a new part (the Add New Part form).

@@ -90,3 +90,23 @@ export const OpenLowStockEventRowSchema = z.object({
 export const OpenLowStockEventRowArraySchema = z.array(
   OpenLowStockEventRowSchema,
 );
+
+////////////////////////////////////////////////////////
+//
+// Low Stock Event All Data Schema
+//
+////////////////////////////////////////////////////////
+export const RecentLowStockEventDataSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  triggeredAt: z.date(),
+  totalRows: z.number(),
+});
+
+export const RecentLowStockEventDataRowArraySchema = z.array(
+  RecentLowStockEventDataSchema,
+);
+
+export type RecentLowStockEventDataRows = z.infer<
+  typeof RecentLowStockEventDataRowArraySchema
+>;

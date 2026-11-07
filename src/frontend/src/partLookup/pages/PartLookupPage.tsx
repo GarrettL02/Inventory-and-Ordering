@@ -4,11 +4,11 @@ import { TableNoData } from '../../components/table/TableNoData';
 import { useSearchParams } from 'react-router-dom';
 import { TableDataError } from '../../components/table/TableDataError';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
-import { useFetchParts } from '../hooks/useFetchParts';
 import { PartTableCard } from '../table/PartTableCard';
 import { AddNewPartForm } from '../forms/AddNewPartForm';
 import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
 import { FormInputOption } from '../../components/form/FormInputProps';
+import { useFetchParts } from '../../hooks/parts/useFetchParts';
 
 export function PartLookupPage() {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import { BackButton } from '../../components/buttons/backButton/BackButton';
 import { useEffect } from 'react';
-import { useFetchPartsById } from '../../partLookup/hooks/useFetchPartsById';
+import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
 import { DataValidationStateWrapper } from '../../components/dataValidationStateWrapper/DataValidationStateWrapper';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../components/readOnly/ReadOnlyInfoSection';

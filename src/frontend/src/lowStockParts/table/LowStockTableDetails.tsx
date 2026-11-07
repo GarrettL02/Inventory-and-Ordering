@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
-import { useState } from 'react';
-import { useFetchPartsById } from '../../partLookup/hooks/useFetchPartsById';
+import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
 
 export interface LowStockTableDetailsProps {
   partId: number;
@@ -10,7 +9,6 @@ export interface LowStockTableDetailsProps {
 export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
   const { parts, loading, error } = useFetchPartsById(partId);
   const nav = useNavigate();
-  const [stockAmount, setStockAmount] = useState('1');
 
   if (loading)
     return <div style={{ fontSize: '13px' }}>Loading part details...</div>;
@@ -72,7 +70,7 @@ export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
       {/* Footer Navigation Buttons */}
       <div style={{ display: 'flex', gap: '16px' }}>
         <button
-          onClick={() => nav(`/inventory${partId}`)}
+          onClick={() => nav(`/inventory/${partId}`)}
           style={{
             background: 'transparent',
             border: 'none',

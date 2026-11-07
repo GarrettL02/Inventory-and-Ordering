@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { getParts } from '../../services/parts/partsService';
-import { PartTableData } from '../types/Part';
+import { PartTableData } from '../../types/parts/Part';
 
 export const useFetchParts = (initialPage: number) => {
   const [parts, setParts] = useState<PartTableData[]>([]);

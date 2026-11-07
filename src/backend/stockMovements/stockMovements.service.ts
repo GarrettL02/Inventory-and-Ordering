@@ -12,6 +12,7 @@ import {
   AdjustStockDto,
   AdjustStockResult,
   PartStockRowArraySchema,
+  RecentStockMovementDataRowArraySchema,
   RecordStockMovementInput,
   StockMovementDataRowArraySchema,
 } from './schema/stockMovements.schema';
@@ -48,6 +49,36 @@ export class StockMovementsService {
 
     //Validate with ZOD schema
     const validatedData = StockMovementDataRowArraySchema.parse(rows);
+
+    return { data: validatedData };
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  GetRecentStockMovements()
+  //  Get the stock history (movements) for one part, by the part's ID
+  //
+  /////////////////////////////////////////////////////////
+  async getRecentStockMovements() {
+    const sql = `
+    SELECT
+      sm.delta,
+      sm.createdAt,
+      sm.reason,
+      u.username AS userName,
+      p.name AS partName
+    FROM stockMovements sm
+    LEFT JOIN users u ON sm.userId = u.id
+    LEFT JOIN parts p ON sm.partId = p.id
+    ORDER BY p.id DESC 
+    LIMIT 15
+  `;
+
+    // Create rows to store rows that match the query
+    const rows = await this.db.query(sql);
+
+    //Validate with ZOD schema
+    const validatedData = RecentStockMovementDataRowArraySchema.parse(rows);
 
     return { data: validatedData };
   }

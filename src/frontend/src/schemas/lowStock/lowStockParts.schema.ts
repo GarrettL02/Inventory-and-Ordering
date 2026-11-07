@@ -11,3 +11,12 @@ export const LowStockPartsSchema = z.object({
 });
 
 export type LowStockPart = z.infer<typeof LowStockPartsSchema>;
+
+export const RecentLowStockPartsSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  triggeredAt: z.string(),
+  totalRows: z.number(),
+});
+
+export type RecentLowStockPart = z.infer<typeof RecentLowStockPartsSchema>;

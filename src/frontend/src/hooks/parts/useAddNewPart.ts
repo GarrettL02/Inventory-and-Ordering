@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { submitNewPartData } from '../../services/parts/partsService';
-import { AddNewPartFormData, PartDetails } from '../types/Part';
+import { AddNewPartFormData, PartDetails } from '../../types/parts/Part';
 
 // Saves a new part and tracks the request's loading / error state, the same way
 // the useFetch* hooks do for reads.

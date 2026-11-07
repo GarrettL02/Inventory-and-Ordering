@@ -45,10 +45,10 @@ export function Header({ children, onHamburgerMenuClick }: HeaderProps) {
           }}
         >
           <img
-            src="/fastecServicesLogo.png"
-            alt="Fastec Services"
+            src="/inventoryManagementSystemIcon.png"
+            alt="Inventory Management System"
             style={{
-              height: '30px', // leave some breathing room under 60px
+              height: '40px', // leave some breathing room under 60px
               width: 'auto',
               mixBlendMode: 'multiply' as any,
               marginLeft: '10px',
