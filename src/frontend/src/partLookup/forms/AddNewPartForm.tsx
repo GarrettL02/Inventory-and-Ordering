@@ -8,12 +8,12 @@ import {
 import { SearchableSelect } from '../../components/formInputs/SearchableSelect';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
-import { AddNewPartFormData } from '../types/Part';
-import { useAddNewPart } from '../hooks/useAddNewPart';
+import { AddNewPartFormData } from '../../types/parts/Part';
 import { FileDrop } from '../../components/formInputs/FileDrop';
 import { useToast } from '../../components/toast/ToastProvider';
 import { uploadPartImage } from '../../services/parts/partsService';
 import { validatePartImage } from '../functions/partImageRules';
+import { useAddNewPart } from '../../hooks/parts/useAddNewPart';
 
 const FORM_ID = 'add-new-part-form';
 

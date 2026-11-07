@@ -4,16 +4,15 @@ export function TableDataError() {
       <td
         colSpan={100}
         style={{
-          borderBottom: '1px solid #ccc',
-          backgroundColor: 'rgb(27, 27, 27)',
+          backgroundColor: '#242424',
           minWidth: '100%',
-          height: '500px',
+          padding: '4rem 1rem',
           textAlign: 'center',
-          fontSize: '20px',
+          fontSize: '14px',
+          color: '#ef5350',
         }}
       >
-        <div>¯\_(ツ)_/¯</div>
-        <div>Error Loading Data.....</div>
+        <div>Error loading data.</div>
       </td>
     </tr>
   );

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useFetchPartsById } from '../hooks/useFetchPartsById';
+import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 import { partImageUrl } from '../../services/parts/partsService';

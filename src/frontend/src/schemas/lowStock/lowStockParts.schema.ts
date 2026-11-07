@@ -16,6 +16,7 @@ export const RecentLowStockPartsSchema = z.object({
   name: z.string(),
   description: z.string(),
   triggeredAt: z.string(),
+  totalRows: z.number(),
 });
 
 export type RecentLowStockPart = z.infer<typeof RecentLowStockPartsSchema>;

@@ -1,5 +1,5 @@
 import { Table } from '../../components/table/Table';
-import { useFetchLowStockPartsTableData } from '../../lowStockParts/hooks/useFetchLowStockPartTableData';
+import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLowStockPartTableData';
 import { LowStockTableCard } from '../../lowStockParts/table/LowStockTableCard';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { TableDataError } from '../../components/table/TableDataError';

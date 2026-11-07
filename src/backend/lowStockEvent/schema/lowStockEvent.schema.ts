@@ -100,6 +100,7 @@ export const RecentLowStockEventDataSchema = z.object({
   name: z.string(),
   description: z.string(),
   triggeredAt: z.date(),
+  totalRows: z.number(),
 });
 
 export const RecentLowStockEventDataRowArraySchema = z.array(

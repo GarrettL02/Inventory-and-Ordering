@@ -16,10 +16,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
 import type { AuthUser } from '../auth/schema/auth.schema';
 import { parseOrBadRequest } from '../common/parseOrBadRequest';
-import {
-  CreatePartSchema,
-  PartsQuerySchema,
-} from './schema/parts.schema';
+import { CreatePartSchema, PartsQuerySchema } from './schema/parts.schema';
 
 @Controller('parts')
 @UseGuards(AuthGuard)
@@ -30,6 +27,11 @@ export class PartController {
   async getAllParts(@Query() query: unknown) {
     const { page, limit, search } = parseOrBadRequest(PartsQuerySchema, query);
     return this.partService.getAllParts(page, limit, search);
+  }
+
+  @Get('valuation')
+  async getPartValuation() {
+    return this.partService.getPartValuation();
   }
 
   // Add New Part form. Body: { name, description, stockLevel, minStockLevel,

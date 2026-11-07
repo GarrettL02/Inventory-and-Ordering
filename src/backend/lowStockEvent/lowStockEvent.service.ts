@@ -77,7 +77,7 @@ export class LowStockService {
   }
 
   async getRecentLowStockParts() {
-    const sql = `SELECT p.name, p.description, lsp.triggeredAt FROM lowStockEvents lsp LEFT JOIN parts p ON p.id = lsp.partId LIMIT 5`;
+    const sql = `SELECT p.name, p.description, lsp.triggeredAt, COUNT(*) OVER() AS totalRows FROM lowStockEvents lsp LEFT JOIN parts p ON p.id = lsp.partId LIMIT 5`;
     const rows = await this.db.query(sql);
 
     //Backend ZOD validation

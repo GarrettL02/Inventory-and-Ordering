@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { partTableGrid } from '../../components/table/Table';
-import { PartTableData } from '../types/Part';
+import { PartTableData } from '../../types/parts/Part';
 import { LowStockKebabMenu } from '../../lowStockParts/kebabMenuActions/LowStockKebabMenu';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { PartCardDetails } from './PartTableDetails';

@@ -32,8 +32,8 @@ export function ExpandableTableCard({
         style={{
           display: 'grid',
           gridTemplateColumns: tableCardGrid, // parts table grid
-          borderBottom: open ? 'none' : '1px solid #9c9b9bff',
-          backgroundColor: open ? '#1a1a1a' : '#222222ff',
+          borderBottom: open ? 'none' : '1px solid #2e2e2e',
+          backgroundColor: open ? '#2a2a2a' : '#242424',
           height: '50px',
           alignItems: 'center',
           cursor: 'pointer',
@@ -41,12 +41,10 @@ export function ExpandableTableCard({
         }}
         onClick={toggle}
         onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = '#1a1a1a')
+          (e.currentTarget.style.backgroundColor = '#2a2a2a')
         }
         onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = open
-            ? '#1a1a1a'
-            : '#222222ff')
+          (e.currentTarget.style.backgroundColor = open ? '#2a2a2a' : '#242424')
         }
       >
         {cardContent}
@@ -54,7 +52,7 @@ export function ExpandableTableCard({
       <tr
         style={{
           display: 'block',
-          backgroundColor: '#1a1a1a',
+          backgroundColor: '#1f1f1f',
         }}
       >
         <td style={{ display: 'block', padding: 0 }}>
@@ -77,7 +75,7 @@ export function ExpandableTableCard({
               <div
                 style={{
                   padding: '14px 2% 18px',
-                  borderBottom: '1px solid #9c9b9bff',
+                  borderBottom: '1px solid #2e2e2e',
                 }}
               >
                 {hasOpened && expandedContent}

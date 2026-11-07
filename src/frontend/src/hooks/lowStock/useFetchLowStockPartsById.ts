@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getLowStockPartById } from '../../services/lowStockParts/lowStockPartsService';
-import { LowStockPart } from '../types/lowStockParts';
+import { LowStockPart } from '../../types/lowStock/lowStockParts';
 
 export const useFetchLowStockPartsById = (id: number) => {
   const [parts, setParts] = useState<LowStockPart>();

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { LowStockTableRow } from '../types/lowStockParts';
+import { LowStockTableRow } from '../../types/lowStock/lowStockParts';
 import { getLowStockTableData } from '../../services/lowStockParts/lowStockPartsService';
 
 export const useFetchLowStockPartsTableData = (initialPage: number) => {

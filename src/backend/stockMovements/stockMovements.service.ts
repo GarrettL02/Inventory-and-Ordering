@@ -70,6 +70,7 @@ export class StockMovementsService {
     FROM stockMovements sm
     LEFT JOIN users u ON sm.userId = u.id
     LEFT JOIN parts p ON sm.partId = p.id
+    ORDER BY p.id DESC 
     LIMIT 15
   `;
 

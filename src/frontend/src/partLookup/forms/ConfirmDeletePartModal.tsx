@@ -1,7 +1,7 @@
 import { Modal } from '../../components/modal/Modal';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
-import { useDeletePart } from '../hooks/useDeletePart';
+import { useDeletePart } from '../../hooks/parts/useDeletePart';
 
 export interface ConfirmDeletePartModalProps {
   partId: number;

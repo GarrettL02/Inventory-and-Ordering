@@ -1,4 +1,4 @@
-import { LowStockTableRow } from '../types/lowStockParts';
+import { LowStockTableRow } from '../../types/lowStock/lowStockParts';
 import { LowStockKebabMenu } from '../kebabMenuActions/LowStockKebabMenu';
 import { partTableGrid } from '../../components/table/Table';
 import { Chip } from '../../components/chip/Chip';

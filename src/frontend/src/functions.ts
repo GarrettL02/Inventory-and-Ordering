@@ -26,6 +26,15 @@ export function formatDateTimeFromDate(date: Date): string {
   return `${dateMonth} / ${dateDay} / ${dateYear}`;
 }
 
+// Short, locale-aware date such as "Nov 6, 2026". Used on the homepage.
+export function formatShortDate(date: string | Date): string {
+  return new Date(date).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
 export function getdateFormatForDetailsPage(date: Date): string {
   //grab the day from the date
   const dateDay = date.getDate();

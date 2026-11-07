@@ -4,16 +4,15 @@ export function TableNoData() {
       <td
         colSpan={100}
         style={{
-          borderBottom: 'none',
-          backgroundColor: 'rgb(27, 27, 27)',
+          backgroundColor: '#242424',
           minWidth: '100%',
-          padding: '2.5rem 1rem',
+          padding: '4rem 1rem',
           textAlign: 'center',
-          fontSize: '18px',
-          color: '#cfcfcf',
+          fontSize: '14px',
+          color: '#a7a7a7',
         }}
       >
-        <div>There is Nothing to Display!</div>
+        <div>Nothing to display.</div>
       </td>
     </tr>
   );

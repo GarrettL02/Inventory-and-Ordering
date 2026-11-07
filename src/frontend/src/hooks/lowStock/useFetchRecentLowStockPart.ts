@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  getLowStockParts,
-  getRecentLowStockParts,
-} from '../../services/lowStockParts/lowStockPartsService';
-import { RecentLowStockPart } from '../../lowStockParts/types/lowStockParts';
+import { getRecentLowStockParts } from '../../services/lowStockParts/lowStockPartsService';
+import { RecentLowStockPart } from '../../types/lowStock/lowStockParts';
 
 export const useFetchRecentLowStockParts = () => {
   const [parts, setParts] = useState<RecentLowStockPart[]>([]);

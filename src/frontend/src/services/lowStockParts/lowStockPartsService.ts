@@ -3,12 +3,12 @@ import {
   LowStockPart,
   LowStockTableRow,
   RecentLowStockPart,
-} from '../../lowStockParts/types/lowStockParts';
+} from '../../types/lowStock/lowStockParts';
 import {
   LowStockPartsSchema,
   RecentLowStockPartsSchema,
-} from '../../lowStockParts/schema/lowStockParts.schema';
-import { LowStockTableRowSchema } from '../../lowStockParts/schema/lowStockPartsTableRow.schema';
+} from '../../schemas/lowStock/lowStockParts.schema';
+import { LowStockTableRowSchema } from '../../schemas/lowStock/lowStockPartsTableRow.schema';
 
 const BASE_URL = '/api/lowstock';
 

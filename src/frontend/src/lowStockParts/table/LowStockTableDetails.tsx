@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
-import { useFetchPartsById } from '../../partLookup/hooks/useFetchPartsById';
+import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
 
 export interface LowStockTableDetailsProps {
   partId: number;

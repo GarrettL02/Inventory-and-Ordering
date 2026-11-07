@@ -31,6 +31,10 @@ export interface PartDetails {
   manufacturerPartNumber?: string | null;
 }
 
+export interface PartValuation {
+  totalValuation: string;
+}
+
 export type AddNewPartFormData = {
   name: string;
   description: string;

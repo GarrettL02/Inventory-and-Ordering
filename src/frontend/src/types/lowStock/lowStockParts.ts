@@ -24,4 +24,5 @@ export type RecentLowStockPart = {
   name: string;
   description: string;
   triggeredAt: string;
+  totalRows: number;
 };

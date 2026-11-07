@@ -1,4 +1,4 @@
-import { useFetchRecentLowStockParts } from '../hooks/useFetchRecentLowStockPart';
+import { useFetchRecentLowStockParts } from '../../hooks/lowStock/useFetchRecentLowStockPart';
 import { HomepageListComponent } from './HomepageListComponent';
 
 export function TasksComponent() {

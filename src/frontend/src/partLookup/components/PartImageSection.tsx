@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { Lightbox } from '../../components/lightBox/LightBox';
 import { partImageUrl } from '../../services/parts/partsService';
-import { usePartImage } from '../hooks/usePartImage';
+import { usePartImage } from '../../hooks/parts/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 
