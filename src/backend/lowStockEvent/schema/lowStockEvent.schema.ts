@@ -13,7 +13,7 @@ export const LowStockEventTableDataSchema = z.object({
   quantity: z.number(),
   urgency: z.number(),
   requestedBy: z.string(),
-  sent: z.number(),
+  inCart: z.number(),
   partId: z.number(),
   isNewPart: z.number(),
   name: z.string(),
@@ -45,9 +45,8 @@ export const LowStockEventAllDataSchema = z.object({
   urgency: z.number(),
   requestedBy: z.string(),
   triggeredAt: z.date(),
-  sent: z.number(),
-  ordered: z.number(),
-  checked: z.number(),
+  inCart: z.number(),
+  autoEntered: z.number(),
   newPartName: z.string().nullable().optional(),
   newPartDescription: z.string().nullable().optional(),
   newPartComment: z.string().nullable().optional(),
@@ -79,8 +78,8 @@ export type LowStockEventDataByIdRows = z.infer<
 
 ////////////////////////////////////////////////////////
 //
-// Open Low Stock Event Row Schema
-// (the id syncForPart() looks up for a part's open event)
+// Low Stock Event Row Schema
+// (the id syncForPart() looks up for a part's existing event)
 //
 ////////////////////////////////////////////////////////
 export const OpenLowStockEventRowSchema = z.object({

@@ -2,7 +2,7 @@ export type LowStockTableRow = {
   lowStockId: number;
   stockLevel: number;
   minStockLevel: number;
-  sent: number;
+  inCart: number;
   partId: number;
   name: string;
   description: string;
@@ -17,7 +17,7 @@ export type LowStockPart = {
   stockLevel: number;
   minStockLevel: number;
   triggeredAt: string;
-  sent: number;
+  inCart: number;
 };
 
 export type RecentLowStockPart = {

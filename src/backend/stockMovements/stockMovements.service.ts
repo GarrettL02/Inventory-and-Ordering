@@ -12,6 +12,7 @@ import {
   AdjustStockDto,
   AdjustStockResult,
   PartStockRowArraySchema,
+  PreviewAdjustStockResult,
   RecentStockMovementDataRowArraySchema,
   RecordStockMovementInput,
   StockMovementDataRowArraySchema,
@@ -168,5 +169,44 @@ export class StockMovementsService {
         lowStockEventId,
       };
     });
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //  PreviewAdjustStock()
+  //  Say what adjustStock() would do, without saving anything: the new stock
+  //  level, and whether it would take the part off the low stock list (the UI
+  //  uses this to ask "are you sure?" first).
+  //
+  /////////////////////////////////////////////////////////
+  async previewAdjustStock(
+    partId: number,
+    delta: number,
+  ): Promise<PreviewAdjustStockResult> {
+    const rows = await this.db.query(
+      'SELECT id, stockLevel, minStockLevel FROM parts WHERE id = ?',
+      [partId],
+    );
+    const part = PartStockRowArraySchema.parse(rows)[0];
+
+    if (!part) {
+      throw new NotFoundException(`Part ${partId} not found`);
+    }
+
+    const newStockLevel = part.stockLevel + delta;
+
+    const willClearLowStock = await this.lowStockService.willClearForPart(
+      partId,
+      newStockLevel,
+      part.minStockLevel,
+    );
+
+    return {
+      partId,
+      stockLevel: part.stockLevel,
+      newStockLevel,
+      minStockLevel: part.minStockLevel,
+      willClearLowStock,
+    };
   }
 }

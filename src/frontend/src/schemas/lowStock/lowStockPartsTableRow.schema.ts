@@ -4,7 +4,7 @@ export const LowStockTableRowSchema = z.object({
   lowStockId: z.number(),
   stockLevel: z.number(),
   minStockLevel: z.number(),
-  sent: z.number(),
+  inCart: z.number(),
   partId: z.number(),
   name: z.string(),
   description: z.string(),

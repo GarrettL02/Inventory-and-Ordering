@@ -110,9 +110,11 @@ CREATE TABLE IF NOT EXISTS users (
 -- Part requests / low stock list. Rows are created by application code when a
 -- stock change drops a part below minStockLevel, or when a user submits the
 -- PartRequest form.
---   partId = 0  -> "new part" request (no real part has id 0, so no FK on purpose)
---   sent        -> part has been moved to the cart in the UI
---   ordered = 1 -> workflow finished, row hidden from the UI table
+--   partId = 0      -> "new part" request (no real part has id 0, so no FK on purpose)
+--   inCart = 1      -> part has been moved to the cart in the UI (hidden from the low stock table)
+--   autoEntered = 1 -> created by a stock drop below minStockLevel. These rows are removed
+--                      automatically when stock rises back to minStockLevel or above
+--                      (unless already inCart). 0 = a person submitted it, never auto-removed.
 CREATE TABLE IF NOT EXISTS lowStockEvents (
   id                 INT UNSIGNED NOT NULL AUTO_INCREMENT,
   partId             INT UNSIGNED NOT NULL DEFAULT 0,
@@ -122,16 +124,14 @@ CREATE TABLE IF NOT EXISTS lowStockEvents (
   urgency            TINYINT NOT NULL DEFAULT 1,
   requestedBy        VARCHAR(100) NOT NULL DEFAULT 'system',
   triggeredAt        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  sent               TINYINT(1) NOT NULL DEFAULT 0,
-  ordered            TINYINT(1) NOT NULL DEFAULT 0,
-  checked            TINYINT(1) NOT NULL DEFAULT 0,
+  inCart             TINYINT(1) NOT NULL DEFAULT 0,
+  autoEntered        TINYINT(1) NOT NULL DEFAULT 0,
   newPartName        VARCHAR(255) NULL,
   newPartDescription VARCHAR(255) NULL,
   newPartComment     TEXT NULL,
   newPartURL         VARCHAR(2048) NULL,
   PRIMARY KEY (id),
-  KEY idx_lowStockEvents_partId (partId),
-  KEY idx_lowStockEvents_ordered (ordered)
+  KEY idx_lowStockEvents_partId (partId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Audit trail of stock changes. The service layer writes a row here and

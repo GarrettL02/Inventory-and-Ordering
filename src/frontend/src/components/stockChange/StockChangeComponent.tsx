@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useAdjustStock } from '../../hooks/stockMovements/useAdjustStock';
 import { useToast } from '../toast/ToastProvider';
+import { Modal } from '../modal/Modal';
+import { GeneralButton } from '../buttons/generalButton/GeneralButton';
+import { CancelButton } from '../buttons/cancelButton/CancelButton';
+import { PreviewAdjustStockResult } from '../../schemas/stockMovements/stockMovements.schema';
 
 export interface StockChangeComponentProps {
   partId: number;
@@ -44,7 +48,10 @@ export function StockChangeComponent({
   const [stockAmount, setStockAmount] = useState('1');
   const [reason, setReason] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
-  const { adjustStock, loading, error } = useAdjustStock();
+  // Set when adding would take the part off the low stock list: shows the confirm modal
+  const [confirmRemoval, setConfirmRemoval] =
+    useState<PreviewAdjustStockResult | null>(null);
+  const { adjustStock, previewStock, loading, error } = useAdjustStock();
   const { showToast } = useToast();
 
   const amount = Number(stockAmount);
@@ -55,7 +62,11 @@ export function StockChangeComponent({
   const canRemove = validAmount && amount <= stockLevel && !loading;
 
   // direction: 1 = add stock, -1 = remove stock
-  const handleChange = async (direction: 1 | -1) => {
+  // removesFromLowStock: the user confirmed this add takes the part off the low stock list
+  const handleChange = async (
+    direction: 1 | -1,
+    removesFromLowStock = false,
+  ) => {
     setNotice(null);
     const result = await adjustStock(
       partId,
@@ -69,7 +80,7 @@ export function StockChangeComponent({
     setReason('');
     showToast(
       direction === 1
-        ? `Added ${amount} to stock`
+        ? `Added ${amount} to stock${removesFromLowStock ? ' - removed from the low stock list' : ''}`
         : `Removed ${amount} from stock`,
     );
     if (result.lowStockEventId !== null) {
@@ -78,6 +89,28 @@ export function StockChangeComponent({
       );
     }
     onChanged?.();
+  };
+
+  // Add button: first ask the backend whether this would take the part off the low
+  // stock list. If it would, show the confirm modal; if not, just add the stock.
+  // If the check itself fails, nothing is changed and the hook's error is shown.
+  const handleAddClick = async () => {
+    setNotice(null);
+    const preview = await previewStock(partId, amount);
+    if (!preview) return;
+
+    if (preview.willClearLowStock) {
+      setConfirmRemoval(preview);
+      return;
+    }
+    await handleChange(1);
+  };
+
+  // "Add Stock" in the modal. The modal closes either way; if the add failed the
+  // error shows under the buttons and what they typed is kept.
+  const handleConfirmAdd = async () => {
+    await handleChange(1, true);
+    setConfirmRemoval(null);
   };
 
   const hover = (enabled: boolean, color: string) => (e: React.MouseEvent) => {
@@ -145,7 +178,7 @@ export function StockChangeComponent({
           style={actionButtonStyle(canAdd, '#103a22')}
           onMouseEnter={hover(canAdd, '#16502f')}
           onMouseLeave={hover(canAdd, '#103a22')}
-          onClick={() => handleChange(1)}
+          onClick={handleAddClick}
         >
           + Add
         </button>
@@ -169,6 +202,31 @@ export function StockChangeComponent({
         <div role="status" style={{ fontSize: '12px', color: '#e0b04a' }}>
           {notice}
         </div>
+      )}
+
+      {confirmRemoval && (
+        <Modal
+          modalTitle="Add Stock"
+          onClose={() => setConfirmRemoval(null)}
+          footer={
+            <>
+              <CancelButton onClick={() => setConfirmRemoval(null)} />
+              <GeneralButton
+                buttonText={loading ? 'Adding...' : 'Add Stock'}
+                onClick={handleConfirmAdd}
+                disabled={loading}
+              />
+            </>
+          }
+        >
+          <p style={{ margin: 0, fontSize: '14px' }}>
+            Are you sure you want to add stock? Adding{' '}
+            <strong>{amount}</strong> brings this part to{' '}
+            <strong>{confirmRemoval.newStockLevel}</strong>, which is at or above
+            its minimum of {confirmRemoval.minStockLevel}. It will be removed
+            from the low stock list.
+          </p>
+        </Modal>
       )}
     </div>
   );

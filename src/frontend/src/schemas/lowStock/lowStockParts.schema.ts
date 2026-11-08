@@ -6,8 +6,7 @@ export const LowStockPartsSchema = z.object({
   stockLevel: z.number(),
   minStockLevel: z.number(),
   triggeredAt: z.string(),
-  sent: z.number(),
-  ordered: z.boolean(),
+  inCart: z.number(),
 });
 
 export type LowStockPart = z.infer<typeof LowStockPartsSchema>;
