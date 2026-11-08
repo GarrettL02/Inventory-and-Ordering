@@ -1,23 +1,28 @@
+import { useState } from 'react';
+
 interface CartBarProps {
   isExpanded: boolean;
   onToggle: () => void;
 }
 
 export function CartBar({ isExpanded, onToggle }: CartBarProps) {
+  const [isToggleHovered, setIsToggleHovered] = useState(false);
+
   return (
     <div
       data-testid="cart-bar-panel"
       style={{
-        backgroundColor: '#212121ff',
+        backgroundColor: '#262626',
         position: 'fixed',
         top: 0,
         right: 0,
         bottom: 0,
         zIndex: 999,
         width: isExpanded ? '32%' : '12%',
-        transition: 'width 0.3s ease',
         boxSizing: 'border-box',
-        borderLeft: '1px solid #3d3d3d',
+        borderLeft: '1px solid #ffffff14',
+        boxShadow: isExpanded ? '-8px 0 24px #00000066' : 'none',
+        transition: 'width 0.3s ease, box-shadow 0.3s ease',
       }}
     >
       <div
@@ -32,31 +37,41 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            marginBottom: '12px',
+            marginBottom: '16px',
             gap: '10px',
           }}
         >
           <button
             style={{
-              color: '#ffffff',
+              color: isToggleHovered ? '#ffffff' : '#c4c4c4',
               alignSelf: 'flex-start',
-              background: 'transparent',
-              border: 'none',
-              borderRadius: '10px',
-              backgroundColor: '#303030',
-              padding: '5px',
+              border: '1px solid #ffffff14',
+              borderRadius: '8px',
+              backgroundColor: isToggleHovered ? '#ffffff1a' : '#ffffff10',
+              padding: '5px 8px',
               cursor: 'pointer',
               fontSize: '15px',
-              transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+              lineHeight: 1,
+              transition:
+                'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease, color 0.15s ease',
               transform: isExpanded ? 'rotate(-270deg)' : 'rotate(-90deg)',
             }}
             onClick={onToggle}
+            onMouseEnter={() => setIsToggleHovered(true)}
+            onMouseLeave={() => setIsToggleHovered(false)}
             aria-expanded={isExpanded}
           >
             ⮝
           </button>
           <div
-            style={{ display: 'flex', alignItems: 'center', color: '#717171' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: '#9a9a9a',
+              fontSize: '13px',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+            }}
           >
             {isExpanded ? 'Close' : 'Open'}
           </div>
@@ -65,12 +80,22 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
           <div
             style={{
               fontSize: isExpanded ? '23px' : '17px',
+              fontWeight: 600,
+              color: '#ffffff',
               transition: 'font-size 0.3s ease',
             }}
           >
             Current Cart
           </div>
-          <div style={{ color: '#580909ff', fontWeight: 700 }}>_________</div>
+          <div
+            style={{
+              width: '40px',
+              height: '3px',
+              marginTop: '8px',
+              borderRadius: '3px',
+              backgroundColor: '#580909ff',
+            }}
+          />
         </div>
       </div>
     </div>

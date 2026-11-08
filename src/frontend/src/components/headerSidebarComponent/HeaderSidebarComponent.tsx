@@ -46,7 +46,14 @@ export function HeaderSidebarComponent({
       name: 'Ordered',
       location: '/ordered',
       icon: <PartsOrderedIcon />,
-      lineBreak: true,
+      lineBreak: false,
+    },
+    {
+      name: 'Settings',
+      location: '/settings',
+      icon: <SettingsIcon />,
+      lineBreak: false,
+      mountedToBottom: true,
     },
   ];
 

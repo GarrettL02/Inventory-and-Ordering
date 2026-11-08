@@ -96,7 +96,7 @@ export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
               padding: 0,
             }}
           >
-            {parts.manufacturerName ?? 'Manufacturer'} Page
+            Product Page
           </button>
         )}
       </div>

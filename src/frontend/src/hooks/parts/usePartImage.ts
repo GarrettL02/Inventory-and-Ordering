@@ -8,7 +8,7 @@ import { validatePartImage } from '../../partLookup/functions/partImageRules';
 // Upload / replace / remove the picture of one part and track the request's
 // saving / error state, the same way useAddNewPart does.
 //
-//   const { uploadImage, removeImage, saving, error } = usePartImage(partId, refetch);
+//   const { uploadImage, removeImage, clearError, saving, error } = usePartImage(partId, refetch);
 //   await uploadImage(file);
 //
 // It never throws - on failure the message goes into `error`. `onChanged` is
@@ -50,5 +50,7 @@ export function usePartImage(partId: number, onChanged: () => void) {
     [partId, run],
   );
 
-  return { uploadImage, removeImage, saving, error };
+  const clearError = useCallback(() => setError(null), []);
+
+  return { uploadImage, removeImage, clearError, saving, error };
 }
