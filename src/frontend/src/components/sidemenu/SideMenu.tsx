@@ -25,7 +25,7 @@ interface SideMenuProps {
 
 const COLLAPSED_WIDTH = '48px';
 const EXPANDED_WIDTH = '200px';
-const ACCENT = '#772a2a';
+const ACCENT = '#580909ff';
 
 const menuStyle = (isExpanded: boolean): CSSProperties => ({
   position: 'fixed',
