@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { Lightbox } from '../../components/lightBox/LightBox';
 import { partImageUrl } from '../../services/parts/partsService';
 import { usePartImage } from '../../hooks/parts/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
+import { FileDrop } from '../../components/formInputs/FileDrop';
 
 interface PartImageSectionProps {
   partId: number;
@@ -17,16 +18,15 @@ interface PartImageSectionProps {
 }
 
 // The picture of a part (one per part): thumbnail that opens in the lightbox,
-// plus Upload / Replace and Remove buttons.
+// a drop zone to upload / replace it, and a Remove Image button.
 export function PartImageSection({
   partId,
   partName,
   filename,
   onChanged,
 }: PartImageSectionProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const { uploadImage, removeImage, saving, error } = usePartImage(
+  const { uploadImage, removeImage, clearError, saving, error } = usePartImage(
     partId,
     onChanged,
   );
@@ -34,11 +34,12 @@ export function PartImageSection({
   const hasImage = Boolean(filename);
   const src = partImageUrl(partId, filename);
 
-  const handleFileChosen = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    // Clear the input so choosing the same file again still fires onChange
-    e.target.value = '';
+  // FileDrop hands over the files it holds (0 or 1 here). A dropped / chosen file is
+  // uploaded straight away; an empty list means the user removed it from the drop zone.
+  const handleFilesChange = (files: File[]) => {
+    const file = files[0];
     if (file) uploadImage(file);
+    else clearError();
   };
 
   return (
@@ -47,19 +48,6 @@ export function PartImageSection({
       shrinkable
       sideTitleSection={
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            style={{
-              background: 'none',
-              color: '#9c9c9c',
-              cursor: 'pointer',
-            }}
-            onClick={() => fileInputRef.current?.click()}
-            disabled={saving}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
-          >
-            {saving ? 'Saving...' : hasImage ? 'Replace Image' : 'Upload Image'}
-          </button>
           {hasImage && (
             <button
               style={{
@@ -92,14 +80,28 @@ export function PartImageSection({
               filename={filename}
             />
 
-            {/* Hidden input, opened by the button above. Only the types the backend accepts. */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              style={{ display: 'none' }}
-              onChange={handleFileChosen}
-            />
+            {/* Drop zone. The key changes whenever the part's picture changes (a new file
+                name after every upload, null after a remove), which remounts it and
+                clears the file it was showing. If an upload fails the key stays the same,
+                so the file stays listed next to the error message. */}
+            <div
+              style={{
+                maxWidth: '420px',
+                opacity: saving ? 0.5 : 1,
+                pointerEvents: saving ? 'none' : 'auto',
+              }}
+            >
+              <FileDrop
+                key={filename ?? 'no-image'}
+                id={`part-image-drop-${partId}`}
+                inputTitle={hasImage ? 'Replace image' : 'Add image'}
+                multiple={false}
+                accept="image/jpeg,image/png,image/webp"
+                onFilesChange={handleFilesChange}
+              />
+            </div>
+
+            {saving && <div style={{ marginTop: '8px' }}>Saving...</div>}
 
             {error && (
               <div role="alert" style={{ color: '#ff6b6b', marginTop: '8px' }}>

@@ -6,6 +6,7 @@ import { ExpandableTableCard } from '../../components/table/ExpandableTableCard'
 import { PartCardDetails } from './PartTableDetails';
 import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
 import { WarningIcon } from '../../components/icons/WarningIcon';
+import { PartsKebabMenu } from '../components/partsKebabMenu.tsx/PartsKebabMenu';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;
@@ -113,9 +114,8 @@ export function PartTableCard({
             }}
           >
             <div onClick={(e) => e.stopPropagation()}>
-              <LowStockKebabMenu
+              <PartsKebabMenu
                 partId={partData.id}
-                partURL={''}
                 onDelete={() => setConfirmDeleteOpen(true)}
               />
               {confirmDeleteOpen && (

@@ -1,6 +1,6 @@
-import { useFetchDigikey } from '../../hooks/parts/useFetchDigikey';
-import { AccordianMenu } from '../accordianMenu/AccordianMenu';
-import { ReadOnlyInfoSection } from '../readOnly/ReadOnlyInfoSection';
+import { useFetchDigikey } from '../../../hooks/parts/useFetchDigikey';
+import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
+import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
 
 interface DistributorAccordianProps {
   partId: number;

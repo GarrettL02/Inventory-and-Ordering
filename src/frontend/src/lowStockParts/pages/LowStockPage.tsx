@@ -63,6 +63,7 @@ export function LowStockPage() {
         overflow: 'hidden',
         paddingBottom: '1rem',
         paddingTop: '40px', //Needed on all pages to offset header
+        paddingRight: '30px',
       }}
     >
       <div

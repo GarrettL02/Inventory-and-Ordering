@@ -6,9 +6,10 @@ import { DataValidationStateWrapper } from '../../components/dataValidationState
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../components/readOnly/ReadOnlyInfoSection';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
-import { DistributorAccordian } from '../../components/distributorAccordian/DistributorAccordian';
+import { DistributorAccordian } from '../components/distributorAccordian/DistributorAccordian';
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
+import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
 
 export function PartDetailsPage() {
   const { partId } = useLoaderData() as { partId: number };
@@ -102,6 +103,12 @@ export function PartDetailsPage() {
                     </div>
                   </div>
                 </AccordianMenu>
+                {parts?.id && (
+                  <ManufacturerAccordian
+                    manufacturerName={parts.manufacturerName}
+                    manufacturerPartNumber={parts.manufacturerPartNumber}
+                  />
+                )}
                 {parts?.manufacturerPartNumber && (
                   <DistributorAccordian
                     partId={parts.id}

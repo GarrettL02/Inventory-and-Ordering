@@ -30,7 +30,7 @@ export function LowStockKebabMenu({
             ]
           : []),
         {
-          label: 'Delete Part',
+          label: 'Delete Part from Low Stock',
           onClick: () =>
             onDelete ? onDelete() : console.log('delete', partId),
         },
