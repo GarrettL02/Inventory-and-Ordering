@@ -6,13 +6,17 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../auth/currentUser.decorator';
 import type { AuthUser } from '../auth/schema/auth.schema';
 import { parseOrBadRequest } from '../common/parseOrBadRequest';
 import { StockMovementsService } from './stockMovements.service';
-import { AdjustStockSchema } from './schema/stockMovements.schema';
+import {
+  AdjustStockSchema,
+  PreviewAdjustStockQuerySchema,
+} from './schema/stockMovements.schema';
 
 @Controller('stockmovements')
 @UseGuards(AuthGuard)
@@ -29,6 +33,19 @@ export class StockMovementsController {
   @Get(':id')
   async getStockDataById(@Param('id', ParseIntPipe) partId: number) {
     return this.stockMovementsService.getStockDataById(partId);
+  }
+
+  // Preview an add / remove without saving it (id = the part's id).
+  // Query: ?delta=5
+  // -> { partId, stockLevel, newStockLevel, minStockLevel, willClearLowStock }
+  //    willClearLowStock = true when saving it would take the part off the low stock list
+  @Get(':id/preview')
+  async previewAdjustStock(
+    @Param('id', ParseIntPipe) partId: number,
+    @Query() query: unknown,
+  ) {
+    const { delta } = parseOrBadRequest(PreviewAdjustStockQuerySchema, query);
+    return this.stockMovementsService.previewAdjustStock(partId, delta);
   }
 
   // Add or remove stock for a part (id = the part's id).

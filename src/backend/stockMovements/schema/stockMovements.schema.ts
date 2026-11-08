@@ -118,3 +118,35 @@ export const AdjustStockResultSchema = z.object({
 });
 
 export type AdjustStockResult = z.infer<typeof AdjustStockResultSchema>;
+
+////////////////////////////////////////////////////////
+//
+// Preview Adjust Stock Query Schema
+// (?delta=5 on GET /stockmovements/:id/preview)
+//
+////////////////////////////////////////////////////////
+export const PreviewAdjustStockQuerySchema = z.object({
+  delta: z.coerce
+    .number()
+    .int()
+    .refine((value) => value !== 0, 'delta cannot be 0'),
+});
+
+////////////////////////////////////////////////////////
+//
+// Preview Adjust Stock Result Schema
+// (what previewAdjustStock() returns; nothing is saved. willClearLowStock is
+// true when the change would remove the part's automatic low stock event)
+//
+////////////////////////////////////////////////////////
+export const PreviewAdjustStockResultSchema = z.object({
+  partId: z.number(),
+  stockLevel: z.number(),
+  newStockLevel: z.number(),
+  minStockLevel: z.number(),
+  willClearLowStock: z.boolean(),
+});
+
+export type PreviewAdjustStockResult = z.infer<
+  typeof PreviewAdjustStockResultSchema
+>;

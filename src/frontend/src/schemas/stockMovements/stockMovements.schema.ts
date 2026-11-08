@@ -33,3 +33,17 @@ export const AdjustStockResultSchema = z.object({
 });
 
 export type AdjustStockResult = z.infer<typeof AdjustStockResultSchema>;
+
+// What GET /stockmovements/:id/preview?delta=N returns. Nothing is saved.
+// willClearLowStock is true when making the change would take the part off the low stock list.
+export const PreviewAdjustStockResultSchema = z.object({
+  partId: z.number(),
+  stockLevel: z.number(),
+  newStockLevel: z.number(),
+  minStockLevel: z.number(),
+  willClearLowStock: z.boolean(),
+});
+
+export type PreviewAdjustStockResult = z.infer<
+  typeof PreviewAdjustStockResultSchema
+>;

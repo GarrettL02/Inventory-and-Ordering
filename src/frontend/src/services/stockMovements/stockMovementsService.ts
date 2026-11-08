@@ -6,6 +6,8 @@ import {
 import {
   AdjustStockResult,
   AdjustStockResultSchema,
+  PreviewAdjustStockResult,
+  PreviewAdjustStockResultSchema,
   RecentStockMovementsDataSchema,
   StockMovementsDataSchema,
 } from '../../schemas/stockMovements/stockMovements.schema';
@@ -83,4 +85,19 @@ export const adjustPartStock = async (
   if (!res.ok) throw await responseError(res);
 
   return AdjustStockResultSchema.parse(await res.json());
+};
+
+// Ask what adding / removing stock would do, without saving anything.
+// willClearLowStock is true when it would take the part off the low stock list.
+export const previewAdjustPartStock = async (
+  partId: number,
+  delta: number,
+): Promise<PreviewAdjustStockResult> => {
+  const res = await fetch(`${BASE_URL}/${partId}/preview?delta=${delta}`, {
+    credentials: 'include',
+  });
+
+  if (!res.ok) throw await responseError(res);
+
+  return PreviewAdjustStockResultSchema.parse(await res.json());
 };
