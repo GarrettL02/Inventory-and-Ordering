@@ -14,13 +14,13 @@ import { TotalRowSchema } from '../common/schema/common.schema';
 
 // Which low stock rows are removed automatically when stock comes back up: the ones
 // a stock drop created (autoEntered) that aren't in the cart yet. Manual requests stay.
-const CLEARABLE_EVENT_CONDITION = 'autoEntered = 1 AND inCart = 0';
+const CLEARABLE_EVENT_CONDITION = 'autoEntered = 1';
 
 @Injectable()
 export class LowStockService {
   constructor(private readonly db: InventoryDatabaseService) {}
 
-  // Get all low stock parts
+  // Get all columns forlow stock parts
   async getLowStockParts() {
     const sql = `SELECT * FROM lowStockEvents`;
     const rows = await this.db.query(sql);
@@ -127,6 +127,7 @@ export class LowStockService {
     minStockLevel: number,
   ): Promise<number | null> {
     if (stockLevel >= minStockLevel) {
+      //runs if stock level is above minimum, deletes the row from lowstockevents
       await tx.run(
         `DELETE FROM lowStockEvents WHERE partId = ? AND ${CLEARABLE_EVENT_CONDITION}`,
         [partId],
@@ -134,6 +135,7 @@ export class LowStockService {
       return null;
     }
 
+    //runs if stock level is below minimum, updates or inserts the row in lowstockevents
     const openEventRows = await tx.query(
       `SELECT id FROM lowStockEvents
        WHERE partId = ?
@@ -142,8 +144,10 @@ export class LowStockService {
       [partId],
     );
 
+    //zod schema validation
     const openEvent = OpenLowStockEventRowArraySchema.parse(openEventRows)[0];
 
+    //if there is id, update the existing low stock event
     if (openEvent) {
       await tx.run(
         'UPDATE lowStockEvents SET stockLevel = ?, minStockLevel = ? WHERE id = ?',
@@ -152,6 +156,7 @@ export class LowStockService {
       return openEvent.id;
     }
 
+    //if there is no id, insert a new low stock event
     const result = await tx.run(
       'INSERT INTO lowStockEvents (partId, stockLevel, minStockLevel, autoEntered) VALUES (?, ?, ?, 1)',
       [partId, stockLevel, minStockLevel],

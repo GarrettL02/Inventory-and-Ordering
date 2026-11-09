@@ -13,25 +13,22 @@ export function ManufacturerAccordian({
 }: ManufacturerAccordianProps) {
   return (
     <AccordianMenu title="Manufacturer Information" shrinkable>
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-        {/* Left: info fields, 2 columns */}
-        <div
-          style={{
-            flex: 4,
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            rowGap: '40px',
-          }}
-        >
-          <ReadOnlyInfoSection
-            title="Manufacturer"
-            information={manufacturerName}
-          />
-          <ReadOnlyInfoSection
-            title="Manufacturer Part Number"
-            information={manufacturerPartNumber}
-          />
-        </div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+          columnGap: '20px',
+          rowGap: '20px',
+        }}
+      >
+        <ReadOnlyInfoSection
+          title="Manufacturer"
+          information={manufacturerName}
+        />
+        <ReadOnlyInfoSection
+          title="Manufacturer Part Number"
+          information={manufacturerPartNumber}
+        />
       </div>
     </AccordianMenu>
   );

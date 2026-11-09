@@ -17,7 +17,7 @@ const headerCell: React.CSSProperties = {
   borderBottom: '1px solid #4a4a4a',
   position: 'sticky',
   top: 0,
-  backgroundColor: '#212121', // so rows don't show through when scrolling
+  backgroundColor: '#242424', // so rows don't show through when scrolling
   whiteSpace: 'nowrap',
 };
 
@@ -53,7 +53,7 @@ export function StockHistorySection({
       style={{
         position: 'relative',
         minHeight: '400px',
-        marginBlock: '30px',
+        marginBlock: '20px',
       }}
     >
       {/* Inner box fills the wrapper exactly; only the table scrolls inside it */}
@@ -63,19 +63,22 @@ export function StockHistorySection({
           inset: 0,
           display: 'flex',
           flexDirection: 'column',
-          border: '2px solid #ccc',
-          borderRadius: '10px',
-          backgroundColor: '#212121',
-          padding: '20px',
+          border: '1px solid #333333',
+          borderRadius: '12px',
+          backgroundColor: '#242424',
+          padding: '14px 20px 20px',
         }}
       >
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: '18px',
-            fontWeight: 500,
-            marginBottom: '12px',
+            alignItems: 'center',
+            fontSize: '16px',
+            fontWeight: 600,
+            paddingBottom: '14px',
+            marginBottom: '14px',
+            borderBottom: '1px solid #333333',
             flexShrink: 0,
           }}
         >

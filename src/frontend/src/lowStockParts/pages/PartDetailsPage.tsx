@@ -11,6 +11,16 @@ import { StockHistorySection } from '../../partLookup/components/StockHistorySec
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
 
+// Big heading that starts each of the two page sections
+const sectionHeadingStyle = {
+  fontSize: '22px',
+  fontWeight: 600,
+  color: '#ffffff',
+  margin: 0,
+  paddingBottom: '10px',
+  borderBottom: '1px solid #333333',
+} as const;
+
 export function PartDetailsPage() {
   const { partId } = useLoaderData() as { partId: number };
   const { parts, loading, error, refetch } = useFetchPartsById(partId);
@@ -37,99 +47,115 @@ export function PartDetailsPage() {
             <div style={{ marginBottom: '20px' }}>
               <BackButton />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h1 style={{ color: '#ffffff' }}>{parts?.name}</h1>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr .7fr',
-                gap: '20px',
-              }}
-            >
-              <div>
-                <AccordianMenu title="Part Information" shrinkable>
-                  {/**------------ Accordian Row 1 ------------ **/}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '3fr 1fr 1fr',
-                      marginBottom: '50px',
-                    }}
-                  >
-                    <div style={{ gridColumn: 1 }}>
+
+            {/**================ Part Details section ================**/}
+            <section>
+              <h1 style={sectionHeadingStyle}>Part Details</h1>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: '14px',
+                }}
+              >
+                <h1
+                  style={{
+                    color: '#a7a7a7',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    margin: 0,
+                  }}
+                >
+                  {parts?.name}
+                </h1>
+              </div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr .7fr',
+                  gap: '20px',
+                }}
+              >
+                <div>
+                  <AccordianMenu title="Part Information" shrinkable>
+                    {/**------------ Text fields (full width) ------------ **/}
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'minmax(0, 1fr)',
+                        rowGap: '20px',
+                      }}
+                    >
                       <ReadOnlyInfoSection
                         title={'Description'}
                         information={parts?.description}
                       />
-                    </div>
-                    <div style={{ gridColumn: 2 }}>
-                      <ReadOnlyInfoSection
-                        title={'Current Stock Level'}
-                        information={parts?.stockLevel}
-                      />
-                    </div>
-                    <div style={{ gridColumn: 3 }}>
-                      <ReadOnlyInfoSection
-                        title={'Minimum Stock Level'}
-                        information={parts?.minStockLevel}
-                      />
-                    </div>
-                  </div>
-                  {/**------------ Accordian Row 2 ------------ **/}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '3fr 1fr 1fr',
-                    }}
-                  >
-                    <div style={{ gridColumn: 1 }}>
                       <ReadOnlyInfoSection
                         title={'Comments'}
                         information={parts?.comment}
                       />
                     </div>
-                    <div style={{ gridColumn: 2 }}>
+                    {/**------------ Numbers and location ------------ **/}
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                        columnGap: '20px',
+                        rowGap: '20px',
+                        marginTop: '20px',
+                        paddingTop: '20px',
+                        borderTop: '1px solid #333333',
+                      }}
+                    >
+                      <ReadOnlyInfoSection
+                        title={'Current Stock Level'}
+                        information={parts?.stockLevel}
+                      />
+                      <ReadOnlyInfoSection
+                        title={'Minimum Stock Level'}
+                        information={parts?.minStockLevel}
+                      />
                       <ReadOnlyInfoSection
                         title={'Average Price'}
                         information={`$${parts?.averagePrice} (1)`}
                       />
-                    </div>
-                    <div style={{ gridColumn: 3 }}>
                       <ReadOnlyInfoSection
                         title={'Storage Location'}
                         information={parts?.storageLocationName}
                       />
                     </div>
-                  </div>
-                </AccordianMenu>
-                {parts?.id && (
-                  <ManufacturerAccordian
-                    manufacturerName={parts.manufacturerName}
-                    manufacturerPartNumber={parts.manufacturerPartNumber}
-                  />
-                )}
-                {parts?.manufacturerPartNumber && (
-                  <DistributorAccordian
-                    partId={parts.id}
-                    partNumber={parts?.manufacturerPartNumber}
-                    distributorName={parts?.manufacturerName}
-                  />
-                )}
+                  </AccordianMenu>
 
-                <PartImageSection
+                  <PartImageSection
+                    partId={partId}
+                    partName={parts?.name ?? ''}
+                    filename={parts?.filename}
+                    onChanged={refetch}
+                  />
+                </div>
+                <StockHistorySection
                   partId={partId}
-                  partName={parts?.name ?? ''}
-                  filename={parts?.filename}
-                  onChanged={refetch}
+                  stockLevel={parts?.stockLevel || 0}
+                  onStockChanged={refetch}
                 />
               </div>
-              <StockHistorySection
-                partId={partId}
-                stockLevel={parts?.stockLevel || 0}
-                onStockChanged={refetch}
+            </section>
+
+            {/**================ Distributor Details section ================**/}
+            <section style={{ marginTop: '30px' }}>
+              <h1 style={sectionHeadingStyle}>Distributor Details</h1>
+              <ManufacturerAccordian
+                manufacturerName={parts?.manufacturerName}
+                manufacturerPartNumber={parts?.manufacturerPartNumber}
               />
-            </div>
+              {parts?.manufacturerPartNumber && (
+                <DistributorAccordian
+                  partId={parts.id}
+                  partNumber={parts?.manufacturerPartNumber}
+                  distributorName={parts?.manufacturerName}
+                />
+              )}
+            </section>
           </div>
         </>
       </DataValidationStateWrapper>

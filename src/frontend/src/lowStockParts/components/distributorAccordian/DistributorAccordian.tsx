@@ -8,23 +8,56 @@ interface DistributorAccordianProps {
   partNumber?: string | null;
 }
 
+// Status / loading / error text that spans the whole fields grid
+const messageStyle = {
+  gridColumn: '1 / -1',
+  color: '#a7a7a7',
+  fontSize: '13px',
+} as const;
+
+const linkButtonStyle = {
+  backgroundColor: '#ffffff12',
+  border: '1px solid #3d3d3d',
+  borderRadius: '8px',
+  color: '#cfcfcf',
+  cursor: 'pointer',
+  fontSize: '12px',
+  fontWeight: 600,
+  padding: '6px 12px',
+} as const;
+
+const setLinkHover = (el: HTMLButtonElement, hovering: boolean) => {
+  el.style.backgroundColor = hovering ? '#ffffff22' : '#ffffff12';
+  el.style.color = hovering ? '#ffffff' : '#cfcfcf';
+};
+
 export function DistributorAccordian({
   partId,
   distributorName,
   partNumber,
 }: DistributorAccordianProps) {
   const { digikeyData, loading, error } = useFetchDigikey(partId);
+  const hasDigikeyData = digikeyData?.state === 'ok';
 
   return (
     <AccordianMenu title="Distributor Information" shrinkable>
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: hasDigikeyData
+            ? 'minmax(0, 2fr) minmax(0, 1fr)'
+            : 'minmax(0, 1fr)',
+          gap: '24px',
+          alignItems: 'start',
+        }}
+      >
         {/* Left: info fields, 2 columns */}
         <div
           style={{
-            flex: 4,
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            rowGap: '40px',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            columnGap: '20px',
+            rowGap: '20px',
           }}
         >
           <ReadOnlyInfoSection
@@ -36,16 +69,24 @@ export function DistributorAccordian({
             information={partNumber}
           />
 
-          {loading && <div>Loading DigiKey data...</div>}
-          {error && <div>Could not load DigiKey data.</div>}
+          {loading && <div style={messageStyle}>Loading DigiKey data...</div>}
+          {error && (
+            <div style={{ ...messageStyle, color: '#ef5350' }}>
+              Could not load DigiKey data.
+            </div>
+          )}
           {digikeyData?.state === 'unavailable' && (
-            <div>{digikeyData.message}</div>
+            <div style={messageStyle}>{digikeyData.message}</div>
           )}
           {digikeyData?.state === 'no-part-number' && (
-            <div>Add a manufacturer part number to see DigiKey data.</div>
+            <div style={messageStyle}>
+              Add a manufacturer part number to see DigiKey data.
+            </div>
           )}
           {digikeyData?.state === 'not-found' && (
-            <div>DigiKey has no exact match for this part number.</div>
+            <div style={messageStyle}>
+              DigiKey has no exact match for this part number.
+            </div>
           )}
           {digikeyData?.state === 'ok' && (
             <>
@@ -60,16 +101,37 @@ export function DistributorAccordian({
             </>
           )}
         </div>
+
+        {/* Right: price breaks in their own panel */}
         {digikeyData?.state === 'ok' && (
-          <div style={{ flex: 1 }}>
+          <div
+            style={{
+              backgroundColor: '#1e1e1e',
+              border: '1px solid #333333',
+              borderRadius: '8px',
+              padding: '14px 16px',
+            }}
+          >
             <ReadOnlyInfoSection
               title="Price (DigiKey)"
               information={
                 digikeyData.data.priceBreaks.length > 0
                   ? digikeyData.data.priceBreaks.map((units) => (
-                      <div key={units.quantity} style={{ marginBottom: '5px' }}>
-                        {units.quantity}:{' '}
-                        {units.unitPrice ? `$${units.unitPrice}` : '—'}
+                      <div
+                        key={units.quantity}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          gap: '16px',
+                          padding: '3px 0',
+                        }}
+                      >
+                        <span style={{ color: '#a7a7a7' }}>
+                          {units.quantity}
+                        </span>
+                        <span>
+                          {units.unitPrice ? `$${units.unitPrice}` : '—'}
+                        </span>
                       </div>
                     ))
                   : undefined
@@ -78,55 +140,50 @@ export function DistributorAccordian({
           </div>
         )}
       </div>
+
       {digikeyData?.state === 'ok' && (
-        <>
-          <div style={{ marginTop: '40px', fontWeight: 600 }}>Links</div>
+        <div
+          style={{
+            marginTop: '24px',
+            paddingTop: '16px',
+            borderTop: '1px solid #333333',
+          }}
+        >
+          <div style={{ color: '#a7a7a7', fontSize: '12px', fontWeight: 500 }}>
+            Links
+          </div>
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 3fr',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
               marginTop: '10px',
-              justifyItems: 'start',
             }}
           >
             <button
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer',
-                color: '#9c9c9c',
-                fontWeight: 600,
-                fontSize: '12px',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              style={linkButtonStyle}
+              onMouseEnter={(e) => setLinkHover(e.currentTarget, true)}
+              onMouseLeave={(e) => setLinkHover(e.currentTarget, false)}
               onClick={() =>
                 digikeyData?.data.productUrl &&
                 window.open(digikeyData.data.productUrl, '_blank')
               }
             >
-              DigiKey Page
+              DigiKey Page ↗
             </button>
             <button
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer',
-                color: '#9c9c9c',
-                fontWeight: 600,
-                fontSize: '12px',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              style={linkButtonStyle}
+              onMouseEnter={(e) => setLinkHover(e.currentTarget, true)}
+              onMouseLeave={(e) => setLinkHover(e.currentTarget, false)}
               onClick={() =>
                 digikeyData?.data.datasheetUrl &&
                 window.open(digikeyData.data.datasheetUrl, '_blank')
               }
             >
-              {partNumber} Datasheet
+              {partNumber} Datasheet ↗
             </button>
           </div>
-        </>
+        </div>
       )}
     </AccordianMenu>
   );

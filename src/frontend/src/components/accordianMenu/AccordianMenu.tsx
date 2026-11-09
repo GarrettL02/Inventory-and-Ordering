@@ -9,6 +9,8 @@ interface AccordionMenuProps {
   sideTitleSection?: React.ReactNode;
 }
 
+// Same look as HomeCard on the homepage: dark card, thin border, divider under
+// the header, 16px semi-bold title. The shrink button and animation stay the same.
 export function AccordianMenu({
   children,
   title,
@@ -21,34 +23,40 @@ export function AccordianMenu({
   const bodyRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div
+    <section
       style={{
-        border: '2px solid #ccc',
-        borderRadius: '10px',
-        backgroundColor: '#212121',
-        padding: '20px',
-        marginBlock: '30px',
+        backgroundColor: '#242424',
+        border: '1px solid #333333',
+        borderRadius: '12px',
+        marginBlock: '20px',
+        minWidth: 0,
+        overflow: 'hidden',
       }}
     >
-      <div
+      <header
         style={{
-          paddingBottom: isOpen ? '20px' : '0px',
-          fontWeight: 'bold',
-          fontSize: '20px',
-          paddingInline: shrinkable ? '0px' : '30px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '12px',
-          transition: 'padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+          padding: '14px 20px',
+          borderBottom: isOpen ? '1px solid #333333' : '1px solid transparent',
+          transition: 'border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            minWidth: 0,
+          }}
+        >
           {shrinkable && (
             <button
               onClick={() => setIsOpen((prev) => !prev)}
               style={{
-                backgroundColor: '#ffffff23',
+                backgroundColor: '#ffffff1a',
                 borderRadius: '10px',
                 border: 'none',
                 color: '#ffffff',
@@ -62,11 +70,17 @@ export function AccordianMenu({
               ⮝
             </button>
           )}
-          {title}
+          <h3 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>
+            {title}
+          </h3>
         </div>
-        {!isOpen && closedExtraText}
+        {!isOpen && closedExtraText && (
+          <span style={{ color: '#a7a7a7', fontSize: '13px' }}>
+            {closedExtraText}
+          </span>
+        )}
         {isOpen && sideTitleSection && sideTitleSection}
-      </div>
+      </header>
 
       <div
         ref={bodyRef}
@@ -76,8 +90,10 @@ export function AccordianMenu({
           transition: 'grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        <div style={{ overflow: 'hidden' }}>{children}</div>
+        <div style={{ overflow: 'hidden' }}>
+          <div style={{ padding: '20px' }}>{children}</div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
