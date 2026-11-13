@@ -21,7 +21,9 @@ export function SettingsPage() {
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}
       >
         <div style={{ gridColumn: 'span 2' }}>
-          <AccordianMenu title={'General Settings'}>data</AccordianMenu>
+          <AccordianMenu title={'General Settings'}>
+            <input type="checkbox" onChange={() => {}} />
+          </AccordianMenu>
         </div>
         <div style={{ gridColumn: 'span 2' }}>
           <AccordianMenu title={'Notification Settings'}>data</AccordianMenu>

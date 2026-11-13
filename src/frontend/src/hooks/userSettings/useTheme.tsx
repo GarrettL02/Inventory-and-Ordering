@@ -12,13 +12,20 @@ import {
 } from '../../settings/themeStyling/themeStyling';
 import { useAuth } from '../auth/useAuth';
 import { getUserSettings } from '../../services/userSettings/userSettingsService';
+import { UserSettingsData } from '../../types/userSettings/userSettings';
 
 type ThemeContextValue = {
   themeName: ThemeName;
   themeType: ThemeColors;
+  //every saved user setting - useUpdateUserSettings reads and writes these
+  settings: UserSettingsData;
+  setSettings: (settings: UserSettingsData) => void;
   loading: boolean;
   error: Error | null;
 };
+
+//used before the saved settings load, and when logged out
+const DEFAULT_USER_SETTINGS: UserSettingsData = { theme: 'light' };
 
 //makes a context for theme management
 export const ThemeContext = createContext<ThemeContextValue | undefined>(
@@ -39,7 +46,9 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
-  const [themeName, setThemeName] = useState<ThemeName>('light');
+  const [settings, setSettings] = useState<UserSettingsData>(
+    DEFAULT_USER_SETTINGS,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -47,7 +56,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (authLoading) return;
 
     if (!user) {
-      setThemeName('light');
+      setSettings(DEFAULT_USER_SETTINGS);
       setError(null);
       setLoading(false);
       return;
@@ -59,7 +68,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     getUserSettings()
       .then(({ data }) => {
-        if (!cancelled) setThemeName(data.theme);
+        if (!cancelled) setSettings(data);
       })
       .catch((settingsError: unknown) => {
         if (!cancelled) {
@@ -79,11 +88,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     };
   }, [authLoading, user]);
 
+  const themeName = settings.theme;
   const themeType =
     themeName === 'dark' ? themeStyling.darkTheme : themeStyling.lightTheme;
 
   return (
-    <ThemeContext.Provider value={{ themeName, themeType, loading, error }}>
+    <ThemeContext.Provider
+      value={{ themeName, themeType, settings, setSettings, loading, error }}
+    >
       <div
         style={{
           minHeight: '100vh',

@@ -12,3 +12,22 @@ export const getUserSettings = async (): Promise<{
   const validatedData = UserSettingsDataSchema.parse(data.data);
   return { data: validatedData };
 };
+
+export const updateUserSettings = async (input: UserSettingsData) => {
+  const res = await fetch(BASE_URL, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  });
+
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+
+  const data = await res.json();
+
+  const validatedData = UserSettingsDataSchema.parse(data.data);
+
+  return { data: validatedData };
+};
