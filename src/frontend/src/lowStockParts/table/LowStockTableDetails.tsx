@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
 import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
 
 export interface LowStockTableDetailsProps {
   partId: number;
@@ -9,12 +11,17 @@ export interface LowStockTableDetailsProps {
 export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
   const { parts, loading, error } = useFetchPartsById(partId);
   const nav = useNavigate();
+  const { themeType } = useContext(ThemeContext)!;
 
   if (loading)
-    return <div style={{ fontSize: '13px' }}>Loading part details...</div>;
+    return (
+      <div style={{ fontSize: '13px', color: themeType.textMutedColor }}>
+        Loading part details...
+      </div>
+    );
   if (error || !parts)
     return (
-      <div style={{ fontSize: '13px' }}>
+      <div style={{ fontSize: '13px', color: themeType.errorTextColor }}>
         Error loading part details: {error}
       </div>
     );
@@ -74,7 +81,7 @@ export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#ffffff',
+            color: themeType.textPrimaryColor,
             cursor: 'pointer',
             fontWeight: 600,
             fontSize: '12px',
@@ -89,7 +96,7 @@ export function LowStockTableDetails({ partId }: LowStockTableDetailsProps) {
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#ffffff',
+              color: themeType.textPrimaryColor,
               cursor: 'pointer',
               fontWeight: 600,
               fontSize: '12px',

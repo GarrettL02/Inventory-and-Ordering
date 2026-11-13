@@ -1,3 +1,21 @@
-export function Chip () {
-    return (<div style={{ backgroundColor: '#ffffff', border: '1px solid black', borderRadius: '10px', color: 'black', padding: '5px', fontSize: '10px' }}>Partkeepr</div>);
+import { useContext } from 'react';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+
+export function Chip() {
+  const { themeType } = useContext(ThemeContext)!;
+
+  return (
+    <div
+      style={{
+        backgroundColor: themeType.surfaceHoverColor,
+        border: `1px solid ${themeType.borderColor}`,
+        borderRadius: '10px',
+        color: themeType.textSecondaryColor,
+        padding: '5px',
+        fontSize: '10px',
+      }}
+    >
+      Partkeepr
+    </div>
+  );
 }

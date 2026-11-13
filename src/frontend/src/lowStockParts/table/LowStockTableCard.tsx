@@ -5,6 +5,8 @@ import { Chip } from '../../components/chip/Chip';
 import { useNavigate } from 'react-router-dom';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { LowStockTableDetails } from './LowStockTableDetails';
+import { useContext } from 'react';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
 
 export interface LowStockTableCardProps {
   lowStockPartData: LowStockTableRow;
@@ -20,6 +22,7 @@ export function LowStockTableCard({
     textOverflow: 'ellipsis',
   };
   const nav = useNavigate();
+  const { themeType } = useContext(ThemeContext)!;
 
   return (
     <ExpandableTableCard
@@ -96,7 +99,7 @@ export function LowStockTableCard({
           >
             <button
               style={{
-                color: '#ffffff',
+                color: themeType.textPrimaryColor,
                 background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
@@ -106,8 +109,12 @@ export function LowStockTableCard({
                 alignItems: 'center',
                 fontWeight: 600,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#b8b8b8')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textSecondaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
               onClick={(e) => {
                 e.stopPropagation();
               }}

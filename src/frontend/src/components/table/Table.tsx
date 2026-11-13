@@ -1,7 +1,9 @@
+import { useContext } from 'react';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+
 export interface TableProps {
   children: React.ReactNode;
   labels: string[];
-  tableType: 'part';
 }
 export const partTableGrid = '2fr 2fr 2fr .55fr .8fr .8fr';
 
@@ -12,23 +14,23 @@ export const overflowSectionStyle = {
   textOverflow: 'ellipsis',
 };
 
-export function Table({ children, labels, tableType }: TableProps) {
+export function Table({ children, labels }: TableProps) {
+  const { themeType } = useContext(ThemeContext)!;
   return (
-    // Same card look as the homepage panels (see home/components/HomeCard)
     <div
       style={{
-        backgroundColor: '#242424',
-        border: '1px solid #333333',
+        backgroundColor: themeType.surfaceColor,
+        border: `1px solid ${themeType.borderColor}`,
         borderRadius: '12px',
         overflow: 'hidden',
         maxWidth: '100%',
+        color: themeType.textPrimaryColor,
       }}
     >
       <table
         style={{
           width: '100%',
           borderCollapse: 'collapse',
-          // Hides the last row's divider so it doesn't double up with the card border
           marginBottom: '-1px',
         }}
       >
@@ -37,7 +39,7 @@ export function Table({ children, labels, tableType }: TableProps) {
             style={{
               display: 'grid',
               gridTemplateColumns: partTableGrid,
-              borderBottom: '1px solid #333333',
+              borderBottom: `1px solid ${themeType.borderColor}`,
             }}
           >
             {labels.map((label, index) => (
@@ -50,7 +52,7 @@ export function Table({ children, labels, tableType }: TableProps) {
                   fontWeight: 600,
                   letterSpacing: '0.04em',
                   textTransform: 'uppercase',
-                  color: '#8a8a8a',
+                  color: themeType.textFaintColor,
                 }}
               >
                 {label}

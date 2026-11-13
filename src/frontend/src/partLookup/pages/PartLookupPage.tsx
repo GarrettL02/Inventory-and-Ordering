@@ -154,7 +154,7 @@ export function PartLookupPage() {
         style={{ marginLeft: '30px', marginBottom: '20px', maxWidth: '100%' }}
       >
         {/* Filters for parts - In stock, storage location, board/manufacturer?? */}
-        <Table labels={headerLabels} tableType={'part'}>
+        <Table labels={headerLabels}>
           {loading && <TableDataLoading />}
 
           {error && <TableDataError />}

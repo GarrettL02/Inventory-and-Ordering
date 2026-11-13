@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+
 interface TableDataDropFieldsProps {
   label: string;
   value: React.ReactNode;
@@ -7,6 +10,8 @@ export function TableDataDropFields({
   label,
   value,
 }: TableDataDropFieldsProps) {
+  const { themeType } = useContext(ThemeContext)!;
+
   return (
     <div style={{ minWidth: 0 }}>
       <div
@@ -15,14 +20,18 @@ export function TableDataDropFields({
           fontWeight: 600,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color: '#8a8a8a',
+          color: themeType.textFaintColor,
           marginBottom: '4px',
         }}
       >
         {label}
       </div>
       <div
-        style={{ fontSize: '14px', color: '#cfcfcf', overflowWrap: 'anywhere' }}
+        style={{
+          fontSize: '14px',
+          color: themeType.textSecondaryColor,
+          overflowWrap: 'anywhere',
+        }}
       >
         {value === null ? 'N/A' : value}
       </div>

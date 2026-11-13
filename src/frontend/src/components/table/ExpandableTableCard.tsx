@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
 
 export interface ExpandableTableCardProps {
   cardContent: React.ReactNode;
@@ -13,17 +14,11 @@ export function ExpandableTableCard({
 }: ExpandableTableCardProps) {
   const [open, setOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
+  const { themeType } = useContext(ThemeContext)!;
 
   const toggle = () => {
     setOpen((prev) => !prev);
     setHasOpened(true);
-  };
-
-  const overflowSectionStyle = {
-    paddingInline: '2%',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
   };
 
   return (
@@ -32,19 +27,26 @@ export function ExpandableTableCard({
         style={{
           display: 'grid',
           gridTemplateColumns: tableCardGrid, // parts table grid
-          borderBottom: open ? 'none' : '1px solid #2e2e2e',
-          backgroundColor: open ? '#2a2a2a' : '#242424',
+          borderBottom: open
+            ? 'none'
+            : `1px solid ${themeType.borderSubtleColor}`,
+          backgroundColor: open
+            ? themeType.surfaceHoverColor
+            : themeType.surfaceColor,
           height: '50px',
           alignItems: 'center',
           cursor: 'pointer',
           fontSize: '13px',
+          color: themeType.textPrimaryColor,
         }}
         onClick={toggle}
         onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = '#2a2a2a')
+          (e.currentTarget.style.backgroundColor = themeType.surfaceHoverColor)
         }
         onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = open ? '#2a2a2a' : '#242424')
+          (e.currentTarget.style.backgroundColor = open
+            ? themeType.surfaceHoverColor
+            : themeType.surfaceColor)
         }
       >
         {cardContent}
@@ -52,7 +54,7 @@ export function ExpandableTableCard({
       <tr
         style={{
           display: 'block',
-          backgroundColor: '#1f1f1f',
+          backgroundColor: themeType.surfaceExpandedColor,
         }}
       >
         <td style={{ display: 'block', padding: 0 }}>
@@ -75,7 +77,7 @@ export function ExpandableTableCard({
               <div
                 style={{
                   padding: '14px 2% 18px',
-                  borderBottom: '1px solid #2e2e2e',
+                  borderBottom: `1px solid ${themeType.borderSubtleColor}`,
                 }}
               >
                 {hasOpened && expandedContent}

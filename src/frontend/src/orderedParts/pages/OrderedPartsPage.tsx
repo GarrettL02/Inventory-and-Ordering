@@ -34,7 +34,7 @@ export function OrderedPartsPage() {
         ___
       </div>
       <div style={{ marginLeft: '30px' }}>
-        <Table labels={headerLabels} tableType={'part'}>
+        <Table labels={headerLabels}>
           {loading && <TableDataLoading />}
 
           {error && <TableDataError />}

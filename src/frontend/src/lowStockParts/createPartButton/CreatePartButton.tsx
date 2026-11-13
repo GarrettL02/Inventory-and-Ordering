@@ -1,22 +1,30 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
 
 export function CreatePartButton() {
   const nav = useNavigate();
+  const { themeType } = useContext(ThemeContext)!;
 
   return (
     <button
       style={{
-        backgroundColor: '#3a0e03',
-        color: 'white',
-        border: '1px solid #bdbdbd',
+        backgroundColor: themeType.buttonBackgroundColor,
+        color: themeType.buttonTextColor,
+        border: `1px solid ${themeType.buttonBorderColor}`,
         borderRadius: '10px',
         padding: '10px 20px',
         fontSize: '12px',
         fontWeight: 550,
         cursor: 'pointer',
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#4e0909')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#3a0e03')}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.backgroundColor =
+          themeType.buttonHoverBackgroundColor)
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.backgroundColor = themeType.buttonBackgroundColor)
+      }
       onClick={() => nav('/parts/partRequest')}
     >
       Add Part Request
