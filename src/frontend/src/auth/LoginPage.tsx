@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+import { useAuth } from '../hooks/auth/useAuth';
+import { useTheme } from '../hooks/userSettings/useTheme';
 
 export function LoginPage() {
+  const themeType = useTheme();
   const { login, loading, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,8 +44,8 @@ export function LoginPage() {
   return (
     <div
       style={{
-        color: 'white',
-        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+        color: themeType.textPrimaryColor,
+        background: themeType.loginBackground,
         width: '100dvw',
         minHeight: '100dvh',
         display: 'flex',
@@ -61,8 +63,8 @@ export function LoginPage() {
     >
       <div
         style={{
-          background: 'linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%)',
-          color: 'white',
+          background: themeType.loginCardBackground,
+          color: themeType.textPrimaryColor,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -70,9 +72,9 @@ export function LoginPage() {
           width: '400px',
           padding: '40px 30px',
           borderRadius: '12px',
-          border: 'none',
           outline: 'none',
-          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+          boxShadow: `0 10px 40px ${themeType.shadowColor}`,
+          border: `1px solid ${themeType.borderColor}`,
           boxSizing: 'border-box',
         }}
       >
@@ -95,7 +97,11 @@ export function LoginPage() {
             }}
           />
           <div
-            style={{ color: '#b0b0b0', fontSize: '14px', fontWeight: '500' }}
+            style={{
+              color: themeType.textMutedColor,
+              fontSize: '14px',
+              fontWeight: '500',
+            }}
           >
             Sign in to your Partkeepr account
           </div>
@@ -118,13 +124,13 @@ export function LoginPage() {
             style={
               {
                 border: 'none',
-                borderBottom: '2px solid #808080',
+                borderBottom: `2px solid ${themeType.inputBorderColor}`,
                 borderRadius: '0px',
                 outline: 'none',
                 padding: '12px 0px',
                 backgroundColor: 'transparent',
                 fontSize: '14px',
-                color: 'white',
+                color: themeType.textPrimaryColor,
                 fontFamily: 'inherit',
                 transition: 'all 0.2s ease',
                 boxSizing: 'border-box',
@@ -132,10 +138,11 @@ export function LoginPage() {
             }
             placeholder="Username"
             onFocus={(e) => {
-              e.currentTarget.style.borderBottomColor = 'white';
+              e.currentTarget.style.borderBottomColor = themeType.accentColor;
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderBottomColor = '#808080';
+              e.currentTarget.style.borderBottomColor =
+                themeType.inputBorderColor;
             }}
           />
 
@@ -148,13 +155,13 @@ export function LoginPage() {
             style={
               {
                 border: 'none',
-                borderBottom: '2px solid #808080',
+                borderBottom: `2px solid ${themeType.inputBorderColor}`,
                 borderRadius: '0px',
                 outline: 'none',
                 padding: '12px 0px',
                 backgroundColor: 'transparent',
                 fontSize: '14px',
-                color: 'white',
+                color: themeType.textPrimaryColor,
                 fontFamily: 'inherit',
                 transition: 'all 0.2s ease',
                 boxSizing: 'border-box',
@@ -162,23 +169,26 @@ export function LoginPage() {
             }
             placeholder="Password"
             onFocus={(e) => {
-              e.currentTarget.style.borderBottomColor = 'white';
+              e.currentTarget.style.borderBottomColor = themeType.accentColor;
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderBottomColor = '#808080';
+              e.currentTarget.style.borderBottomColor =
+                themeType.inputBorderColor;
             }}
           />
           <button
             type="submit"
             disabled={submitting}
             style={{
-              border: '2px solid white',
+              border: `2px solid ${themeType.buttonBorderColor}`,
               borderRadius: '6px',
               outline: 'none',
               padding: '12px 16px',
               cursor: submitting ? 'not-allowed' : 'pointer',
               backgroundColor: 'transparent',
-              color: submitting ? '#808080' : 'white',
+              color: submitting
+                ? themeType.textMutedColor
+                : themeType.textPrimaryColor,
               fontSize: '16px',
               fontWeight: '600',
               transition: 'all 0.2s ease',
@@ -188,7 +198,7 @@ export function LoginPage() {
             onMouseEnter={(e) => {
               if (!submitting) {
                 e.currentTarget.style.backgroundColor =
-                  'rgba(255, 255, 255, 0.1)';
+                  themeType.hoverOverlayColor;
               }
             }}
             onMouseLeave={(e) => {
@@ -206,11 +216,11 @@ export function LoginPage() {
             style={{
               marginTop: '16px',
               padding: '12px',
-              backgroundColor: 'rgba(255, 193, 7, 0.2)',
-              color: '#ffc107',
+              backgroundColor: themeType.warningBackgroundColor,
+              color: themeType.warningTextColor,
               borderRadius: '6px',
               fontSize: '14px',
-              border: '1px solid #ffc107',
+              border: `1px solid ${themeType.warningTextColor}`,
               width: '100%',
               boxSizing: 'border-box',
             }}

@@ -1,17 +1,17 @@
 import { PageRouter } from './pageRoutes/PageRouter';
-import { AuthProvider } from './auth/hooks/useAuth';
+import { AuthProvider } from './hooks/auth/useAuth';
 import { ToastProvider } from './components/toast/ToastProvider';
-import { ThemeProvider } from './settings/themeStyling/ThemeProvider';
+import { ThemeProvider } from './hooks/userSettings/useTheme';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
         <ToastProvider>
           <PageRouter />
         </ToastProvider>
-      </AuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

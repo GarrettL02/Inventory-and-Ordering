@@ -1,3 +1,5 @@
+import { useTheme } from '../../../hooks/userSettings/useTheme';
+
 interface GeneralButtonProps {
   onClick?: () => void;
   buttonText: string;
@@ -13,6 +15,7 @@ export function GeneralButton({
   form,
   disabled,
 }: GeneralButtonProps) {
+  const themeType = useTheme();
   return (
     <button
       type={type}
@@ -20,9 +23,9 @@ export function GeneralButton({
       disabled={disabled}
       style={{
         whiteSpace: 'nowrap',
-        backgroundColor: '#3a0e03',
-        color: 'white',
-        border: '1px solid #a3a3a3',
+        backgroundColor: themeType.buttonBackgroundColor,
+        color: themeType.buttonTextColor,
+        border: `1px solid ${themeType.buttonBorderColor}`,
         borderRadius: '10px',
         padding: '10px 20px',
         fontSize: '15px',
@@ -30,8 +33,13 @@ export function GeneralButton({
         cursor: disabled ? 'not-allowed' : 'pointer',
         opacity: disabled ? 0.6 : 1,
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#4e0909')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#3a0e03')}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.backgroundColor =
+          themeType.buttonHoverBackgroundColor)
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.backgroundColor = themeType.buttonBackgroundColor)
+      }
       onClick={() => onClick?.()}
     >
       {buttonText}

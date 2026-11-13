@@ -26,9 +26,9 @@ export class UserSettingsService {
     // Create rows to store rows that match the query
     const rows = await this.db.query(sql, [userId]);
 
-    //Validate with ZOD schema - if no settings exist default to dark
+    // Validate with ZOD schema - settings default to light when no row exists.
     const validatedData = UserSettingsSchema.parse(
-      rows[0] ?? { theme: 'dark' },
+      rows[0] ?? { theme: 'light' },
     );
 
     return { data: validatedData };

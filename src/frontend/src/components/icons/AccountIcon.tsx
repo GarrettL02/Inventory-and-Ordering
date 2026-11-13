@@ -1,4 +1,7 @@
+import { useTheme } from '../../hooks/userSettings/useTheme';
+
 export function AccountIcon({ size = 24 }: { size?: number } = {}) {
+  const themeType = useTheme();
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +9,7 @@ export function AccountIcon({ size = 24 }: { size?: number } = {}) {
       width={size}
       height={size}
       fill="none"
-      stroke="white"
+      stroke={themeType.textPrimaryColor}
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"

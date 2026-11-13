@@ -7,6 +7,7 @@ import { PartPagePartIcon } from '../icons/PartPagePartIcon';
 import { HomeIcon } from '../icons/HomeIcon';
 import { AssetsIcon } from '../icons/AssetsIcon';
 import { SettingsIcon } from '../icons/SettingsIcon';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface HeaderSidebarComponentProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ interface HeaderSidebarComponentProps {
 export function HeaderSidebarComponent({
   children,
 }: HeaderSidebarComponentProps) {
+  const themeType = useTheme();
   const [menuExpanded, setMenuExpanded] = useState(false);
 
   const sideMenuLinks = [
@@ -62,8 +64,8 @@ export function HeaderSidebarComponent({
       style={{
         padding: '3rem',
         fontFamily: 'Arial, sans-serif',
-        color: 'white',
-        backgroundColor: '#1d1d1dff',
+        color: themeType.textPrimaryColor,
+        backgroundColor: themeType.backgroundColor,
         minHeight: '100dvh',
         width: '100%',
         boxSizing: 'border-box',

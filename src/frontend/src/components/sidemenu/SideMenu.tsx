@@ -8,6 +8,8 @@ import {
   SetStateAction,
 } from 'react';
 import { NavLink } from 'react-router';
+import { useTheme } from '../../hooks/userSettings/useTheme';
+import { ThemeColors } from '../../settings/themeStyling/themeStyling';
 
 interface SideMenuLink {
   name: string;
@@ -25,9 +27,10 @@ interface SideMenuProps {
 
 const COLLAPSED_WIDTH = '48px';
 const EXPANDED_WIDTH = '200px';
-const ACCENT = '#580909ff';
-
-const menuStyle = (isExpanded: boolean): CSSProperties => ({
+const menuStyle = (
+  isExpanded: boolean,
+  themeType: ThemeColors,
+): CSSProperties => ({
   position: 'fixed',
   top: 0,
   bottom: 0,
@@ -40,9 +43,9 @@ const menuStyle = (isExpanded: boolean): CSSProperties => ({
   flexDirection: 'column',
   gap: 4,
   overflowX: 'hidden',
-  backgroundColor: '#262626',
-  borderRight: '1px solid #ffffff14',
-  boxShadow: isExpanded ? '8px 0 24px #00000066' : 'none',
+  backgroundColor: themeType.sidebarBackgroundColor,
+  borderRight: `1px solid ${themeType.sidebarBorderColor}`,
+  boxShadow: isExpanded ? `8px 0 24px ${themeType.shadowColor}` : 'none',
   transition: 'width 0.25s ease, box-shadow 0.25s ease',
 });
 
@@ -50,6 +53,7 @@ const linkStyle = (
   isActive: boolean,
   isHovered: boolean,
   isFocused: boolean,
+  themeType: ThemeColors,
 ): CSSProperties => ({
   position: 'relative',
   display: 'flex',
@@ -58,29 +62,32 @@ const linkStyle = (
   height: 40,
   paddingLeft: 8, // centers a 24px icon in the collapsed rail
   borderRadius: 8,
-  color: isActive || isHovered ? '#ffffff' : '#9a9a9a',
+  color:
+    isActive || isHovered
+      ? themeType.sidebarTextActiveColor
+      : themeType.sidebarTextColor,
   backgroundColor: isActive
-    ? '#ffffff1a'
+    ? themeType.activeOverlayColor
     : isHovered
-      ? '#ffffff10'
+      ? themeType.hoverOverlayColor
       : 'transparent',
   fontSize: 14,
   textDecoration: 'none',
   whiteSpace: 'nowrap',
-  outline: isFocused ? `2px solid ${ACCENT}` : 'none',
+  outline: isFocused ? `2px solid ${themeType.accentColor}` : 'none',
   outlineOffset: -2,
   transition: 'background-color 0.15s ease, color 0.15s ease',
 });
 
-const accentBarStyle: CSSProperties = {
+const accentBarStyle = (themeType: ThemeColors): CSSProperties => ({
   position: 'absolute',
   left: -4,
   top: 8,
   bottom: 8,
   width: 3,
   borderRadius: '0 3px 3px 0',
-  backgroundColor: ACCENT,
-};
+  backgroundColor: themeType.accentColor,
+});
 
 // keeps icons from being squashed by the label while the menu resizes
 const iconWrapperStyle: CSSProperties = {
@@ -97,12 +104,12 @@ const labelStyle = (isExpanded: boolean): CSSProperties => ({
   transition: `opacity 0.15s ease ${isExpanded ? '0.1s' : '0s'}`,
 });
 
-const dividerStyle: CSSProperties = {
+const dividerStyle = (themeType: ThemeColors): CSSProperties => ({
   width: 'calc(100% - 16px)',
   margin: '8px auto',
   border: 0,
-  borderTop: '1px solid #ffffff1a',
-};
+  borderTop: `1px solid ${themeType.sidebarBorderColor}`,
+});
 
 const bottomStyle: CSSProperties = { marginTop: 'auto' };
 
@@ -113,6 +120,7 @@ function SideMenuItem({
   link: SideMenuLink;
   isExpanded: boolean;
 }) {
+  const themeType = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -125,11 +133,13 @@ function SideMenuItem({
       // only show the ring for keyboard focus, not mouse clicks
       onFocus={(e) => setIsFocused(e.currentTarget.matches(':focus-visible'))}
       onBlur={() => setIsFocused(false)}
-      style={({ isActive }) => linkStyle(isActive, isHovered, isFocused)}
+      style={({ isActive }) =>
+        linkStyle(isActive, isHovered, isFocused, themeType)
+      }
     >
       {({ isActive }) => (
         <>
-          {isActive && <span style={accentBarStyle} />}
+          {isActive && <span style={accentBarStyle(themeType)} />}
           <span style={iconWrapperStyle}>{link.icon}</span>
           <span style={labelStyle(isExpanded)}>{link.name}</span>
         </>
@@ -143,6 +153,7 @@ export function SideMenu({
   setIsExpanded,
   menuLinks,
 }: SideMenuProps) {
+  const themeType = useTheme();
   const triggerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -168,11 +179,15 @@ export function SideMenu({
   const bottomLinks = menuLinks.filter((link) => link.mountedToBottom);
 
   return (
-    <nav ref={triggerRef} aria-label="Main" style={menuStyle(isExpanded)}>
+    <nav
+      ref={triggerRef}
+      aria-label="Main"
+      style={menuStyle(isExpanded, themeType)}
+    >
       {mainLinks.map((link) => (
         <Fragment key={link.name}>
           <SideMenuItem link={link} isExpanded={isExpanded} />
-          {link.lineBreak && <hr style={dividerStyle} />}
+          {link.lineBreak && <hr style={dividerStyle(themeType)} />}
         </Fragment>
       ))}
       <div style={bottomStyle}>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface LightboxImage {
   src: string;
@@ -18,6 +19,7 @@ export function Lightbox({
   startIndex = 0,
   onClose,
 }: LightboxProps) {
+  const themeType = useTheme();
   const [currentIndex, setCurrentIndex] = useState(startIndex);
 
   //use the index that was clicked
@@ -47,7 +49,7 @@ export function Lightbox({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.9)',
+          backgroundColor: themeType.modalBackdropColor,
           zIndex: 9999,
           display: 'flex',
           alignItems: 'center',
@@ -63,12 +65,16 @@ export function Lightbox({
             right: '20px',
             background: 'none',
             border: 'none',
-            color: '#ffffff',
+            color: themeType.textPrimaryColor,
             fontSize: '32px',
             cursor: 'pointer',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#5a0000')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = themeType.linkHoverColor)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = themeType.textPrimaryColor)
+          }
         >
           ✕
         </button>
@@ -80,7 +86,7 @@ export function Lightbox({
             top: '20px',
             left: '50%',
             transform: 'translateX(-50%)',
-            color: 'white',
+            color: themeType.textPrimaryColor,
             fontSize: '16px',
           }}
         >
@@ -96,12 +102,16 @@ export function Lightbox({
               left: '20px',
               background: 'none',
               border: 'none',
-              color: '#ffffff',
+              color: themeType.textPrimaryColor,
               fontSize: '48px',
               cursor: 'pointer',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#5a0000')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = themeType.linkHoverColor)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = themeType.textPrimaryColor)
+            }
           >
             ‹
           </button>
@@ -127,12 +137,16 @@ export function Lightbox({
               right: '20px',
               background: 'none',
               border: 'none',
-              color: '#ffffff',
+              color: themeType.textPrimaryColor,
               fontSize: '48px',
               cursor: 'pointer',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#5a0000')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = themeType.linkHoverColor)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = themeType.textPrimaryColor)
+            }
           >
             ›
           </button>
@@ -144,7 +158,7 @@ export function Lightbox({
             bottom: '20px',
             left: '50%',
             transform: 'translateX(-50%)',
-            color: 'white',
+            color: themeType.textPrimaryColor,
             fontSize: '16px',
           }}
         >

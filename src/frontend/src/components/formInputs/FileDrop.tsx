@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface FileDropProps {
   inputTitle: string;
@@ -17,6 +18,7 @@ export function FileDrop({
   multiple = true,
   accept,
 }: FileDropProps) {
+  const themeType = useTheme();
   const [files, setFiles] = useState<File[]>([]);
   const [dragging, setDragging] = useState(false);
 
@@ -57,8 +59,10 @@ export function FileDrop({
         onDrop={handleDrop}
         onClick={() => document.getElementById(id)?.click()}
         style={{
-          backgroundColor: dragging ? '#3a3a3a' : '#2d2d2d',
-          border: `2px dashed ${dragging ? '#888' : '#555'}`,
+          backgroundColor: dragging
+            ? themeType.dropZoneActiveBackgroundColor
+            : themeType.dropZoneBackgroundColor,
+          border: `2px dashed ${dragging ? themeType.dropZoneActiveBorderColor : themeType.dropZoneBorderColor}`,
           borderRadius: '8px',
           padding: '30px',
           textAlign: 'center',
@@ -67,7 +71,13 @@ export function FileDrop({
           marginTop: '4px',
         }}
       >
-        <p style={{ color: '#aaa', margin: 0, fontSize: '14px' }}>
+        <p
+          style={{
+            color: themeType.textMutedColor,
+            margin: 0,
+            fontSize: '14px',
+          }}
+        >
           {dragging
             ? 'Drop files here...'
             : 'Drag & drop files here, or click to browse'}
@@ -96,12 +106,12 @@ export function FileDrop({
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#3a3a3a',
+                backgroundColor: themeType.dropZoneActiveBackgroundColor,
                 borderRadius: '6px',
                 padding: '6px 10px',
                 marginBottom: '6px',
                 fontSize: '13px',
-                color: '#cfcfcf',
+                color: themeType.textSecondaryColor,
               }}
             >
               <span>{file.name}</span>
@@ -111,7 +121,7 @@ export function FileDrop({
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#ff6b6b',
+                  color: themeType.errorTextColor,
                   cursor: 'pointer',
                   fontSize: '16px',
                   lineHeight: 1,

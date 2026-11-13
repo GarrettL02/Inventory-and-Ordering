@@ -85,6 +85,7 @@ const darkTheme = {
   errorTextColor: '#ff6b6b',
   successTextColor: '#5fd38d', // stock added / positive change
   warningTextColor: '#e0b04a', // "below minimum stock" notice
+  warningBackgroundColor: '#3a2f14',
   warningIconColor: '#ff7221', // low stock icon in the parts table
   toastSuccessBackgroundColor: '#377553',
   toastErrorBackgroundColor: '#755147',
@@ -167,6 +168,7 @@ const lightTheme: typeof darkTheme = {
   errorTextColor: '#c62828',
   successTextColor: '#2e7d32',
   warningTextColor: '#8a6100',
+  warningBackgroundColor: '#fff4ce',
   warningIconColor: '#e65100',
   toastSuccessBackgroundColor: '#377553',
   toastErrorBackgroundColor: '#755147',

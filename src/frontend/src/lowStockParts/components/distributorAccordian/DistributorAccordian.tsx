@@ -1,6 +1,7 @@
 import { useFetchDigikey } from '../../../hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
+import { useTheme } from '../../../hooks/userSettings/useTheme';
 
 interface DistributorAccordianProps {
   partId: number;
@@ -13,6 +14,7 @@ export function DistributorAccordian({
   distributorName,
   partNumber,
 }: DistributorAccordianProps) {
+  const themeType = useTheme();
   const { digikeyData, loading, error } = useFetchDigikey(partId);
 
   return (
@@ -94,12 +96,16 @@ export function DistributorAccordian({
                 border: 'none',
                 background: 'none',
                 cursor: 'pointer',
-                color: '#9c9c9c',
+                color: themeType.textMutedColor,
                 fontWeight: 600,
                 fontSize: '12px',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textMutedColor)
+              }
               onClick={() =>
                 digikeyData?.data.productUrl &&
                 window.open(digikeyData.data.productUrl, '_blank')
@@ -112,12 +118,16 @@ export function DistributorAccordian({
                 border: 'none',
                 background: 'none',
                 cursor: 'pointer',
-                color: '#9c9c9c',
+                color: themeType.textMutedColor,
                 fontWeight: 600,
                 fontSize: '12px',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textMutedColor)
+              }
               onClick={() =>
                 digikeyData?.data.datasheetUrl &&
                 window.open(digikeyData.data.datasheetUrl, '_blank')

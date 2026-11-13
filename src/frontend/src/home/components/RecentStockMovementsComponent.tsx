@@ -1,6 +1,7 @@
 import { formatShortDate } from '../../functions';
 import { useFetchRecentStockMovements } from '../../hooks/stockMovements/useFetchRecentStockMovements';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 const title = 'Recent Stock Movements';
 
@@ -9,6 +10,7 @@ const gridColumns =
   'minmax(0, 2fr) 56px minmax(0, 1.2fr) minmax(0, 1.8fr) minmax(0, 1.2fr)';
 
 export function RecentStockMovementsComponent() {
+  const themeType = useTheme();
   const { stockMovementData, loading, error } = useFetchRecentStockMovements();
   // Wrap long text onto a second line instead of cutting it off, so nothing
   // disappears when the panel is narrow
@@ -33,7 +35,9 @@ export function RecentStockMovementsComponent() {
     >
       {loading && <p style={homeCardMessageStyle}>Loading...</p>}
       {error && !loading && (
-        <p style={{ ...homeCardMessageStyle, color: '#ef5350' }}>{error}</p>
+        <p style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}>
+          {error}
+        </p>
       )}
       {!loading && !error && stockMovementData.length === 0 && (
         <p style={homeCardMessageStyle}>No recent stock movements yet.</p>
@@ -49,8 +53,8 @@ export function RecentStockMovementsComponent() {
               fontWeight: 600,
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
-              color: '#8a8a8a',
-              borderBottom: '1px solid #2e2e2e',
+              color: themeType.textFaintColor,
+              borderBottom: `1px solid ${themeType.borderSubtleColor}`,
             }}
           >
             <div>Part</div>
@@ -77,7 +81,10 @@ export function RecentStockMovementsComponent() {
                 className="storage-location-row"
                 style={{
                   ...rowStyle,
-                  borderTop: index === 0 ? 'none' : '1px solid #2e2e2e',
+                  borderTop:
+                    index === 0
+                      ? 'none'
+                      : `1px solid ${themeType.borderSubtleColor}`,
                 }}
               >
                 <div style={cellStyle} title={m.partName}>
@@ -87,19 +94,28 @@ export function RecentStockMovementsComponent() {
                   style={{
                     textAlign: 'right',
                     fontWeight: 600,
-                    color: m.delta >= 0 ? '#4caf50' : '#ef5350',
+                    color:
+                      m.delta >= 0
+                        ? themeType.successTextColor
+                        : themeType.errorTextColor,
                   }}
                 >
                   {m.delta > 0 ? `+${m.delta}` : m.delta}
                 </div>
                 <div
-                  style={{ ...cellStyle, color: '#cfcfcf' }}
+                  style={{
+                    ...cellStyle,
+                    color: themeType.textSecondaryColor,
+                  }}
                   title={m.userName ?? ''}
                 >
                   {m.userName ?? '—'}
                 </div>
                 <div
-                  style={{ ...cellStyle, color: '#cfcfcf' }}
+                  style={{
+                    ...cellStyle,
+                    color: themeType.textSecondaryColor,
+                  }}
                   title={m.reason}
                 >
                   {m.reason}
@@ -108,7 +124,7 @@ export function RecentStockMovementsComponent() {
                   style={{
                     textAlign: 'right',
                     fontSize: '12px',
-                    color: '#a7a7a7',
+                    color: themeType.textMutedColor,
                     overflowWrap: 'anywhere',
                   }}
                 >

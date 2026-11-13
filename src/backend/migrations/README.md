@@ -13,6 +13,7 @@ Connection settings come from `.env` (`DB_HOST`, `DB_USERNAME`, `DB_PASSWORD`, `
 
 - **Fresh database:** runs `DatabaseSchema.sql`, then records every file in this folder as applied (the baseline already includes them).
 - **Existing database:** runs only the files not yet recorded in `schemaMigrations`, in order.
+- New users automatically receive a light-theme `userSettings` row through a database trigger.
 
 ## Adding a change
 

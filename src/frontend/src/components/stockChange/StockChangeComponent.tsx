@@ -5,6 +5,7 @@ import { Modal } from '../modal/Modal';
 import { GeneralButton } from '../buttons/generalButton/GeneralButton';
 import { CancelButton } from '../buttons/cancelButton/CancelButton';
 import { PreviewAdjustStockResult } from '../../schemas/stockMovements/stockMovements.schema';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface StockChangeComponentProps {
   partId: number;
@@ -13,38 +14,12 @@ export interface StockChangeComponentProps {
   onChanged?: () => void;
 }
 
-const inputStyle: React.CSSProperties = {
-  backgroundColor: '#161616',
-  color: 'white',
-  border: '1px solid #a3a3a3',
-  borderRadius: '7px',
-  padding: '6px 8px',
-  fontSize: '12px',
-  boxSizing: 'border-box',
-};
-
-// Remove = the red-brown used on the other buttons, Add = a matching dark green
-const actionButtonStyle = (
-  enabled: boolean,
-  color: string,
-): React.CSSProperties => ({
-  backgroundColor: color,
-  color: 'white',
-  border: '1px solid #a3a3a3',
-  borderRadius: '8px',
-  padding: '6px 14px',
-  fontSize: '12px',
-  fontWeight: 550,
-  cursor: enabled ? 'pointer' : 'not-allowed',
-  opacity: enabled ? 1 : 0.45,
-  whiteSpace: 'nowrap',
-});
-
 export function StockChangeComponent({
   partId,
   stockLevel,
   onChanged,
 }: StockChangeComponentProps) {
+  const themeType = useTheme();
   const [stockAmount, setStockAmount] = useState('1');
   const [reason, setReason] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
@@ -116,6 +91,30 @@ export function StockChangeComponent({
   const hover = (enabled: boolean, color: string) => (e: React.MouseEvent) => {
     if (enabled) (e.currentTarget as HTMLElement).style.backgroundColor = color;
   };
+  const inputStyle: React.CSSProperties = {
+    backgroundColor: themeType.compactInputBackgroundColor,
+    color: themeType.compactInputTextColor,
+    border: `1px solid ${themeType.compactInputBorderColor}`,
+    borderRadius: '7px',
+    padding: '6px 8px',
+    fontSize: '12px',
+    boxSizing: 'border-box',
+  };
+  const actionButtonStyle = (
+    enabled: boolean,
+    color: string,
+  ): React.CSSProperties => ({
+    backgroundColor: color,
+    color: themeType.buttonTextColor,
+    border: `1px solid ${themeType.buttonBorderColor}`,
+    borderRadius: '8px',
+    padding: '6px 14px',
+    fontSize: '12px',
+    fontWeight: 550,
+    cursor: enabled ? 'pointer' : 'not-allowed',
+    opacity: enabled ? 1 : 0.45,
+    whiteSpace: 'nowrap',
+  });
 
   // One short line that says what each button would do
   let preview: string | null = null;
@@ -135,7 +134,9 @@ export function StockChangeComponent({
         gap: '8px',
       }}
     >
-      <div style={{ fontSize: '12px', color: '#a7a7a7' }}>Adjust Stock</div>
+      <div style={{ fontSize: '12px', color: themeType.textMutedColor }}>
+        Adjust Stock
+      </div>
 
       {/* Row 1: how many, and why (optional) */}
       <div style={{ display: 'flex', gap: '8px' }}>
@@ -166,40 +167,60 @@ export function StockChangeComponent({
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <button
           disabled={!canRemove}
-          style={actionButtonStyle(canRemove, '#3a0e03')}
-          onMouseEnter={hover(canRemove, '#4e0909')}
-          onMouseLeave={hover(canRemove, '#3a0e03')}
+          style={actionButtonStyle(canRemove, themeType.buttonBackgroundColor)}
+          onMouseEnter={hover(
+            canRemove,
+            themeType.buttonHoverBackgroundColor,
+          )}
+          onMouseLeave={hover(canRemove, themeType.buttonBackgroundColor)}
           onClick={() => handleChange(-1)}
         >
           − Remove
         </button>
         <button
           disabled={!canAdd}
-          style={actionButtonStyle(canAdd, '#103a22')}
-          onMouseEnter={hover(canAdd, '#16502f')}
-          onMouseLeave={hover(canAdd, '#103a22')}
+          style={actionButtonStyle(
+            canAdd,
+            themeType.successButtonBackgroundColor,
+          )}
+          onMouseEnter={hover(
+            canAdd,
+            themeType.successButtonHoverBackgroundColor,
+          )}
+          onMouseLeave={hover(
+            canAdd,
+            themeType.successButtonBackgroundColor,
+          )}
           onClick={handleAddClick}
         >
           + Add
         </button>
         {loading && (
-          <span style={{ fontSize: '12px', color: '#a7a7a7' }}>Saving...</span>
+          <span style={{ fontSize: '12px', color: themeType.textMutedColor }}>
+            Saving...
+          </span>
         )}
       </div>
 
       {/* Feedback: what will happen / what went wrong / what happened */}
       {preview && !loading && !error && (
-        <div style={{ fontSize: '11px', color: '#a7a7a7' }}>
+        <div style={{ fontSize: '11px', color: themeType.textMutedColor }}>
           Current stock: {stockLevel}  ·  {preview}
         </div>
       )}
       {error && (
-        <div role="alert" style={{ fontSize: '12px', color: '#ff6b6b' }}>
+        <div
+          role="alert"
+          style={{ fontSize: '12px', color: themeType.errorTextColor }}
+        >
           {error}
         </div>
       )}
       {notice && !error && (
-        <div role="status" style={{ fontSize: '12px', color: '#e0b04a' }}>
+        <div
+          role="status"
+          style={{ fontSize: '12px', color: themeType.warningTextColor }}
+        >
           {notice}
         </div>
       )}

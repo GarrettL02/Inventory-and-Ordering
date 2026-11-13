@@ -7,23 +7,10 @@ import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetc
 import { StorageLocationData } from '../../types/storageLocation/storageLocation';
 import { TrashRemoveIcon } from '../../components/icons/TrashRemoveIcon';
 import { ConfirmDeleteStorageLocationModal } from './ConfirmDeleteStorageLocationModal';
-
-// Hover highlight can't be done with inline styles, so it lives in a tiny <style>
-const LIST_CSS = `
-  .storage-location-row { transition: background-color 0.15s ease; }
-  .storage-location-row:hover { background-color: #ffffff14; }
-  .storage-location-delete { color: #a7a7a7; transition: color 0.15s ease; }
-  .storage-location-delete:hover { color: #ff6b6b; }
-`;
-
-const messageStyle = {
-  margin: 0,
-  padding: '12px 16px',
-  color: '#a7a7a7',
-  fontSize: '13px',
-};
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function StorageLocationListComponent() {
+  const themeType = useTheme();
   const { storageLocationData, loading, error, refetch } =
     useFetchAllStorageLocations();
   const {
@@ -79,7 +66,12 @@ export function StorageLocationListComponent() {
       shrinkable
       closedExtraText={!loading && !error ? countLabel : undefined}
     >
-      <style>{LIST_CSS}</style>
+      <style>{`
+        .storage-location-row { transition: background-color 0.15s ease; }
+        .storage-location-row:hover { background-color: ${themeType.hoverOverlayColor}; }
+        .storage-location-delete { color: ${themeType.textMutedColor}; transition: color 0.15s ease; }
+        .storage-location-delete:hover { color: ${themeType.errorTextColor}; }
+      `}</style>
 
       {locationToDelete && (
         <ConfirmDeleteStorageLocationModal
@@ -115,9 +107,9 @@ export function StorageLocationListComponent() {
             minWidth: 0,
             padding: '8px 10px',
             fontSize: '14px',
-            backgroundColor: '#ebebeb',
-            color: '#1a1a1a',
-            border: addError ? '2px solid #4f0000' : '2px solid #a3a3a3',
+            backgroundColor: themeType.inputBackgroundColor,
+            color: themeType.inputTextColor,
+            border: `2px solid ${addError ? themeType.inputErrorBorderColor : themeType.inputBorderColor}`,
             borderRadius: '5px',
           }}
         />
@@ -130,22 +122,54 @@ export function StorageLocationListComponent() {
       {addError && (
         <p
           role="alert"
-          style={{ margin: '0 0 12px', color: '#ff6b6b', fontSize: '13px' }}
+          style={{
+            margin: '0 0 12px',
+            color: themeType.errorTextColor,
+            fontSize: '13px',
+          }}
         >
           {addError}
         </p>
       )}
 
-      {loading && <p style={messageStyle}>Loading...</p>}
+      {loading && (
+        <p
+          style={{
+            margin: 0,
+            padding: '12px 16px',
+            color: themeType.textMutedColor,
+            fontSize: '13px',
+          }}
+        >
+          Loading...
+        </p>
+      )}
 
       {error && (
-        <p role="alert" style={{ ...messageStyle, color: '#ff6b6b' }}>
+        <p
+          role="alert"
+          style={{
+            margin: 0,
+            padding: '12px 16px',
+            color: themeType.errorTextColor,
+            fontSize: '13px',
+          }}
+        >
           Could not load storage locations: {error}
         </p>
       )}
 
       {!loading && !error && count === 0 && (
-        <p style={messageStyle}>No storage locations yet.</p>
+        <p
+          style={{
+            margin: 0,
+            padding: '12px 16px',
+            color: themeType.textMutedColor,
+            fontSize: '13px',
+          }}
+        >
+          No storage locations yet.
+        </p>
       )}
 
       {!loading && !error && count > 0 && (
@@ -153,7 +177,7 @@ export function StorageLocationListComponent() {
           <div
             style={{
               padding: '0 16px 8px',
-              color: '#a7a7a7',
+              color: themeType.textMutedColor,
               fontSize: '12px',
             }}
           >
@@ -166,9 +190,9 @@ export function StorageLocationListComponent() {
               padding: 0,
               maxHeight: '280px',
               overflowY: 'auto',
-              border: '1px solid #4a4a4a',
+              border: `1px solid ${themeType.borderStrongColor}`,
               borderRadius: '8px',
-              backgroundColor: '#1a1a1a',
+              backgroundColor: themeType.surfaceExpandedColor,
             }}
           >
             {sortedLocations.map((location, index) => (
@@ -181,7 +205,10 @@ export function StorageLocationListComponent() {
                   gap: '12px',
                   padding: '10px 16px',
                   fontSize: '14px',
-                  borderTop: index === 0 ? 'none' : '1px solid #333333',
+                  borderTop:
+                    index === 0
+                      ? 'none'
+                      : `1px solid ${themeType.borderColor}`,
                 }}
               >
                 <span
@@ -190,7 +217,7 @@ export function StorageLocationListComponent() {
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: '#8b2a12',
+                    backgroundColor: themeType.accentColor,
                     flexShrink: 0,
                   }}
                 />

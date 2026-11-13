@@ -1,29 +1,32 @@
+import { useTheme } from '../../hooks/userSettings/useTheme';
+
 export interface RatingProps {
   value: number;
 }
 
 export function Rating({ value }: RatingProps) {
+  const themeType = useTheme();
   const filled = '★'.repeat(value);
   const empty = '☆'.repeat(5 - value);
 
   function colorValue() {
     if (value <= 2) {
-      return '#044f00f2';
+      return themeType.successTextColor;
     }
     if (value > 2 && value < 4) {
-      return '#948d06f8';
+      return themeType.warningTextColor;
     }
     if (value >= 4) {
-      return '#830202f2';
+      return themeType.errorTextColor;
     }
-    return 'white';
+    return themeType.textPrimaryColor;
   }
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
       <div
         style={{
-          backgroundColor: '#2e2e2e',
-          border: '1px solid #1a1a1a',
+          backgroundColor: themeType.surfaceHoverColor,
+          border: `1px solid ${themeType.borderColor}`,
           borderRadius: '20px',
           fontSize: '20px',
           fontWeight: 500,

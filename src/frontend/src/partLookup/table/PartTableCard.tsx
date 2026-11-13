@@ -7,6 +7,7 @@ import { PartCardDetails } from './PartTableDetails';
 import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
 import { WarningIcon } from '../../components/icons/WarningIcon';
 import { PartsKebabMenu } from '../components/partsKebabMenu.tsx/PartsKebabMenu';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;
@@ -21,6 +22,7 @@ export function PartTableCard({
   onDeleted,
   onStockChanged,
 }: LowStockTableCardProps) {
+  const themeType = useTheme();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const overflowSectionStyle = {
     paddingInline: '2%',
@@ -55,7 +57,7 @@ export function PartTableCard({
               {partData.stockLevel < partData.minStockLevel && (
                 <span
                   style={{
-                    color: 'rgb(255, 114, 33)',
+                    color: themeType.warningIconColor,
                     fontWeight: 'bold',
                     marginRight: '6px',
                   }}

@@ -5,6 +5,7 @@ import {
   RegisterOptions,
   UseFormRegister,
 } from 'react-hook-form';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface InfoInputProps<T extends FieldValues> {
   inputTitle: string;
@@ -23,6 +24,7 @@ export function InfoInput<T extends FieldValues>({
   rules,
   inputWidth,
 }: InfoInputProps<T>) {
+  const themeType = useTheme();
   return (
     <div
       style={{
@@ -34,15 +36,16 @@ export function InfoInput<T extends FieldValues>({
       <label>{inputTitle}</label>
       <input
         style={{
-          backgroundColor: '#cfcfcf',
-          border: `1px solid ${errors[name] ? '#8b0a0a' : '#1a1a1a'}`,
+          backgroundColor: themeType.inputBackgroundColor,
+          color: themeType.inputTextColor,
+          border: `1px solid ${errors[name] ? themeType.inputErrorBorderColor : themeType.inputBorderColor}`,
           borderRadius: '4px',
           padding: '5px',
         }}
         {...register(name, rules)}
       />
       {errors[name] && (
-        <p style={{ fontSize: '12px', color: '#8b0a0a' }}>
+        <p style={{ fontSize: '12px', color: themeType.errorTextColor }}>
           {errors[name]?.message as string}
         </p>
       )}

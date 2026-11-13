@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface HamburgerMneuProps {
   onMenuClick: () => void;
 }
 
 export function HamburgerMenu({ onMenuClick }: HamburgerMneuProps) {
+  const themeType = useTheme();
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -34,7 +36,11 @@ export function HamburgerMenu({ onMenuClick }: HamburgerMneuProps) {
           y1="20"
           x2="50"
           y2="20"
-          stroke={isMenuHovered ? '#ffffff' : '#9c9c9c'}
+          stroke={
+            isMenuHovered
+              ? themeType.textPrimaryColor
+              : themeType.textMutedColor
+          }
           stroke-width="4"
           stroke-linecap="round"
         />
@@ -44,7 +50,11 @@ export function HamburgerMenu({ onMenuClick }: HamburgerMneuProps) {
           y1="32"
           x2="50"
           y2="32"
-          stroke={isMenuHovered ? '#ffffff' : '#9c9c9c'}
+          stroke={
+            isMenuHovered
+              ? themeType.textPrimaryColor
+              : themeType.textMutedColor
+          }
           stroke-width="4"
           stroke-linecap="round"
         />
@@ -54,7 +64,11 @@ export function HamburgerMenu({ onMenuClick }: HamburgerMneuProps) {
           y1="44"
           x2="50"
           y2="44"
-          stroke={isMenuHovered ? '#ffffff' : '#9c9c9c'}
+          stroke={
+            isMenuHovered
+              ? themeType.textPrimaryColor
+              : themeType.textMutedColor
+          }
           stroke-width="4"
           stroke-linecap="round"
         />

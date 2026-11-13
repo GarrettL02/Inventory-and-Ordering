@@ -1,5 +1,6 @@
 import { useFetchPartValuation } from '../../hooks/parts/useFetchPartValuation';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -22,6 +23,7 @@ interface StatProps {
 }
 
 function Stat({ label, value, note, muted }: StatProps) {
+  const themeType = useTheme();
   return (
     <div style={{ padding: '20px' }}>
       <div
@@ -30,7 +32,7 @@ function Stat({ label, value, note, muted }: StatProps) {
           fontWeight: 600,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color: '#8a8a8a',
+          color: themeType.textFaintColor,
         }}
       >
         {label}
@@ -40,14 +42,22 @@ function Stat({ label, value, note, muted }: StatProps) {
           fontSize: '30px',
           fontWeight: 600,
           marginTop: '6px',
-          color: muted ? '#6b6b6b' : '#ffffff',
+          color: muted
+            ? themeType.textMutedColor
+            : themeType.textPrimaryColor,
           fontVariantNumeric: 'tabular-nums',
         }}
       >
         {value}
       </div>
       {note && (
-        <div style={{ fontSize: '12px', color: '#a7a7a7', marginTop: '4px' }}>
+        <div
+          style={{
+            fontSize: '12px',
+            color: themeType.textMutedColor,
+            marginTop: '4px',
+          }}
+        >
           {note}
         </div>
       )}
@@ -56,13 +66,18 @@ function Stat({ label, value, note, muted }: StatProps) {
 }
 
 export function InventoryValuationComponent() {
+  const themeType = useTheme();
   const { partValue, loading, error } = useFetchPartValuation();
 
   return (
     <HomeCard title="Inventory Valuation">
       {loading && <p style={homeCardMessageStyle}>Loading...</p>}
       {error && !loading && (
-        <p style={{ ...homeCardMessageStyle, color: '#ef5350' }}>{error}</p>
+        <p
+          style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}
+        >
+          {error}
+        </p>
       )}
       {!loading && !error && (
         <>
@@ -71,7 +86,9 @@ export function InventoryValuationComponent() {
             value={formatCurrency(partValue?.totalValuation)}
             note="Stock level × average price"
           />
-          <div style={{ borderTop: '1px solid #2e2e2e' }}>
+          <div
+            style={{ borderTop: `1px solid ${themeType.borderSubtleColor}` }}
+          >
             <Stat
               label="Assets"
               value="—"

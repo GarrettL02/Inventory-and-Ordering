@@ -9,7 +9,7 @@ import { TableDataLoading } from '../../components/table/TableDataLoading';
 //import { LowStockTableFilters } from '../tableFilters/LowStockTableFilters';
 import { CreatePartButton } from '../createPartButton/CreatePartButton';
 import { CartBar } from '../components/CartBar';
-import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+import { ThemeContext } from '../../hooks/userSettings/useTheme';
 
 export function LowStockPage() {
   const [isCartExpanded, setIsCartExpanded] = useState(false);

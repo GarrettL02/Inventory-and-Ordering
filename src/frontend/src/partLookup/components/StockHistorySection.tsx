@@ -1,5 +1,7 @@
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 import { useFetchStockMovements } from '../../hooks/stockMovements/useFetchStockMovements';
+import { useTheme } from '../../hooks/userSettings/useTheme';
+import { ThemeColors } from '../../settings/themeStyling/themeStyling';
 
 interface StockHistorySectionProps {
   partId: number;
@@ -8,24 +10,24 @@ interface StockHistorySectionProps {
   onStockChanged?: () => void;
 }
 
-const headerCell: React.CSSProperties = {
+const headerCell = (themeType: ThemeColors): React.CSSProperties => ({
   textAlign: 'left',
   padding: '8px 12px',
   fontSize: '12px',
   fontWeight: 600,
-  color: '#a7a7a7',
-  borderBottom: '1px solid #4a4a4a',
+  color: themeType.textMutedColor,
+  borderBottom: `1px solid ${themeType.borderStrongColor}`,
   position: 'sticky',
   top: 0,
-  backgroundColor: '#212121', // so rows don't show through when scrolling
+  backgroundColor: themeType.panelBackgroundColor,
   whiteSpace: 'nowrap',
-};
+});
 
-const cell: React.CSSProperties = {
+const cell = (themeType: ThemeColors): React.CSSProperties => ({
   padding: '8px 12px',
   fontSize: '13px',
-  borderBottom: '1px solid #333',
-};
+  borderBottom: `1px solid ${themeType.borderColor}`,
+});
 
 // +5 / -2 (a negative number already has its minus sign)
 const formatDelta = (delta: number) => (delta > 0 ? `+${delta}` : `${delta}`);
@@ -38,6 +40,7 @@ export function StockHistorySection({
   stockLevel,
   onStockChanged,
 }: StockHistorySectionProps) {
+  const themeType = useTheme();
   const { stockMovementData, loading, error, refetch } =
     useFetchStockMovements(partId);
 
@@ -63,9 +66,10 @@ export function StockHistorySection({
           inset: 0,
           display: 'flex',
           flexDirection: 'column',
-          border: '2px solid #ccc',
+          border: `2px solid ${themeType.panelBorderColor}`,
           borderRadius: '10px',
-          backgroundColor: '#212121',
+          backgroundColor: themeType.panelBackgroundColor,
+          color: themeType.textPrimaryColor,
           padding: '20px',
         }}
       >
@@ -91,7 +95,9 @@ export function StockHistorySection({
         </div>
 
         {loading && <div>Loading...</div>}
-        {error && <div style={{ color: '#ff6b6b' }}>{error}</div>}
+        {error && (
+          <div style={{ color: themeType.errorTextColor }}>{error}</div>
+        )}
         {!loading && !error && movements.length === 0 && (
           <div>No stock changes yet.</div>
         )}
@@ -108,35 +114,49 @@ export function StockHistorySection({
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={headerCell}>Date</th>
-                  <th style={headerCell}>Changed By</th>
-                  <th style={{ ...headerCell, textAlign: 'right' }}>Change</th>
-                  <th style={{ ...headerCell, textAlign: 'right' }}>
+                  <th style={headerCell(themeType)}>Date</th>
+                  <th style={headerCell(themeType)}>Changed By</th>
+                  <th style={{ ...headerCell(themeType), textAlign: 'right' }}>
+                    Change
+                  </th>
+                  <th style={{ ...headerCell(themeType), textAlign: 'right' }}>
                     Resulting Stock
                   </th>
-                  <th style={headerCell}>Reason</th>
+                  <th style={headerCell(themeType)}>Reason</th>
                 </tr>
               </thead>
               <tbody>
                 {movements.map((movement) => (
                   <tr key={movement.id}>
-                    <td style={cell}>{formatDate(movement.createdAt)}</td>
-                    <td style={cell}>{movement.userName ?? 'System'}</td>
+                    <td style={cell(themeType)}>
+                      {formatDate(movement.createdAt)}
+                    </td>
+                    <td style={cell(themeType)}>
+                      {movement.userName ?? 'System'}
+                    </td>
                     <td
                       style={{
-                        ...cell,
+                        ...cell(themeType),
                         textAlign: 'right',
                         fontWeight: 600,
-                        color: movement.delta > 0 ? '#5fd38d' : '#ff6b6b',
+                        color:
+                          movement.delta > 0
+                            ? themeType.successTextColor
+                            : themeType.errorTextColor,
                       }}
                     >
                       {formatDelta(movement.delta)}
                     </td>
-                    <td style={{ ...cell, textAlign: 'right' }}>
+                    <td style={{ ...cell(themeType), textAlign: 'right' }}>
                       {movement.stockLevelAfter}
                     </td>
                     {/* Date and reason can wrap; the other columns stay on one line */}
-                    <td style={{ ...cell, overflowWrap: 'anywhere' }}>
+                    <td
+                      style={{
+                        ...cell(themeType),
+                        overflowWrap: 'anywhere',
+                      }}
+                    >
                       {movement.reason}
                     </td>
                   </tr>

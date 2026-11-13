@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface FormInputOption {
   value: string | number;
@@ -31,11 +32,13 @@ export function FormInputs({
   options,
   placeholderOption,
 }: FormInputsProps) {
+  const themeType = useTheme();
   const id = useId();
 
   const sharedStyles = {
-    backgroundColor: '#ebebeb',
-    border: inputErrors ? '2px solid #4f0000' : '2px solid #a3a3a3',
+    backgroundColor: themeType.inputBackgroundColor,
+    color: themeType.inputTextColor,
+    border: `2px solid ${inputErrors ? themeType.inputErrorBorderColor : themeType.inputBorderColor}`,
     borderRadius: '5px',
     padding: '5px',
     width: inputWidth ? `${inputWidth}%` : '50%',
@@ -80,7 +83,9 @@ export function FormInputs({
     >
       <label htmlFor={id}>
         {label}
-        {required && <span style={{ color: '#d36a6a' }}> *</span>}
+        {required && (
+          <span style={{ color: themeType.errorTextColor }}> *</span>
+        )}
       </label>
       {field}
       {inputErrors}

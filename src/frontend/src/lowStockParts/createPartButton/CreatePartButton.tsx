@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+import { ThemeContext } from '../../hooks/userSettings/useTheme';
 
 export function CreatePartButton() {
   const nav = useNavigate();

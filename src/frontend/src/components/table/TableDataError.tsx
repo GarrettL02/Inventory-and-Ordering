@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+import { ThemeContext } from '../../hooks/userSettings/useTheme';
 
 export function TableDataError() {
   const { themeType } = useContext(ThemeContext)!;

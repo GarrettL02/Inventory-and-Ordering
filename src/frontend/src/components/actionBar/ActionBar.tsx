@@ -1,18 +1,21 @@
+import { useTheme } from '../../hooks/userSettings/useTheme';
+
 interface ActionBarProps {
   actions: React.ReactNode;
 }
 export function ActionBar({ actions }: ActionBarProps) {
+  const themeType = useTheme();
   return (
     <div
       style={{
-        backgroundColor: 'rgb(20, 20, 20)',
+        backgroundColor: themeType.surfaceColor,
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         zIndex: 0,
         height: '70px',
-        borderTop: '2px solid #333',
+        borderTop: `2px solid ${themeType.borderColor}`,
       }}
     >
       <div

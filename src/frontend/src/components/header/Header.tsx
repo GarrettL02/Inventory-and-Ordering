@@ -1,5 +1,6 @@
 import { HamburgerMenu } from '../hamburgerMenu/HamburgerMenu';
 import { AccountHeaderSection } from '../account/AccountHeaderSection';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -10,10 +11,13 @@ interface HeaderProps {
 const headerGridColumns = '.2fr 3fr 2fr';
 
 export function Header({ children, onHamburgerMenuClick }: HeaderProps) {
+  const themeType = useTheme();
   return (
     <div
       style={{
-        backgroundColor: '#242424ff',
+        backgroundColor: themeType.headerBackgroundColor,
+        color: themeType.textPrimaryColor,
+        borderBottom: `1px solid ${themeType.borderColor}`,
         position: 'fixed',
         top: 0,
         left: 0,

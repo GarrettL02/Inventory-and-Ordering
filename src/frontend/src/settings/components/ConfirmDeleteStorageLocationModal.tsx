@@ -2,6 +2,7 @@ import { Modal } from '../../components/modal/Modal';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { useDeleteStorageLocation } from '../../hooks/storageLocation/useDeleteStorageLocation';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface ConfirmDeleteStorageLocationModalProps {
   storageLocationId: number;
@@ -17,6 +18,7 @@ export function ConfirmDeleteStorageLocationModal({
   onClose,
   onDeleted,
 }: ConfirmDeleteStorageLocationModalProps) {
+  const themeType = useTheme();
   const { deleteStorageLocation, loading, error } = useDeleteStorageLocation();
 
   const handleDelete = async () => {
@@ -52,8 +54,8 @@ export function ConfirmDeleteStorageLocationModal({
           role="alert"
           style={{
             marginTop: '12px',
-            color: '#ff6b6b',
-            border: '1px solid #4f0000',
+            color: themeType.errorTextColor,
+            border: `1px solid ${themeType.inputErrorBorderColor}`,
             borderRadius: '5px',
             padding: '8px',
             fontSize: '12px',

@@ -6,6 +6,7 @@ import { usePartImage } from '../../hooks/parts/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 import { FileDrop } from '../../components/formInputs/FileDrop';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface PartImageSectionProps {
   partId: number;
@@ -25,6 +26,7 @@ export function PartImageSection({
   filename,
   onChanged,
 }: PartImageSectionProps) {
+  const themeType = useTheme();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const { uploadImage, removeImage, clearError, saving, error } = usePartImage(
     partId,
@@ -52,13 +54,17 @@ export function PartImageSection({
             <button
               style={{
                 background: 'none',
-                color: '#9c9c9c',
+                color: themeType.textMutedColor,
                 cursor: 'pointer',
               }}
               onClick={removeImage}
               disabled={saving}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textMutedColor)
+              }
             >
               Remove Image
             </button>
@@ -104,7 +110,10 @@ export function PartImageSection({
             {saving && <div style={{ marginTop: '8px' }}>Saving...</div>}
 
             {error && (
-              <div role="alert" style={{ color: '#ff6b6b', marginTop: '8px' }}>
+              <div
+                role="alert"
+                style={{ color: themeType.errorTextColor, marginTop: '8px' }}
+              >
                 {error}
               </div>
             )}

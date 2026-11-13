@@ -19,8 +19,14 @@ export function TableFilterBar({
   onSearchChange,
   tableGrid,
 }: TableFilterBarProps) {
+  const themeType = useTheme();
   return (
-    <div style={{ display: 'flex', backgroundColor: '#181818ff' }}>
+    <div
+      style={{
+        display: 'flex',
+        backgroundColor: themeType.filterBarBackgroundColor,
+      }}
+    >
       {/* filters aligned to table grid */}
       <div
         style={{
@@ -40,13 +46,13 @@ export function TableFilterBar({
             onChange={(e) => onFilterChange?.(filter.key, e.target.value)}
             style={{
               gridColumn: filter.gridColumn,
-              border: '2px solid #ccc',
+              border: `2px solid ${themeType.compactInputBorderColor}`,
               borderRadius: '12px',
               paddingInline: '10px',
               paddingBlock: '10px',
-              backgroundColor: 'rgb(19, 19, 19)',
+              backgroundColor: themeType.compactInputBackgroundColor,
               fontSize: '12px',
-              color: '#a8a8a8',
+              color: themeType.compactInputTextColor,
               cursor: 'pointer',
               width: '100%',
             }}
@@ -69,9 +75,10 @@ export function TableFilterBar({
           style={{
             width: '200px',
             background: 'none',
-            border: '2px solid #ccc',
+            border: `2px solid ${themeType.compactInputBorderColor}`,
             borderRadius: '10px',
-            color: '#ffffff',
+            backgroundColor: themeType.compactInputBackgroundColor,
+            color: themeType.compactInputTextColor,
             paddingInline: '15px',
             paddingBlock: '10px',
           }}
@@ -83,3 +90,4 @@ export function TableFilterBar({
     </div>
   );
 }
+import { useTheme } from '../../hooks/userSettings/useTheme';

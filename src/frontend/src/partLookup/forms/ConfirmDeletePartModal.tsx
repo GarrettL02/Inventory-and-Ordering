@@ -2,6 +2,7 @@ import { Modal } from '../../components/modal/Modal';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { useDeletePart } from '../../hooks/parts/useDeletePart';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface ConfirmDeletePartModalProps {
   partId: number;
@@ -17,6 +18,7 @@ export function ConfirmDeletePartModal({
   onClose,
   onDeleted,
 }: ConfirmDeletePartModalProps) {
+  const themeType = useTheme();
   const { deletePart, loading, error } = useDeletePart();
 
   const handleDelete = async () => {
@@ -52,8 +54,8 @@ export function ConfirmDeletePartModal({
           role="alert"
           style={{
             marginTop: '12px',
-            color: '#ff6b6b',
-            border: '1px solid #4f0000',
+            color: themeType.errorTextColor,
+            border: `1px solid ${themeType.inputErrorBorderColor}`,
             borderRadius: '5px',
             padding: '8px',
             fontSize: '12px',

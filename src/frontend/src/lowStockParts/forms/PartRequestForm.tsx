@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { BackButton } from '../../components/buttons/backButton/BackButton';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function PartRequestForm() {
+  const themeType = useTheme();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -9,8 +11,8 @@ export function PartRequestForm() {
   return (
     <div
       style={{
-        backgroundColor: '#2e2e2e',
-        color: '#ffffff',
+        backgroundColor: themeType.backgroundColor,
+        color: themeType.textPrimaryColor,
         width: '100%',
         minHeight: '100dvh',
         padding: '20px',

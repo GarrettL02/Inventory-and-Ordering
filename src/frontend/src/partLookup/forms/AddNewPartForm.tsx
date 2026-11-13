@@ -14,6 +14,7 @@ import { useToast } from '../../components/toast/ToastProvider';
 import { uploadPartImage } from '../../services/parts/partsService';
 import { validatePartImage } from '../functions/partImageRules';
 import { useAddNewPart } from '../../hooks/parts/useAddNewPart';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 const FORM_ID = 'add-new-part-form';
 
@@ -31,18 +32,23 @@ export interface AddNewPartFormProps {
 const toIdOrNull = (value: unknown) =>
   value === '' || value === null || value === undefined ? null : Number(value);
 
-const FieldError = ({ message }: { message?: string }) =>
-  message ? <span style={{ color: '#ff6b6b' }}>{message}</span> : null;
+const FieldError = ({ message }: { message?: string }) => {
+  const themeType = useTheme();
+  return message ? (
+    <span style={{ color: themeType.errorTextColor }}>{message}</span>
+  ) : null;
+};
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
+  const themeType = useTheme();
   return (
     <div
       style={{
         gridColumn: 'span 2',
         fontSize: '13px',
         fontWeight: 700,
-        color: '#c9c9c9',
-        borderBottom: '1px solid #4a4a4a',
+        color: themeType.textSecondaryColor,
+        borderBottom: `1px solid ${themeType.borderStrongColor}`,
         paddingBottom: '4px',
         marginTop: '8px',
       }}
@@ -58,6 +64,7 @@ export function AddNewPartForm({
   storageLocations = [],
   categories = [],
 }: AddNewPartFormProps) {
+  const themeType = useTheme();
   const { addNewPart, loading: saving, error: submitError } = useAddNewPart();
   const { showToast } = useToast();
 
@@ -157,8 +164,8 @@ export function AddNewPartForm({
             role="alert"
             style={{
               gridColumn: 'span 2',
-              color: '#ff6b6b',
-              border: '1px solid #4f0000',
+              color: themeType.errorTextColor,
+              border: `1px solid ${themeType.inputErrorBorderColor}`,
               borderRadius: '5px',
               padding: '8px',
               fontSize: '12px',

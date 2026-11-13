@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface ModalProps {
   modalTitle: string;
@@ -10,6 +11,7 @@ export interface ModalProps {
 }
 
 export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
+  const themeType = useTheme();
   // Close on Escape
   useEffect(() => {
     if (!onClose) return;
@@ -41,7 +43,7 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: '#1e1e1edc',
+        backgroundColor: themeType.modalBackdropColor,
         backdropFilter: 'blur(3px)',
         display: 'flex',
         justifyContent: 'center',
@@ -56,14 +58,16 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          background: 'linear-gradient(135deg, #1e1e1e 0%, #303030 100%)',
+          background: themeType.modalBackground,
+          color: themeType.textPrimaryColor,
           minHeight: '100px',
           minWidth: '50%',
           maxWidth: '90%',
           maxHeight: '90vh',
           boxSizing: 'border-box',
           padding: '20px',
-          boxShadow: '0 8px 40px #0000004d',
+          boxShadow: `0 8px 40px ${themeType.shadowColor}`,
+          border: `1px solid ${themeType.borderColor}`,
           borderRadius: '12px',
           gap: '20px',
         }}
@@ -84,7 +88,7 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#a7a7a7',
+                color: themeType.textMutedColor,
                 cursor: 'pointer',
                 fontSize: '22px',
                 lineHeight: 1,
@@ -112,7 +116,7 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
               alignItems: 'center',
               gap: '10px',
               paddingTop: '12px',
-              borderTop: '1px solid #4a4a4a',
+              borderTop: `1px solid ${themeType.borderStrongColor}`,
             }}
           >
             {footer}

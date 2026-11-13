@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../hooks/userSettings/useTheme';
 
 interface ModalOpenButtonProps {
   modalInfoComponent: React.ReactNode;
@@ -9,6 +10,7 @@ export function ModalOpenButton({
   buttonText,
   modalInfoComponent,
 }: ModalOpenButtonProps) {
+  const themeType = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -16,9 +18,9 @@ export function ModalOpenButton({
       <button
         onClick={() => setModalOpen(true)}
         style={{
-          backgroundColor: '#3a0e03',
-          color: 'white',
-          border: '1px solid #bdbdbd',
+          backgroundColor: themeType.buttonBackgroundColor,
+          color: themeType.buttonTextColor,
+          border: `1px solid ${themeType.buttonBorderColor}`,
           borderRadius: '10px',
           padding: '10px 20px',
           fontSize: '12px',
@@ -26,10 +28,12 @@ export function ModalOpenButton({
           cursor: 'pointer',
         }}
         onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = '#4e0909')
+          (e.currentTarget.style.backgroundColor =
+            themeType.buttonHoverBackgroundColor)
         }
         onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = '#3a0e03')
+          (e.currentTarget.style.backgroundColor =
+            themeType.buttonBackgroundColor)
         }
       >
         {buttonText}

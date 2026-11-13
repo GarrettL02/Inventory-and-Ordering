@@ -1,7 +1,9 @@
 import { useRouteError } from 'react-router-dom';
 import { BackButton } from '../buttons/backButton/BackButton';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function ErrorPage() {
+  const themeType = useTheme();
   const error = useRouteError() as {
     status?: number;
     statusText?: string;
@@ -13,8 +15,8 @@ export function ErrorPage() {
       style={{
         padding: '2rem',
         textAlign: 'center',
-        backgroundColor: '#2e2e2e',
-        color: '#fff',
+        backgroundColor: themeType.backgroundColor,
+        color: themeType.textPrimaryColor,
         minHeight: '100dvh',
       }}
     >

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface CartBarProps {
   isExpanded: boolean;
@@ -6,13 +7,14 @@ interface CartBarProps {
 }
 
 export function CartBar({ isExpanded, onToggle }: CartBarProps) {
+  const themeType = useTheme();
   const [isToggleHovered, setIsToggleHovered] = useState(false);
 
   return (
     <div
       data-testid="cart-bar-panel"
       style={{
-        backgroundColor: '#262626',
+        backgroundColor: themeType.sidebarBackgroundColor,
         position: 'fixed',
         top: 0,
         right: 0,
@@ -20,8 +22,10 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
         zIndex: 999,
         width: isExpanded ? '32%' : '12%',
         boxSizing: 'border-box',
-        borderLeft: '1px solid #ffffff14',
-        boxShadow: isExpanded ? '-8px 0 24px #00000066' : 'none',
+        borderLeft: `1px solid ${themeType.sidebarBorderColor}`,
+        boxShadow: isExpanded
+          ? `-8px 0 24px ${themeType.shadowColor}`
+          : 'none',
         transition: 'width 0.3s ease, box-shadow 0.3s ease',
       }}
     >
@@ -43,11 +47,15 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
         >
           <button
             style={{
-              color: isToggleHovered ? '#ffffff' : '#c4c4c4',
+              color: isToggleHovered
+                ? themeType.textPrimaryColor
+                : themeType.textSecondaryColor,
               alignSelf: 'flex-start',
-              border: '1px solid #ffffff14',
+              border: `1px solid ${themeType.sidebarBorderColor}`,
               borderRadius: '8px',
-              backgroundColor: isToggleHovered ? '#ffffff1a' : '#ffffff10',
+              backgroundColor: isToggleHovered
+                ? themeType.activeOverlayColor
+                : themeType.hoverOverlayColor,
               padding: '5px 8px',
               cursor: 'pointer',
               fontSize: '15px',
@@ -67,7 +75,7 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              color: '#9a9a9a',
+              color: themeType.sidebarTextColor,
               fontSize: '13px',
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
@@ -81,7 +89,7 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
             style={{
               fontSize: isExpanded ? '23px' : '17px',
               fontWeight: 600,
-              color: '#ffffff',
+              color: themeType.textPrimaryColor,
               transition: 'font-size 0.3s ease',
             }}
           >
@@ -93,7 +101,7 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
               height: '3px',
               marginTop: '8px',
               borderRadius: '3px',
-              backgroundColor: '#580909ff',
+              backgroundColor: themeType.accentColor,
             }}
           />
         </div>

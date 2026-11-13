@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Lightbox } from './LightBox';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface ImageLightboxComponentProps {
   imageSrc: string;
@@ -12,6 +13,7 @@ export function ImageLightboxComponent({
   imageAlt,
   filename,
 }: ImageLightboxComponentProps) {
+  const themeType = useTheme();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const hasImage = Boolean(filename);
 
@@ -28,13 +30,13 @@ export function ImageLightboxComponent({
             maxHeight: '220px',
             objectFit: 'contain',
             borderRadius: '6px',
-            border: '1px solid #4a4a4a',
+            border: `1px solid ${themeType.borderStrongColor}`,
             cursor: 'zoom-in',
             marginBottom: '12px',
           }}
         />
       ) : (
-        <div style={{ color: '#bbb9b9', marginBottom: '12px' }}>
+        <div style={{ color: themeType.textMutedColor, marginBottom: '12px' }}>
           No image yet
         </div>
       )}

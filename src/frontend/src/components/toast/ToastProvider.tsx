@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 type ToastKind = 'success' | 'error';
 
@@ -24,12 +25,8 @@ const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
 const TOAST_DURATION_MS = 2500;
 
-const toastColors: Record<ToastKind, string> = {
-  success: '#377553',
-  error: '#755147',
-};
-
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const themeType = useTheme();
   const [toasts, setToasts] = useState<ToastProps[]>([]);
   const nextId = useRef(0);
   const timers = useRef<number[]>([]);
@@ -83,9 +80,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={t.id}
             role="status"
             style={{
-              backgroundColor: toastColors[t.kind],
-              color: 'white',
-              border: '1px solid #858585',
+              backgroundColor:
+                t.kind === 'success'
+                  ? themeType.toastSuccessBackgroundColor
+                  : themeType.toastErrorBackgroundColor,
+              color: themeType.buttonTextColor,
+              border: `1px solid ${themeType.borderStrongColor}`,
               borderRadius: '8px',
               padding: '8px 16px',
               fontSize: '13px',

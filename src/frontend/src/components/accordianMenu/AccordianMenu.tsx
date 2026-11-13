@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface AccordionMenuProps {
   children: React.ReactNode;
@@ -17,15 +18,17 @@ export function AccordianMenu({
   initiallyShrunk,
   sideTitleSection,
 }: AccordionMenuProps) {
+  const themeType = useTheme();
   const [isOpen, setIsOpen] = useState(initiallyShrunk ? false : true);
   const bodyRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
       style={{
-        border: '2px solid #ccc',
+        border: `2px solid ${themeType.borderColor}`,
         borderRadius: '10px',
-        backgroundColor: '#212121',
+        backgroundColor: themeType.panelBackgroundColor,
+        color: themeType.textPrimaryColor,
         padding: '20px',
         marginBlock: '30px',
       }}
@@ -48,10 +51,10 @@ export function AccordianMenu({
             <button
               onClick={() => setIsOpen((prev) => !prev)}
               style={{
-                backgroundColor: '#ffffff23',
+                backgroundColor: themeType.activeOverlayColor,
                 borderRadius: '10px',
                 border: 'none',
-                color: '#ffffff',
+                color: themeType.textPrimaryColor,
                 cursor: 'pointer',
                 padding: '2px 8px',
                 fontSize: '14px',

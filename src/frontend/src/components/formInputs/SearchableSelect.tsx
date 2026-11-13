@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { FormInputOption } from '../form/FormInputProps';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface SearchableSelectProps {
   label: string;
@@ -39,6 +40,7 @@ export function SearchableSelect({
   disabled,
   inputErrors,
 }: SearchableSelectProps) {
+  const themeType = useTheme();
   const id = useId();
   const listId = `${id}-list`;
 
@@ -147,7 +149,9 @@ export function SearchableSelect({
     >
       <label htmlFor={id}>
         {label}
-        {required && <span style={{ color: '#d36a6a' }}> *</span>}
+        {required && (
+          <span style={{ color: themeType.errorTextColor }}> *</span>
+        )}
       </label>
 
       {/* +14px so it lines up with the other inputs, which add padding + border
@@ -183,9 +187,9 @@ export function SearchableSelect({
           style={{
             width: '100%',
             boxSizing: 'border-box',
-            backgroundColor: '#ebebeb',
-            color: '#1a1a1a',
-            border: inputErrors ? '2px solid #4f0000' : '2px solid #a3a3a3',
+            backgroundColor: themeType.inputBackgroundColor,
+            color: themeType.inputTextColor,
+            border: `2px solid ${inputErrors ? themeType.inputErrorBorderColor : themeType.inputBorderColor}`,
             borderRadius: '5px',
             padding: '5px 24px 5px 5px',
           }}
@@ -197,7 +201,7 @@ export function SearchableSelect({
             right: '8px',
             top: '50%',
             transform: 'translateY(-50%)',
-            color: '#555',
+            color: themeType.textMutedColor,
             pointerEvents: 'none',
             fontSize: '10px',
           }}
@@ -221,15 +225,20 @@ export function SearchableSelect({
               listStyle: 'none',
               maxHeight: '180px',
               overflowY: 'auto',
-              backgroundColor: '#ebebeb',
-              color: '#1a1a1a',
-              border: '2px solid #a3a3a3',
+              backgroundColor: themeType.inputBackgroundColor,
+              color: themeType.inputTextColor,
+              border: `2px solid ${themeType.inputBorderColor}`,
               borderRadius: '5px',
-              boxShadow: '0 4px 12px #00000066',
+              boxShadow: `0 4px 12px ${themeType.shadowColor}`,
             }}
           >
             {rows.length === 0 && (
-              <li style={{ padding: '6px 8px', color: '#666' }}>
+              <li
+                style={{
+                  padding: '6px 8px',
+                  color: themeType.textMutedColor,
+                }}
+              >
                 No matching options
               </li>
             )}
@@ -257,7 +266,9 @@ export function SearchableSelect({
                     fontWeight: isSelected ? 700 : 400,
                     fontStyle: row.value === null ? 'italic' : 'normal',
                     backgroundColor:
-                      index === highlighted ? '#cfcfcf' : 'transparent',
+                      index === highlighted
+                        ? themeType.surfaceHoverColor
+                        : 'transparent',
                   }}
                 >
                   {row.label}

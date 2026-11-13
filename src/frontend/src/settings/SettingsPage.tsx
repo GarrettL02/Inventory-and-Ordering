@@ -1,11 +1,13 @@
 import { AccordianMenu } from '../components/accordianMenu/AccordianMenu';
 import { StorageLocationListComponent } from './components/StorageLocationListComponent';
+import { useTheme } from '../hooks/userSettings/useTheme';
 
 export function SettingsPage() {
+  const themeType = useTheme();
   return (
     <div
       style={{
-        color: '#ffffff',
+        color: themeType.textPrimaryColor,
         minHeight: '100dvh',
         paddingTop: '20px',
         paddingLeft: '25px',

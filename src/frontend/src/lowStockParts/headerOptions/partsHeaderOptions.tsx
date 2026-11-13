@@ -1,12 +1,16 @@
 import { NavLink } from 'react-router';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function PartsHeaderOptions() {
+  const themeType = useTheme();
   const linkStyle = ({ isActive }: { isActive: boolean }) => ({
-    color: isActive ? '#ffffff' : '#b0b0b0',
+    color: isActive
+      ? themeType.textPrimaryColor
+      : themeType.textMutedColor,
     fontWeight: isActive ? 700 : 400,
     cursor: 'pointer',
     textDecoration: 'none',
-    borderBottom: isActive ? '2px solid white' : '',
+    borderBottom: isActive ? `2px solid ${themeType.accentColor}` : '',
     paddingBottom: '20px',
     paddingTop: '20px',
   });

@@ -10,8 +10,10 @@ import { DistributorAccordian } from '../components/distributorAccordian/Distrib
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function PartDetailsPage() {
+  const themeType = useTheme();
   const { partId } = useLoaderData() as { partId: number };
   const { parts, loading, error, refetch } = useFetchPartsById(partId);
 
@@ -22,7 +24,7 @@ export function PartDetailsPage() {
   return (
     <div
       style={{
-        color: '#ffffff',
+        color: themeType.textPrimaryColor,
         minHeight: '100dvh',
         paddingTop: '20px',
         paddingLeft: '25px',
@@ -38,7 +40,9 @@ export function PartDetailsPage() {
               <BackButton />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h1 style={{ color: '#ffffff' }}>{parts?.name}</h1>
+              <h1 style={{ color: themeType.textPrimaryColor }}>
+                {parts?.name}
+              </h1>
             </div>
             <div
               style={{

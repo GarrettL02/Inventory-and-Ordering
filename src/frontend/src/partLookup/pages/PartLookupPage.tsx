@@ -9,8 +9,10 @@ import { AddNewPartForm } from '../forms/AddNewPartForm';
 import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
 import { FormInputOption } from '../../components/form/FormInputProps';
 import { useFetchParts } from '../../hooks/parts/useFetchParts';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function PartLookupPage() {
+  const themeType = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -87,6 +89,7 @@ export function PartLookupPage() {
         overflow: 'hidden',
         paddingBottom: '1rem',
         paddingTop: '40px', //Needed on all pages to offset header
+        color: themeType.textPrimaryColor,
       }}
     >
       {modalOpen && (
@@ -108,7 +111,11 @@ export function PartLookupPage() {
             Inventory
           </h2>
           <div
-            style={{ color: '#580909ff', marginLeft: '50px', fontWeight: 700 }}
+            style={{
+              color: themeType.accentColor,
+              marginLeft: '50px',
+              fontWeight: 700,
+            }}
           >
             ___
           </div>
@@ -117,9 +124,9 @@ export function PartLookupPage() {
           <button
             onClick={() => setModalOpen(true)}
             style={{
-              backgroundColor: '#3a0e03',
-              color: 'white',
-              border: '1px solid #bdbdbd',
+              backgroundColor: themeType.buttonBackgroundColor,
+              color: themeType.buttonTextColor,
+              border: `1px solid ${themeType.buttonBorderColor}`,
               borderRadius: '10px',
               padding: '10px 20px',
               fontSize: '12px',
@@ -127,10 +134,12 @@ export function PartLookupPage() {
               cursor: 'pointer',
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#4e0909')
+              (e.currentTarget.style.backgroundColor =
+                themeType.buttonHoverBackgroundColor)
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = '#3a0e03')
+              (e.currentTarget.style.backgroundColor =
+                themeType.buttonBackgroundColor)
             }
           >
             Add New Part
@@ -141,10 +150,10 @@ export function PartLookupPage() {
             style={{
               padding: '7px',
               width: '250px',
-              border: '1px solid white',
+              border: `1px solid ${themeType.compactInputBorderColor}`,
               borderRadius: '7px',
-              backgroundColor: '#161616',
-              color: 'white',
+              backgroundColor: themeType.compactInputBackgroundColor,
+              color: themeType.compactInputTextColor,
             }}
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -182,27 +191,56 @@ export function PartLookupPage() {
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1 || loading}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.backgroundColor =
+                    themeType.surfaceHoverColor;
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = themeType.surfaceColor;
+              }}
               style={{
-                border: 'none',
+                backgroundColor: themeType.surfaceColor,
+                color: themeType.textPrimaryColor,
+                border: `1px solid ${themeType.borderColor}`,
                 borderRadius: '10px',
                 padding: '7px 10px',
-                cursor: 'pointer',
+                cursor: page === 1 || loading ? 'not-allowed' : 'pointer',
+                opacity: page === 1 || loading ? 0.55 : 1,
               }}
             >
               ← Previous
             </button>
-            <span style={{ margin: '0 20px' }}>
+            <span
+              style={{ margin: '0 20px', color: themeType.textSecondaryColor }}
+            >
               Page {pagination?.page} of {pagination?.totalPages} (
               {pagination?.total} total items)
             </span>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === pagination?.totalPages || loading}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.backgroundColor =
+                    themeType.surfaceHoverColor;
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = themeType.surfaceColor;
+              }}
               style={{
-                border: 'none',
+                backgroundColor: themeType.surfaceColor,
+                color: themeType.textPrimaryColor,
+                border: `1px solid ${themeType.borderColor}`,
                 borderRadius: '10px',
                 padding: '7px 10px',
-                cursor: 'pointer',
+                cursor:
+                  page === pagination?.totalPages || loading
+                    ? 'not-allowed'
+                    : 'pointer',
+                opacity: page === pagination?.totalPages || loading ? 0.55 : 1,
               }}
             >
               Next →

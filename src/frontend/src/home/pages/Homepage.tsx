@@ -1,13 +1,15 @@
-import { useAuth } from '../../auth/hooks/useAuth';
+import { useAuth } from '../../hooks/auth/useAuth';
 import { InventoryValuationComponent } from '../components/InventoryValuationComponent';
 import { PartsNoCostComponent } from '../components/PartsNoCostComponent';
 import { RecentOrderedComponent } from '../components/ReccentOrderedComponent';
 import { RecentLowStockComponent } from '../components/RecentLowStockComponent';
 import { RecentStockMovementsComponent } from '../components/RecentStockMovementsComponent';
 import { TasksComponent } from '../components/TasksComponent';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function HomePage() {
   const { user } = useAuth();
+  const themeType = useTheme();
   return (
     <div
       style={{
@@ -22,7 +24,13 @@ export function HomePage() {
         <h2 style={{ fontSize: '28px', fontWeight: 600, margin: 0 }}>
           {`Welcome${user?.username ? `, ${user.username}` : ''}`}
         </h2>
-        <p style={{ color: '#a7a7a7', fontSize: '14px', margin: '6px 0 0' }}>
+        <p
+          style={{
+            color: themeType.textMutedColor,
+            fontSize: '14px',
+            margin: '6px 0 0',
+          }}
+        >
           Here&rsquo;s what&rsquo;s happening with your parts.
         </p>
       </div>

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
 import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
-import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+import { ThemeContext } from '../../hooks/userSettings/useTheme';
 
 export interface LowStockTableDetailsProps {
   partId: number;

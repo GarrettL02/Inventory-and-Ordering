@@ -1,9 +1,11 @@
-import { useAuth } from '../../auth/hooks/useAuth';
+import { useAuth } from '../../hooks/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export function AccountHeaderSection() {
+  const themeType = useTheme();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -41,10 +43,10 @@ export function AccountHeaderSection() {
         position: 'fixed',
         top: rect.bottom + 2,
         right: window.innerWidth - rect.right,
-        backgroundColor: '#1f1f1f',
-        border: '1px solid #403f3f',
+        backgroundColor: themeType.menuBackgroundColor,
+        border: `1px solid ${themeType.menuBorderColor}`,
         borderRadius: '4px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        boxShadow: `0 2px 8px ${themeType.shadowColor}`,
         zIndex: 9999,
         minWidth: '150px',
       });
@@ -64,15 +66,17 @@ export function AccountHeaderSection() {
           cursor: 'pointer',
           borderRadius: '4px',
           transition: 'background-color 0.2s',
-          backgroundColor: '#292929e5',
+          backgroundColor: themeType.accountChipBackgroundColor,
           paddingInline: '20px',
           paddingBlock: '8px',
         }}
         onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = '#141414e5')
+          (e.currentTarget.style.backgroundColor =
+            themeType.accountChipHoverBackgroundColor)
         }
         onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = '#292929e5')
+          (e.currentTarget.style.backgroundColor =
+            themeType.accountChipBackgroundColor)
         }
       >
         <div
@@ -81,12 +85,12 @@ export function AccountHeaderSection() {
             borderRadius: '25px',
             width: '30px',
             height: '30px',
-            backgroundColor: '#458fff',
-            boxShadow: '0 2px 4px rgba(32, 32, 32, 0.79)',
+            backgroundColor: themeType.avatarBackgroundColor,
+            boxShadow: `0 2px 4px ${themeType.shadowColor}`,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'white',
+            color: themeType.buttonTextColor,
             fontWeight: 'bold',
           }}
         >
@@ -118,11 +122,16 @@ export function AccountHeaderSection() {
                 background: 'none',
                 textAlign: 'left',
                 cursor: 'pointer',
-                color: '#ffffff',
+                color: themeType.textPrimaryColor,
                 fontWeight: 'normal',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#797979')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  themeType.hoverOverlayColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = 'transparent')
+              }
             >
               Sign Out
             </button>

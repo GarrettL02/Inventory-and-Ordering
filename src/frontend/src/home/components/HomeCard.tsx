@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface HomeCardProps {
   title: string;
@@ -10,11 +11,13 @@ interface HomeCardProps {
 // Lightweight card used on the homepage. Kept separate from AccordianMenu so
 // the other pages that use the accordion are not affected by this styling.
 export function HomeCard({ title, count, action, children }: HomeCardProps) {
+  const themeType = useTheme();
   return (
     <section
       style={{
-        backgroundColor: '#242424',
-        border: '1px solid #333333',
+        backgroundColor: themeType.surfaceColor,
+        color: themeType.textPrimaryColor,
+        border: `1px solid ${themeType.borderColor}`,
         borderRadius: '12px',
         display: 'flex',
         flexDirection: 'column',
@@ -29,7 +32,7 @@ export function HomeCard({ title, count, action, children }: HomeCardProps) {
           justifyContent: 'space-between',
           gap: '12px',
           padding: '14px 20px',
-          borderBottom: '1px solid #333333',
+          borderBottom: `1px solid ${themeType.borderColor}`,
         }}
       >
         <div
@@ -46,8 +49,8 @@ export function HomeCard({ title, count, action, children }: HomeCardProps) {
           {count !== undefined && count > 0 && (
             <span
               style={{
-                backgroundColor: '#ffffff1a',
-                color: '#cfcfcf',
+                backgroundColor: themeType.activeOverlayColor,
+                color: themeType.textSecondaryColor,
                 borderRadius: '999px',
                 fontSize: '12px',
                 fontWeight: 600,
@@ -68,6 +71,5 @@ export function HomeCard({ title, count, action, children }: HomeCardProps) {
 export const homeCardMessageStyle = {
   margin: 0,
   padding: '20px',
-  color: '#a7a7a7',
   fontSize: '13px',
 } as const;

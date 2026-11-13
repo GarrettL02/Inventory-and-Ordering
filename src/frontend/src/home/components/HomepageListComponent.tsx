@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { formatShortDate } from '../../functions';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 interface ItemData {
   name: string;
@@ -31,6 +32,7 @@ export function HomepageListComponent({
   redirectPage,
 }: HomepageListComponentProps) {
   const nav = useNavigate();
+  const themeType = useTheme();
 
   return (
     <HomeCard
@@ -42,7 +44,7 @@ export function HomepageListComponent({
             style={{
               background: 'none',
               fontSize: '13px',
-              color: '#cfcfcf',
+              color: themeType.textSecondaryColor,
               border: 'none',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
@@ -56,7 +58,11 @@ export function HomepageListComponent({
     >
       {loading && <p style={homeCardMessageStyle}>Loading...</p>}
       {error && !loading && (
-        <p style={{ ...homeCardMessageStyle, color: '#ef5350' }}>{error}</p>
+        <p
+          style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}
+        >
+          {error}
+        </p>
       )}
       {!loading && !error && itemData.length === 0 && (
         <p style={homeCardMessageStyle}>{`No ${title.toLowerCase()} yet.`}</p>
@@ -81,7 +87,10 @@ export function HomepageListComponent({
                 alignItems: 'center',
                 gap: '16px',
                 padding: '12px 20px',
-                borderTop: index === 0 ? 'none' : '1px solid #2e2e2e',
+                borderTop:
+                  index === 0
+                    ? 'none'
+                    : `1px solid ${themeType.borderSubtleColor}`,
               }}
             >
               <div style={{ minWidth: 0, flex: 1 }}>
@@ -92,7 +101,7 @@ export function HomepageListComponent({
                   style={{
                     ...truncateStyle,
                     fontSize: '12px',
-                    color: '#a7a7a7',
+                    color: themeType.textMutedColor,
                     marginTop: '2px',
                   }}
                 >
@@ -102,7 +111,7 @@ export function HomepageListComponent({
               <div
                 style={{
                   fontSize: '12px',
-                  color: '#a7a7a7',
+                  color: themeType.textMutedColor,
                   whiteSpace: 'nowrap',
                 }}
               >

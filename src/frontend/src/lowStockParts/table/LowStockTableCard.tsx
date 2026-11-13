@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { LowStockTableDetails } from './LowStockTableDetails';
 import { useContext } from 'react';
-import { ThemeContext } from '../../settings/themeStyling/ThemeProvider';
+import { ThemeContext } from '../../hooks/userSettings/useTheme';
 
 export interface LowStockTableCardProps {
   lowStockPartData: LowStockTableRow;

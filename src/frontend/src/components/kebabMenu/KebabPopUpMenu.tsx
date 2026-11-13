@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { KebabIcon } from './KebabIcon';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface MenuItem {
   label: string;
@@ -13,6 +14,7 @@ interface KebabPopUpMenuProps {
 }
 
 export function KebabPopUpMenu({ items, partId }: KebabPopUpMenuProps) {
+  const themeType = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState({});
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -46,10 +48,11 @@ export function KebabPopUpMenu({ items, partId }: KebabPopUpMenuProps) {
         top: openUpward ? 'auto' : rect.bottom,
         bottom: openUpward ? window.innerHeight - rect.top : 'auto',
         right: window.innerWidth - rect.right,
-        backgroundColor: '#d9d8d8',
-        border: '1px solid #ccc',
+        backgroundColor: themeType.menuBackgroundColor,
+        color: themeType.textPrimaryColor,
+        border: `1px solid ${themeType.menuBorderColor}`,
         borderRadius: '4px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        boxShadow: `0 2px 8px ${themeType.shadowColor}`,
         zIndex: 9999,
         minWidth: '150px',
       });
@@ -86,9 +89,11 @@ export function KebabPopUpMenu({ items, partId }: KebabPopUpMenuProps) {
                   background: 'none',
                   textAlign: 'left',
                   cursor: 'pointer',
+                  color: themeType.textPrimaryColor,
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = '#c0bfbf')
+                  (e.currentTarget.style.backgroundColor =
+                    themeType.hoverOverlayColor)
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.backgroundColor = 'transparent')

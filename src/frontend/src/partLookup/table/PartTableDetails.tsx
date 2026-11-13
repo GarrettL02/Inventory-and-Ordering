@@ -4,6 +4,7 @@ import { TableDataDropFields } from '../../components/table/TableDataDropFields'
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 import { partImageUrl } from '../../services/parts/partsService';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
+import { useTheme } from '../../hooks/userSettings/useTheme';
 
 export interface PartCardDetailsProps {
   partId: number;
@@ -15,15 +16,20 @@ export function PartCardDetails({
   partId,
   onStockChanged,
 }: PartCardDetailsProps) {
+  const themeType = useTheme();
   const { parts, loading, error, refetch } = useFetchPartsById(partId);
   const partImgSrc = partImageUrl(partId, parts?.filename);
   const nav = useNavigate();
 
   if (loading)
-    return <div style={{ fontSize: '13px' }}>Loading part details...</div>;
+    return (
+      <div style={{ fontSize: '13px', color: themeType.textMutedColor }}>
+        Loading part details...
+      </div>
+    );
   if (error || !parts)
     return (
-      <div style={{ fontSize: '13px' }}>
+      <div style={{ fontSize: '13px', color: themeType.errorTextColor }}>
         Error loading part details: {error}
       </div>
     );
@@ -98,7 +104,7 @@ export function PartCardDetails({
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#ffffff',
+            color: themeType.textPrimaryColor,
             cursor: 'pointer',
             fontWeight: 600,
             fontSize: '12px',
@@ -113,7 +119,7 @@ export function PartCardDetails({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#ffffff',
+              color: themeType.textPrimaryColor,
               cursor: 'pointer',
               fontWeight: 600,
               fontSize: '12px',
