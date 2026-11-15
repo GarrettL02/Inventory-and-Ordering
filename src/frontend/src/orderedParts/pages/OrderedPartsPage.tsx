@@ -3,8 +3,10 @@ import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLow
 import { LowStockTableCard } from '../../lowStockParts/table/LowStockTableCard';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { TableDataError } from '../../components/table/TableDataError';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function OrderedPartsPage() {
+  const themeType = useTheme();
   //fetch the lowStockPartData using the react hook
   const { lowStockTableData, loading, error } =
     useFetchLowStockPartsTableData(1);
@@ -25,7 +27,7 @@ export function OrderedPartsPage() {
       <h2 style={{ marginBottom: '-12px', marginLeft: '50px' }}>Ordered</h2>
       <div
         style={{
-          color: '#580909ff',
+          color: themeType.accentColor,
           marginLeft: '50px',
           marginBottom: '20px',
           fontWeight: 700,
@@ -34,7 +36,7 @@ export function OrderedPartsPage() {
         ___
       </div>
       <div style={{ marginLeft: '30px' }}>
-        <Table labels={headerLabels} tableType={'part'}>
+        <Table labels={headerLabels}>
           {loading && <TableDataLoading />}
 
           {error && <TableDataError />}

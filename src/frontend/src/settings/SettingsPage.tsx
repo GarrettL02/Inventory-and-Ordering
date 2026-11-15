@@ -1,11 +1,15 @@
 import { AccordianMenu } from '../components/accordianMenu/AccordianMenu';
 import { StorageLocationListComponent } from './components/StorageLocationListComponent';
+import { useTheme } from '../hooks/userSettings/useSettings';
+import { GeneralButton } from '../components/buttons/generalButton/GeneralButton';
+import { GeneralSettingsAccordian } from './components/GeneralSettingsAccordian';
 
 export function SettingsPage() {
+  const themeType = useTheme();
   return (
     <div
       style={{
-        color: '#ffffff',
+        color: themeType.textPrimaryColor,
         minHeight: '100dvh',
         paddingTop: '20px',
         paddingLeft: '25px',
@@ -19,7 +23,7 @@ export function SettingsPage() {
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}
       >
         <div style={{ gridColumn: 'span 2' }}>
-          <AccordianMenu title={'General Settings'}>data</AccordianMenu>
+          <GeneralSettingsAccordian />
         </div>
         <div style={{ gridColumn: 'span 2' }}>
           <AccordianMenu title={'Notification Settings'}>data</AccordianMenu>

@@ -1,13 +1,16 @@
 import { PageRouter } from './pageRoutes/PageRouter';
-import { AuthProvider } from './auth/hooks/useAuth';
+import { AuthProvider } from './hooks/auth/useAuth';
 import { ToastProvider } from './components/toast/ToastProvider';
+import { SettingsProvider } from './hooks/userSettings/useSettings';
 
 function App() {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <PageRouter />
-      </ToastProvider>
+      <SettingsProvider>
+        <ToastProvider>
+          <PageRouter />
+        </ToastProvider>
+      </SettingsProvider>
     </AuthProvider>
   );
 }
