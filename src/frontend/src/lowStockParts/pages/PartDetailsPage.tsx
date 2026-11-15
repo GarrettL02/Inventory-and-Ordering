@@ -10,6 +10,7 @@ import { DistributorAccordian } from '../components/distributorAccordian/Distrib
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 // Big heading that starts each of the two page sections
 const sectionHeadingStyle = {
@@ -21,6 +22,7 @@ const sectionHeadingStyle = {
 } as const;
 
 export function PartDetailsPage() {
+  const themeType = useTheme();
   const { partId } = useLoaderData() as { partId: number };
   const { parts, loading, error, refetch } = useFetchPartsById(partId);
 
@@ -31,7 +33,7 @@ export function PartDetailsPage() {
   return (
     <div
       style={{
-        color: '#ffffff',
+        color: themeType.textPrimaryColor,
         minHeight: '100dvh',
         paddingTop: '20px',
         paddingLeft: '25px',
@@ -46,52 +48,27 @@ export function PartDetailsPage() {
             <div style={{ marginBottom: '20px' }}>
               <BackButton />
             </div>
-
-            {/**================ Part Details section ================**/}
-            <section>
-              <h1
-                style={{
-                  ...sectionHeadingStyle,
-                  borderBottom: '1px solid #333333',
-                }}
-              >
-                Part Details
-              </h1>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginTop: '14px',
-                }}
-              >
-                <h1
-                  style={{
-                    color: '#a7a7a7',
-                    fontSize: '16px',
-                    fontWeight: 400,
-                    margin: 0,
-                  }}
-                >
-                  {parts?.name}
-                </h1>
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr .7fr',
-                  gap: '20px',
-                }}
-              >
-                <div>
-                  <AccordianMenu title="Part Information" shrinkable>
-                    {/**------------ Text fields (full width) ------------ **/}
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'minmax(0, 1fr)',
-                        rowGap: '20px',
-                      }}
-                    >
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <h1 style={{ color: '#ffffff' }}>{parts?.name}</h1>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr .7fr',
+                gap: '20px',
+              }}
+            >
+              <div>
+                <AccordianMenu title="Part Information" shrinkable>
+                  {/**------------ Accordian Row 1 ------------ **/}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '3fr 1fr 1fr',
+                      marginBottom: '50px',
+                    }}
+                  >
+                    <div style={{ gridColumn: 1 }}>
                       <ReadOnlyInfoSection
                         title={'Description'}
                         information={parts?.description}

@@ -1,6 +1,7 @@
 import { useFetchDigikey } from '../../../hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
+import { useTheme } from '../../../hooks/userSettings/useSettings';
 
 interface DistributorAccordianProps {
   partId: number;
@@ -36,6 +37,7 @@ export function DistributorAccordian({
   distributorName,
   partNumber,
 }: DistributorAccordianProps) {
+  const themeType = useTheme();
   const { digikeyData, loading, error } = useFetchDigikey(partId);
   const hasDigikeyData = digikeyData?.state === 'ok';
 
@@ -161,9 +163,20 @@ export function DistributorAccordian({
             }}
           >
             <button
-              style={linkButtonStyle}
-              onMouseEnter={(e) => setLinkHover(e.currentTarget, true)}
-              onMouseLeave={(e) => setLinkHover(e.currentTarget, false)}
+              style={{
+                border: 'none',
+                background: 'none',
+                cursor: 'pointer',
+                color: themeType.textMutedColor,
+                fontWeight: 600,
+                fontSize: '12px',
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textMutedColor)
+              }
               onClick={() =>
                 digikeyData?.data.productUrl &&
                 window.open(digikeyData.data.productUrl, '_blank')
@@ -172,9 +185,16 @@ export function DistributorAccordian({
               DigiKey Page ↗
             </button>
             <button
-              style={linkButtonStyle}
-              onMouseEnter={(e) => setLinkHover(e.currentTarget, true)}
-              onMouseLeave={(e) => setLinkHover(e.currentTarget, false)}
+              style={{
+                border: 'none',
+                background: 'none',
+                cursor: 'pointer',
+                color: '#9c9c9c',
+                fontWeight: 600,
+                fontSize: '12px',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
               onClick={() =>
                 digikeyData?.data.datasheetUrl &&
                 window.open(digikeyData.data.datasheetUrl, '_blank')

@@ -159,3 +159,17 @@ CREATE TABLE IF NOT EXISTS schemaMigrations (
   appliedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (filename)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS userSettings (
+  userId    INT UNSIGNED NOT NULL,
+  theme     ENUM('light','dark') NOT NULL DEFAULT 'light',
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (userId),
+  CONSTRAINT fk_userSettings_user
+    FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TRIGGER trg_users_create_settings
+AFTER INSERT ON users
+FOR EACH ROW
+  INSERT INTO userSettings (userId, theme) VALUES (NEW.id, 'light');

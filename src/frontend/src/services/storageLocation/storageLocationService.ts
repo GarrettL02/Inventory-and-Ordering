@@ -1,4 +1,4 @@
-import { StorageLocationDataSchema } from '../../schemas/storageLocation/storageLocation';
+import { StorageLocationDataSchema } from '../../schemas/storageLocation/storageLocation.schema';
 import z from 'zod';
 import { StorageLocationData } from '../../types/storageLocation/storageLocation';
 

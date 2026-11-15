@@ -9,6 +9,7 @@ import { DigikeyModule } from '../digikey/digikey.module';
 import { StockMovementsModule } from '../stockMovements/stockMovements.module';
 import { StorageLocationsModule } from '../storageLocations/storageLocations.module';
 import { PartImagesModule } from '../partImages/partImages.module';
+import { UserSettingsModule } from '../userSettings/userSettings.module';
 
 const frontendBuildPath =
   process.env.FRONTEND_BUILD_PATH ??
@@ -30,6 +31,7 @@ console.log('Serving static from:', frontendBuildPath);
     StockMovementsModule,
     StorageLocationsModule,
     PartImagesModule,
+    UserSettingsModule,
   ],
 })
 export class AppModule {}
