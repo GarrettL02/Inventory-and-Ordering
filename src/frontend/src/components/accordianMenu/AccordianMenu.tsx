@@ -32,7 +32,6 @@ export function AccordianMenu({
         backgroundColor: themeType.panelBackgroundColor,
         color: themeType.textPrimaryColor,
         padding: '20px',
-        marginBlock: '30px',
       }}
     >
       <header
@@ -42,7 +41,9 @@ export function AccordianMenu({
           justifyContent: 'space-between',
           gap: '12px',
           padding: '14px 20px',
-          borderBottom: isOpen ? '1px solid #333333' : '1px solid transparent',
+          borderBottom: isOpen
+            ? `1px solid ${themeType.borderColor}`
+            : '1px solid transparent',
           transition: 'border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
@@ -58,7 +59,7 @@ export function AccordianMenu({
             <button
               onClick={() => setIsOpen((prev) => !prev)}
               style={{
-                backgroundColor: '#ffffff23',
+                backgroundColor: themeType.activeOverlayColor,
                 borderRadius: '10px',
                 border: 'none',
                 color: themeType.textPrimaryColor,
@@ -77,7 +78,7 @@ export function AccordianMenu({
           </h3>
         </div>
         {!isOpen && closedExtraText && (
-          <span style={{ color: '#a7a7a7', fontSize: '13px' }}>
+          <span style={{ color: themeType.textMutedColor, fontSize: '13px' }}>
             {closedExtraText}
           </span>
         )}

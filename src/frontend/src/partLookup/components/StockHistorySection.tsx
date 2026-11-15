@@ -56,7 +56,6 @@ export function StockHistorySection({
       style={{
         position: 'relative',
         minHeight: '400px',
-        marginBlock: '20px',
       }}
     >
       {/* Inner box fills the wrapper exactly; only the table scrolls inside it */}
@@ -82,7 +81,7 @@ export function StockHistorySection({
             fontWeight: 600,
             paddingBottom: '14px',
             marginBottom: '14px',
-            borderBottom: '1px solid #333333',
+            borderBottom: `1px solid ${themeType.borderColor}`,
             flexShrink: 0,
           }}
         >

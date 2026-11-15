@@ -16,7 +16,6 @@ import { useTheme } from '../../hooks/userSettings/useSettings';
 const sectionHeadingStyle = {
   fontSize: '22px',
   fontWeight: 600,
-  color: '#ffffff',
   margin: 0,
   paddingBottom: '10px',
 } as const;
@@ -48,64 +47,82 @@ export function PartDetailsPage() {
             <div style={{ marginBottom: '20px' }}>
               <BackButton />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h1 style={{ color: '#ffffff' }}>{parts?.name}</h1>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr .7fr',
-                gap: '20px',
-              }}
-            >
-              <div>
-                <AccordianMenu title="Part Information" shrinkable>
-                  {/**------------ Accordian Row 1 ------------ **/}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '3fr 1fr 1fr',
-                      marginBottom: '50px',
-                    }}
-                  >
-                    <div style={{ gridColumn: 1 }}>
-                      <ReadOnlyInfoSection
-                        title={'Description'}
-                        information={parts?.description}
-                      />
-                      <ReadOnlyInfoSection
-                        title={'Comments'}
-                        information={parts?.comment}
-                      />
-                    </div>
-                    {/**------------ Numbers and location ------------ **/}
+            <section style={{ marginTop: '30px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottom: `1px solid ${themeType.borderColor}`,
+                }}
+              >
+                <h1 style={sectionHeadingStyle}>Part Details</h1>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h1 style={{ margin: '24px 0 20px' }}>{parts?.name}</h1>
+              </div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr .7fr',
+                  gap: '20px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                  }}
+                >
+                  <AccordianMenu title="Part Information" shrinkable>
+                    {/**------------ Accordian Row 1 ------------ **/}
                     <div
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                        columnGap: '20px',
-                        rowGap: '20px',
-                        marginTop: '20px',
-                        paddingTop: '20px',
-                        borderTop: '1px solid #333333',
+                        gridTemplateColumns: '3fr 1fr 1fr',
+                        marginBottom: '50px',
                       }}
                     >
-                      <ReadOnlyInfoSection
-                        title={'Current Stock Level'}
-                        information={parts?.stockLevel}
-                      />
-                      <ReadOnlyInfoSection
-                        title={'Minimum Stock Level'}
-                        information={parts?.minStockLevel}
-                      />
-                      <ReadOnlyInfoSection
-                        title={'Average Price'}
-                        information={`$${parts?.averagePrice} (1)`}
-                      />
-                      <ReadOnlyInfoSection
-                        title={'Storage Location'}
-                        information={parts?.storageLocationName}
-                      />
+                      <div style={{ gridColumn: 1 }}>
+                        <ReadOnlyInfoSection
+                          title={'Description'}
+                          information={parts?.description}
+                        />
+                        <ReadOnlyInfoSection
+                          title={'Comments'}
+                          information={parts?.comment}
+                        />
+                      </div>
+                      {/**------------ Numbers and location ------------ **/}
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                          columnGap: '20px',
+                          rowGap: '20px',
+                          marginTop: '20px',
+                          paddingTop: '20px',
+                          borderTop: `1px solid ${themeType.borderColor}`,
+                        }}
+                      >
+                        <ReadOnlyInfoSection
+                          title={'Current Stock Level'}
+                          information={parts?.stockLevel}
+                        />
+                        <ReadOnlyInfoSection
+                          title={'Minimum Stock Level'}
+                          information={parts?.minStockLevel}
+                        />
+                        <ReadOnlyInfoSection
+                          title={'Average Price'}
+                          information={`$${parts?.averagePrice} (1)`}
+                        />
+                        <ReadOnlyInfoSection
+                          title={'Storage Location'}
+                          information={parts?.storageLocationName}
+                        />
+                      </div>
                     </div>
                   </AccordianMenu>
 
@@ -122,10 +139,12 @@ export function PartDetailsPage() {
                   onStockChanged={refetch}
                 />
               </div>
-              <ManufacturerAccordian
-                manufacturerName={parts?.manufacturerName}
-                manufacturerPartNumber={parts?.manufacturerPartNumber}
-              />
+              <div style={{ marginTop: '20px' }}>
+                <ManufacturerAccordian
+                  manufacturerName={parts?.manufacturerName}
+                  manufacturerPartNumber={parts?.manufacturerPartNumber}
+                />
+              </div>
             </section>
 
             {/**================ Distributor Details section ================**/}
@@ -135,14 +154,14 @@ export function PartDetailsPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  borderBottom: '1px solid #333333',
+                  borderBottom: `1px solid ${themeType.borderColor}`,
                 }}
               >
                 <h1 style={sectionHeadingStyle}>Distributor(s) Details</h1>
                 <button
                   style={{
                     background: 'none',
-                    color: '#ffffff',
+                    color: themeType.textPrimaryColor,
                     cursor: 'pointer',
                   }}
                 >
@@ -154,6 +173,7 @@ export function PartDetailsPage() {
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
                   gap: '20px',
+                  marginTop: '20px',
                 }}
               >
                 {parts?.manufacturerPartNumber && (

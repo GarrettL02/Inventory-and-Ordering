@@ -9,29 +9,6 @@ interface DistributorAccordianProps {
   partNumber?: string | null;
 }
 
-// Status / loading / error text that spans the whole fields grid
-const messageStyle = {
-  gridColumn: '1 / -1',
-  color: '#a7a7a7',
-  fontSize: '13px',
-} as const;
-
-const linkButtonStyle = {
-  backgroundColor: '#ffffff12',
-  border: '1px solid #3d3d3d',
-  borderRadius: '8px',
-  color: '#cfcfcf',
-  cursor: 'pointer',
-  fontSize: '12px',
-  fontWeight: 600,
-  padding: '6px 12px',
-} as const;
-
-const setLinkHover = (el: HTMLButtonElement, hovering: boolean) => {
-  el.style.backgroundColor = hovering ? '#ffffff22' : '#ffffff12';
-  el.style.color = hovering ? '#ffffff' : '#cfcfcf';
-};
-
 export function DistributorAccordian({
   partId,
   distributorName,
@@ -40,6 +17,13 @@ export function DistributorAccordian({
   const themeType = useTheme();
   const { digikeyData, loading, error } = useFetchDigikey(partId);
   const hasDigikeyData = digikeyData?.state === 'ok';
+
+  // Status / loading / error text that spans the whole fields grid
+  const messageStyle = {
+    gridColumn: '1 / -1',
+    color: themeType.textMutedColor,
+    fontSize: '13px',
+  } as const;
 
   return (
     <AccordianMenu title="Distributor Information" shrinkable>
@@ -73,7 +57,7 @@ export function DistributorAccordian({
 
           {loading && <div style={messageStyle}>Loading DigiKey data...</div>}
           {error && (
-            <div style={{ ...messageStyle, color: '#ef5350' }}>
+            <div style={{ ...messageStyle, color: themeType.errorTextColor }}>
               Could not load DigiKey data.
             </div>
           )}
@@ -108,8 +92,8 @@ export function DistributorAccordian({
         {digikeyData?.state === 'ok' && (
           <div
             style={{
-              backgroundColor: '#1e1e1e',
-              border: '1px solid #333333',
+              backgroundColor: themeType.surfaceExpandedColor,
+              border: `1px solid ${themeType.borderColor}`,
               borderRadius: '8px',
               padding: '14px 16px',
             }}
@@ -128,7 +112,7 @@ export function DistributorAccordian({
                           padding: '3px 0',
                         }}
                       >
-                        <span style={{ color: '#a7a7a7' }}>
+                        <span style={{ color: themeType.textMutedColor }}>
                           {units.quantity}
                         </span>
                         <span>
@@ -148,10 +132,16 @@ export function DistributorAccordian({
           style={{
             marginTop: '24px',
             paddingTop: '16px',
-            borderTop: '1px solid #333333',
+            borderTop: `1px solid ${themeType.borderColor}`,
           }}
         >
-          <div style={{ color: '#a7a7a7', fontSize: '12px', fontWeight: 500 }}>
+          <div
+            style={{
+              color: themeType.textMutedColor,
+              fontSize: '12px',
+              fontWeight: 500,
+            }}
+          >
             Links
           </div>
           <div
@@ -189,12 +179,16 @@ export function DistributorAccordian({
                 border: 'none',
                 background: 'none',
                 cursor: 'pointer',
-                color: '#9c9c9c',
+                color: themeType.textMutedColor,
                 fontWeight: 600,
                 fontSize: '12px',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#9c9c9c')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = themeType.textPrimaryColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = themeType.textMutedColor)
+              }
               onClick={() =>
                 digikeyData?.data.datasheetUrl &&
                 window.open(digikeyData.data.datasheetUrl, '_blank')

@@ -17,7 +17,9 @@ export function ReadOnlyInfoSection({
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', fontSize: '12px' }}>
       <div style={{ fontWeight: 300, marginBottom: '6px' }}>{title}</div>
-      <div style={{ color: '#bbb9b9' }}>{information || 'N/A'}</div>
+      <div style={{ color: themeType.textSecondaryColor }}>
+        {information || 'N/A'}
+      </div>
     </div>
   );
 }
