@@ -18,7 +18,6 @@ const sectionHeadingStyle = {
   color: '#ffffff',
   margin: 0,
   paddingBottom: '10px',
-  borderBottom: '1px solid #333333',
 } as const;
 
 export function PartDetailsPage() {
@@ -50,7 +49,14 @@ export function PartDetailsPage() {
 
             {/**================ Part Details section ================**/}
             <section>
-              <h1 style={sectionHeadingStyle}>Part Details</h1>
+              <h1
+                style={{
+                  ...sectionHeadingStyle,
+                  borderBottom: '1px solid #333333',
+                }}
+              >
+                Part Details
+              </h1>
               <div
                 style={{
                   display: 'flex',
@@ -139,22 +145,48 @@ export function PartDetailsPage() {
                   onStockChanged={refetch}
                 />
               </div>
-            </section>
-
-            {/**================ Distributor Details section ================**/}
-            <section style={{ marginTop: '30px' }}>
-              <h1 style={sectionHeadingStyle}>Distributor Details</h1>
               <ManufacturerAccordian
                 manufacturerName={parts?.manufacturerName}
                 manufacturerPartNumber={parts?.manufacturerPartNumber}
               />
-              {parts?.manufacturerPartNumber && (
-                <DistributorAccordian
-                  partId={parts.id}
-                  partNumber={parts?.manufacturerPartNumber}
-                  distributorName={parts?.manufacturerName}
-                />
-              )}
+            </section>
+
+            {/**================ Distributor Details section ================**/}
+            <section style={{ marginTop: '30px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottom: '1px solid #333333',
+                }}
+              >
+                <h1 style={sectionHeadingStyle}>Distributor(s) Details</h1>
+                <button
+                  style={{
+                    background: 'none',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  + Add Distributor
+                </button>
+              </div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '20px',
+                }}
+              >
+                {parts?.manufacturerPartNumber && (
+                  <DistributorAccordian
+                    partId={parts.id}
+                    partNumber={parts?.manufacturerPartNumber}
+                    distributorName={parts?.manufacturerName}
+                  />
+                )}
+              </div>
             </section>
           </div>
         </>
