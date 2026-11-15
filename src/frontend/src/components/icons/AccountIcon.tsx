@@ -1,4 +1,4 @@
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function AccountIcon({ size = 24 }: { size?: number } = {}) {
   const themeType = useTheme();

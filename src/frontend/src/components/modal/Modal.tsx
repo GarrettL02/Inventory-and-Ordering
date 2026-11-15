@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface ModalProps {
   modalTitle: string;

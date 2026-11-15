@@ -2,7 +2,7 @@ import { useAuth } from '../../hooks/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function AccountHeaderSection() {
   const themeType = useTheme();
@@ -84,7 +84,7 @@ export function AccountHeaderSection() {
             border: 'none',
             borderRadius: '25px',
             width: '30px',
-            height: '30px',
+            height: '28px',
             backgroundColor: themeType.avatarBackgroundColor,
             boxShadow: `0 2px 4px ${themeType.shadowColor}`,
             display: 'flex',

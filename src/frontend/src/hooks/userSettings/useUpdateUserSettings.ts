@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { updateUserSettings as updateUserSettingsRequest } from '../../services/userSettings/userSettingsService';
 import { UserSettingsData } from '../../types/userSettings/userSettings';
-import { useThemeSettings } from './useTheme';
+import { useSettings } from './useSettings';
 
 // Saves any of the user's settings and tracks the request's loading / error state,
 // the same way useAddStorageLocation does for storage locations.
@@ -17,7 +17,7 @@ import { useThemeSettings } from './useTheme';
 // to how they were. It never throws - on failure it returns null and puts the
 // message in `error`.
 export function useUpdateUserSettings() {
-  const { settings, setSettings } = useThemeSettings();
+  const { settings, setSettings } = useSettings();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export function useUpdateUserSettings() {
       setSettings(next); // show the change right away
       try {
         //the server saves them and sends back what it stored
-        const { data } = await updateUserSettingsRequest(next);
+        const { data } = await updateUserSettingsRequest(updates);
         setSettings(data);
         return data;
       } catch (err: any) {

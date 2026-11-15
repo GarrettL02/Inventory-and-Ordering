@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../../hooks/userSettings/useTheme';
+import { ThemeContext } from '../../hooks/userSettings/useSettings';
 
 export function CreatePartButton() {
   const nav = useNavigate();
@@ -23,7 +23,8 @@ export function CreatePartButton() {
           themeType.buttonHoverBackgroundColor)
       }
       onMouseLeave={(e) =>
-        (e.currentTarget.style.backgroundColor = themeType.buttonBackgroundColor)
+        (e.currentTarget.style.backgroundColor =
+          themeType.buttonBackgroundColor)
       }
       onClick={() => nav('/parts/partRequest')}
     >

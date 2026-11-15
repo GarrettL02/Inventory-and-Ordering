@@ -9,7 +9,7 @@ import { AddNewPartForm } from '../forms/AddNewPartForm';
 import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
 import { FormInputOption } from '../../components/form/FormInputProps';
 import { useFetchParts } from '../../hooks/parts/useFetchParts';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function PartLookupPage() {
   const themeType = useTheme();

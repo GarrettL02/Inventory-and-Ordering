@@ -1,4 +1,4 @@
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface KebabIconProps {
   onClick: () => void;

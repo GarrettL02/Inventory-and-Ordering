@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '../../../hooks/userSettings/useTheme';
+import { useTheme } from '../../../hooks/userSettings/useSettings';
 
 interface ModalOpenButtonProps {
   modalInfoComponent: React.ReactNode;

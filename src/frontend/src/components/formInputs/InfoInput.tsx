@@ -5,7 +5,7 @@ import {
   RegisterOptions,
   UseFormRegister,
 } from 'react-hook-form';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface InfoInputProps<T extends FieldValues> {
   inputTitle: string;

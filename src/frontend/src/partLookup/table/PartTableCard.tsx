@@ -7,7 +7,7 @@ import { PartCardDetails } from './PartTableDetails';
 import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
 import { WarningIcon } from '../../components/icons/WarningIcon';
 import { PartsKebabMenu } from '../components/partsKebabMenu.tsx/PartsKebabMenu';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;

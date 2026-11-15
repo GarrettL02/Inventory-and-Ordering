@@ -7,7 +7,7 @@ import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetc
 import { StorageLocationData } from '../../types/storageLocation/storageLocation';
 import { TrashRemoveIcon } from '../../components/icons/TrashRemoveIcon';
 import { ConfirmDeleteStorageLocationModal } from './ConfirmDeleteStorageLocationModal';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function StorageLocationListComponent() {
   const themeType = useTheme();
@@ -206,9 +206,7 @@ export function StorageLocationListComponent() {
                   padding: '10px 16px',
                   fontSize: '14px',
                   borderTop:
-                    index === 0
-                      ? 'none'
-                      : `1px solid ${themeType.borderColor}`,
+                    index === 0 ? 'none' : `1px solid ${themeType.borderColor}`,
                 }}
               >
                 <span

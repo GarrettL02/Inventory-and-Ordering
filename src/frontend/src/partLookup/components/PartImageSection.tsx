@@ -6,7 +6,7 @@ import { usePartImage } from '../../hooks/parts/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 import { FileDrop } from '../../components/formInputs/FileDrop';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface PartImageSectionProps {
   partId: number;

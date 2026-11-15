@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { BackButton } from '../../components/buttons/backButton/BackButton';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function PartRequestForm() {
   const themeType = useTheme();

@@ -1,6 +1,6 @@
 import { useFetchPartValuation } from '../../hooks/parts/useFetchPartValuation';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -42,9 +42,7 @@ function Stat({ label, value, note, muted }: StatProps) {
           fontSize: '30px',
           fontWeight: 600,
           marginTop: '6px',
-          color: muted
-            ? themeType.textMutedColor
-            : themeType.textPrimaryColor,
+          color: muted ? themeType.textMutedColor : themeType.textPrimaryColor,
           fontVariantNumeric: 'tabular-nums',
         }}
       >
@@ -73,9 +71,7 @@ export function InventoryValuationComponent() {
     <HomeCard title="Inventory Valuation">
       {loading && <p style={homeCardMessageStyle}>Loading...</p>}
       {error && !loading && (
-        <p
-          style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}
-        >
+        <p style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}>
           {error}
         </p>
       )}
@@ -89,12 +85,7 @@ export function InventoryValuationComponent() {
           <div
             style={{ borderTop: `1px solid ${themeType.borderSubtleColor}` }}
           >
-            <Stat
-              label="Assets"
-              value="—"
-              note="Not tracked yet"
-              muted
-            />
+            <Stat label="Assets" value="—" note="Not tracked yet" muted />
           </div>
         </>
       )}

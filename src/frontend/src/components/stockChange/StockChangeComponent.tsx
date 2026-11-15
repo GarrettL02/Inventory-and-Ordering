@@ -5,7 +5,7 @@ import { Modal } from '../modal/Modal';
 import { GeneralButton } from '../buttons/generalButton/GeneralButton';
 import { CancelButton } from '../buttons/cancelButton/CancelButton';
 import { PreviewAdjustStockResult } from '../../schemas/stockMovements/stockMovements.schema';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface StockChangeComponentProps {
   partId: number;
@@ -168,10 +168,7 @@ export function StockChangeComponent({
         <button
           disabled={!canRemove}
           style={actionButtonStyle(canRemove, themeType.buttonBackgroundColor)}
-          onMouseEnter={hover(
-            canRemove,
-            themeType.buttonHoverBackgroundColor,
-          )}
+          onMouseEnter={hover(canRemove, themeType.buttonHoverBackgroundColor)}
           onMouseLeave={hover(canRemove, themeType.buttonBackgroundColor)}
           onClick={() => handleChange(-1)}
         >
@@ -187,10 +184,7 @@ export function StockChangeComponent({
             canAdd,
             themeType.successButtonHoverBackgroundColor,
           )}
-          onMouseLeave={hover(
-            canAdd,
-            themeType.successButtonBackgroundColor,
-          )}
+          onMouseLeave={hover(canAdd, themeType.successButtonBackgroundColor)}
           onClick={handleAddClick}
         >
           + Add
@@ -205,7 +199,7 @@ export function StockChangeComponent({
       {/* Feedback: what will happen / what went wrong / what happened */}
       {preview && !loading && !error && (
         <div style={{ fontSize: '11px', color: themeType.textMutedColor }}>
-          Current stock: {stockLevel}  ·  {preview}
+          Current stock: {stockLevel} · {preview}
         </div>
       )}
       {error && (
@@ -241,11 +235,10 @@ export function StockChangeComponent({
           }
         >
           <p style={{ margin: 0, fontSize: '14px' }}>
-            Are you sure you want to add stock? Adding{' '}
-            <strong>{amount}</strong> brings this part to{' '}
-            <strong>{confirmRemoval.newStockLevel}</strong>, which is at or above
-            its minimum of {confirmRemoval.minStockLevel}. It will be removed
-            from the low stock list.
+            Are you sure you want to add stock? Adding <strong>{amount}</strong>{' '}
+            brings this part to <strong>{confirmRemoval.newStockLevel}</strong>,
+            which is at or above its minimum of {confirmRemoval.minStockLevel}.
+            It will be removed from the low stock list.
           </p>
         </Modal>
       )}

@@ -4,7 +4,7 @@ import { TableDataDropFields } from '../../components/table/TableDataDropFields'
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 import { partImageUrl } from '../../services/parts/partsService';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface PartCardDetailsProps {
   partId: number;

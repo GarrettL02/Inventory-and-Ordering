@@ -2,7 +2,7 @@ import { Modal } from '../../components/modal/Modal';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { CancelButton } from '../../components/buttons/cancelButton/CancelButton';
 import { useDeleteStorageLocation } from '../../hooks/storageLocation/useDeleteStorageLocation';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface ConfirmDeleteStorageLocationModalProps {
   storageLocationId: number;

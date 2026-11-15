@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface HomeCardProps {
   title: string;

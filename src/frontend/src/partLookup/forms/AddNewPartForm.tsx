@@ -14,7 +14,7 @@ import { useToast } from '../../components/toast/ToastProvider';
 import { uploadPartImage } from '../../services/parts/partsService';
 import { validatePartImage } from '../functions/partImageRules';
 import { useAddNewPart } from '../../hooks/parts/useAddNewPart';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 const FORM_ID = 'add-new-part-form';
 

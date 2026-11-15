@@ -8,7 +8,7 @@ import {
   SetStateAction,
 } from 'react';
 import { NavLink } from 'react-router';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 import { ThemeColors } from '../../settings/themeStyling/themeStyling';
 
 interface SideMenuLink {

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { formatShortDate } from '../../functions';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface ItemData {
   name: string;
@@ -58,9 +58,7 @@ export function HomepageListComponent({
     >
       {loading && <p style={homeCardMessageStyle}>Loading...</p>}
       {error && !loading && (
-        <p
-          style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}
-        >
+        <p style={{ ...homeCardMessageStyle, color: themeType.errorTextColor }}>
           {error}
         </p>
       )}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Lightbox } from './LightBox';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export interface ImageLightboxComponentProps {
   imageSrc: string;

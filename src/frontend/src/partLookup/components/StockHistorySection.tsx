@@ -1,6 +1,6 @@
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
 import { useFetchStockMovements } from '../../hooks/stockMovements/useFetchStockMovements';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 import { ThemeColors } from '../../settings/themeStyling/themeStyling';
 
 interface StockHistorySectionProps {

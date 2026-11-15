@@ -1,7 +1,7 @@
 import { useFetchDigikey } from '../../../hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
-import { useTheme } from '../../../hooks/userSettings/useTheme';
+import { useTheme } from '../../../hooks/userSettings/useSettings';
 
 interface DistributorAccordianProps {
   partId: number;

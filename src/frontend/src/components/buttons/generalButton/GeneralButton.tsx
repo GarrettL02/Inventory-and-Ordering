@@ -1,4 +1,4 @@
-import { useTheme } from '../../../hooks/userSettings/useTheme';
+import { useTheme } from '../../../hooks/userSettings/useSettings';
 
 interface GeneralButtonProps {
   onClick?: () => void;
@@ -38,7 +38,8 @@ export function GeneralButton({
           themeType.buttonHoverBackgroundColor)
       }
       onMouseLeave={(e) =>
-        (e.currentTarget.style.backgroundColor = themeType.buttonBackgroundColor)
+        (e.currentTarget.style.backgroundColor =
+          themeType.buttonBackgroundColor)
       }
       onClick={() => onClick?.()}
     >

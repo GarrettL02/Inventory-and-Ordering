@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface CartBarProps {
   isExpanded: boolean;
@@ -23,9 +23,7 @@ export function CartBar({ isExpanded, onToggle }: CartBarProps) {
         width: isExpanded ? '32%' : '12%',
         boxSizing: 'border-box',
         borderLeft: `1px solid ${themeType.sidebarBorderColor}`,
-        boxShadow: isExpanded
-          ? `-8px 0 24px ${themeType.shadowColor}`
-          : 'none',
+        boxShadow: isExpanded ? `-8px 0 24px ${themeType.shadowColor}` : 'none',
         transition: 'width 0.3s ease, box-shadow 0.3s ease',
       }}
     >

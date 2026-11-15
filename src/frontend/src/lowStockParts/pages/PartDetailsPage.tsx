@@ -10,7 +10,7 @@ import { DistributorAccordian } from '../components/distributorAccordian/Distrib
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function PartDetailsPage() {
   const themeType = useTheme();

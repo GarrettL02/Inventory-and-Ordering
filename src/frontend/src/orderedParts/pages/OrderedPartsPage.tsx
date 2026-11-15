@@ -3,7 +3,7 @@ import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLow
 import { LowStockTableCard } from '../../lowStockParts/table/LowStockTableCard';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { TableDataError } from '../../components/table/TableDataError';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function OrderedPartsPage() {
   const themeType = useTheme();

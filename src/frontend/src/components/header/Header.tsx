@@ -1,6 +1,6 @@
 import { HamburgerMenu } from '../hamburgerMenu/HamburgerMenu';
 import { AccountHeaderSection } from '../account/AccountHeaderSection';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface HeaderProps {
   children?: React.ReactNode;

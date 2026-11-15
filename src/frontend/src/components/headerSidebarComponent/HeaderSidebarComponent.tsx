@@ -7,7 +7,7 @@ import { PartPagePartIcon } from '../icons/PartPagePartIcon';
 import { HomeIcon } from '../icons/HomeIcon';
 import { AssetsIcon } from '../icons/AssetsIcon';
 import { SettingsIcon } from '../icons/SettingsIcon';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 interface HeaderSidebarComponentProps {
   children: React.ReactNode;

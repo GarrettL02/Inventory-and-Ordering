@@ -1,7 +1,7 @@
 import { formatShortDate } from '../../functions';
 import { useFetchRecentStockMovements } from '../../hooks/stockMovements/useFetchRecentStockMovements';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 const title = 'Recent Stock Movements';
 

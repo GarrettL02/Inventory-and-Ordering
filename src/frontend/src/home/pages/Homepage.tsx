@@ -5,7 +5,7 @@ import { RecentOrderedComponent } from '../components/ReccentOrderedComponent';
 import { RecentLowStockComponent } from '../components/RecentLowStockComponent';
 import { RecentStockMovementsComponent } from '../components/RecentStockMovementsComponent';
 import { TasksComponent } from '../components/TasksComponent';
-import { useTheme } from '../../hooks/userSettings/useTheme';
+import { useTheme } from '../../hooks/userSettings/useSettings';
 
 export function HomePage() {
   const { user } = useAuth();

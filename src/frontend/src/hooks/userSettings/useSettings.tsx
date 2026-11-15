@@ -27,24 +27,24 @@ type ThemeContextValue = {
 //used before the saved settings load, and when logged out
 const DEFAULT_USER_SETTINGS: UserSettingsData = { theme: 'light' };
 
-//makes a context for theme management
+//makes a context for user settings (theme is derived from them)
 export const ThemeContext = createContext<ThemeContextValue | undefined>(
   undefined,
 );
 
-export function useThemeSettings() {
+export function useSettings() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useThemeSettings must be used inside ThemeProvider');
+    throw new Error('useSettings must be used inside SettingsProvider');
   }
   return context;
 }
 
 export function useTheme() {
-  return useThemeSettings().themeType;
+  return useSettings().themeType;
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function SettingsProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const [settings, setSettings] = useState<UserSettingsData>(
     DEFAULT_USER_SETTINGS,

@@ -13,21 +13,19 @@ export const getUserSettings = async (): Promise<{
   return { data: validatedData };
 };
 
-export const updateUserSettings = async (input: UserSettingsData) => {
+export const updateUserSettings = async (input: Partial<UserSettingsData>) => {
   const res = await fetch(BASE_URL, {
     method: 'PUT',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
 
-  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.message ?? `HTTP error ${res.status}`);
+  }
 
   const data = await res.json();
-
-  const validatedData = UserSettingsDataSchema.parse(data.data);
-
-  return { data: validatedData };
+  return { data: UserSettingsDataSchema.parse(data.data) };
 };
