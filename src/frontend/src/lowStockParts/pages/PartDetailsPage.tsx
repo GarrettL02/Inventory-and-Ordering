@@ -11,6 +11,8 @@ import { StockHistorySection } from '../../partLookup/components/StockHistorySec
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
 import { useTheme } from '../../hooks/userSettings/useSettings';
+import { WarningIcon } from '../../components/icons/WarningIcon';
+import { CurrentStockComponent } from '../components/currentStockComponent/CurrentStockComponent';
 
 // Big heading that starts each of the two page sections
 const sectionHeadingStyle = {
@@ -57,6 +59,15 @@ export function PartDetailsPage() {
                 }}
               >
                 <h1 style={sectionHeadingStyle}>Part Details</h1>
+                <button
+                  style={{
+                    background: 'none',
+                    color: themeType.textPrimaryColor,
+                    cursor: 'pointer',
+                  }}
+                >
+                  + Edit Part
+                </button>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <h1 style={{ margin: '24px 0 20px' }}>{parts?.name}</h1>
@@ -75,16 +86,23 @@ export function PartDetailsPage() {
                     gap: '20px',
                   }}
                 >
-                  <AccordianMenu title="Part Information" shrinkable>
+                  <AccordianMenu title="Part Information">
                     {/**------------ Accordian Row 1 ------------ **/}
                     <div
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: '3fr 1fr 1fr',
-                        marginBottom: '50px',
+                        gridTemplateColumns: '3fr 2fr',
+                        columnGap: '40px',
                       }}
                     >
-                      <div style={{ gridColumn: 1 }}>
+                      <div
+                        style={{
+                          gridColumn: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '20px',
+                        }}
+                      >
                         <ReadOnlyInfoSection
                           title={'Description'}
                           information={parts?.description}
@@ -98,17 +116,21 @@ export function PartDetailsPage() {
                       <div
                         style={{
                           display: 'grid',
+                          gridColumn: 2,
                           gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                           columnGap: '20px',
                           rowGap: '20px',
-                          marginTop: '20px',
-                          paddingTop: '20px',
-                          borderTop: `1px solid ${themeType.borderColor}`,
+                          alignContent: 'start',
                         }}
                       >
                         <ReadOnlyInfoSection
                           title={'Current Stock Level'}
-                          information={parts?.stockLevel}
+                          information={
+                            <CurrentStockComponent
+                              stockLevel={parts?.stockLevel}
+                              minStockLevel={parts?.minStockLevel}
+                            />
+                          }
                         />
                         <ReadOnlyInfoSection
                           title={'Minimum Stock Level'}
@@ -116,7 +138,9 @@ export function PartDetailsPage() {
                         />
                         <ReadOnlyInfoSection
                           title={'Average Price'}
-                          information={`$${parts?.averagePrice} (1)`}
+                          information={
+                            parts ? `$${parts.averagePrice}` : undefined
+                          }
                         />
                         <ReadOnlyInfoSection
                           title={'Storage Location'}
@@ -125,24 +149,30 @@ export function PartDetailsPage() {
                       </div>
                     </div>
                   </AccordianMenu>
-
-                  <PartImageSection
-                    partId={partId}
-                    partName={parts?.name ?? ''}
-                    filename={parts?.filename}
-                    onChanged={refetch}
-                  />
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns:
+                        'repeat(auto-fit, minmax(260px, 1fr))',
+                      gap: '20px',
+                    }}
+                  >
+                    <PartImageSection
+                      partId={partId}
+                      partName={parts?.name ?? ''}
+                      filename={parts?.filename}
+                      onChanged={refetch}
+                    />
+                    <ManufacturerAccordian
+                      manufacturerName={parts?.manufacturerName}
+                      manufacturerPartNumber={parts?.manufacturerPartNumber}
+                    />
+                  </div>
                 </div>
                 <StockHistorySection
                   partId={partId}
                   stockLevel={parts?.stockLevel || 0}
                   onStockChanged={refetch}
-                />
-              </div>
-              <div style={{ marginTop: '20px' }}>
-                <ManufacturerAccordian
-                  manufacturerName={parts?.manufacturerName}
-                  manufacturerPartNumber={parts?.manufacturerPartNumber}
                 />
               </div>
             </section>

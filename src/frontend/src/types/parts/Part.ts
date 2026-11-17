@@ -47,4 +47,6 @@ export type AddNewPartFormData = {
   minStockLevel: number;
   categoryId?: number | null;
   storageLocationId?: number | null;
+  distributorName?: string | null;
+  distributorPartNumber?: string | null;
 };

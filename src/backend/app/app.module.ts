@@ -10,6 +10,7 @@ import { StockMovementsModule } from '../stockMovements/stockMovements.module';
 import { StorageLocationsModule } from '../storageLocations/storageLocations.module';
 import { PartImagesModule } from '../partImages/partImages.module';
 import { UserSettingsModule } from '../userSettings/userSettings.module';
+import { PartDistributorModule } from '../partDistributor/partDistributor.module';
 
 const frontendBuildPath =
   process.env.FRONTEND_BUILD_PATH ??
@@ -32,6 +33,7 @@ console.log('Serving static from:', frontendBuildPath);
     StorageLocationsModule,
     PartImagesModule,
     UserSettingsModule,
+    PartDistributorModule,
   ],
 })
 export class AppModule {}

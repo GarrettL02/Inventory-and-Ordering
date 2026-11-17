@@ -93,6 +93,8 @@ export function AddNewPartForm({
       minStockLevel: 0,
       categoryId: null,
       storageLocationId: null,
+      distributorName: '',
+      distributorPartNumber: '',
     },
   });
 
@@ -176,7 +178,7 @@ export function AddNewPartForm({
         )}
 
         {/* ---------- Essentials ---------- */}
-        <SectionTitle>Basics</SectionTitle>
+        <SectionTitle>Basics Details</SectionTitle>
         <div style={{ gridColumn: 'span 2' }}>
           <FormInputs
             label="Part Name"
@@ -207,6 +209,28 @@ export function AddNewPartForm({
             inputErrors={<FieldError message={errors.description?.message} />}
           />
         </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <FormInputs
+            label="Comments"
+            inputType="textarea"
+            inputWidth={90}
+            inputHeight={60}
+            inputParams={{ ...register('comment') }}
+          />
+        </div>
+        <FormInputs
+          label="Price (each, optional)"
+          inputType="number"
+          min={0}
+          step="any"
+          inputWidth={40}
+          inputParams={{
+            ...register('averagePrice', {
+              min: { value: 0, message: 'Cannot be negative' },
+            }),
+          }}
+          inputErrors={<FieldError message={errors.averagePrice?.message} />}
+        />
 
         {/* ---------- Stock ---------- */}
         <SectionTitle>Stock</SectionTitle>
@@ -271,9 +295,7 @@ export function AddNewPartForm({
             ...register('categoryId', { setValueAs: toIdOrNull }),
           }}
         />
-
-        {/* ---------- Optional details ---------- */}
-        <SectionTitle>Part Details</SectionTitle>
+        <SectionTitle>Manufacturer Details</SectionTitle>
         <FormInputs
           label="Manufacturer Name"
           required
@@ -300,6 +322,31 @@ export function AddNewPartForm({
             <FieldError message={errors.manufacturerPartNumber?.message} />
           }
         />
+        <SectionTitle>Distributor Details</SectionTitle>
+        <FormInputs
+          label="Distributor Name"
+          required
+          inputWidth={90}
+          inputParams={{
+            ...register('distributorName', {
+              required: 'Distributor name is required',
+            }),
+          }}
+          inputErrors={<FieldError message={errors.distributorName?.message} />}
+        />
+        <FormInputs
+          label="Distributor Part Number"
+          required
+          inputWidth={90}
+          inputParams={{
+            ...register('distributorPartNumber', {
+              required: 'Distributor part number is required',
+            }),
+          }}
+          inputErrors={
+            <FieldError message={errors.distributorPartNumber?.message} />
+          }
+        />
         <div style={{ gridColumn: 'span 2' }}>
           <FormInputs
             label="Product URL"
@@ -315,28 +362,6 @@ export function AddNewPartForm({
               }),
             }}
             inputErrors={<FieldError message={errors.partURL?.message} />}
-          />
-        </div>
-        <FormInputs
-          label="Price (each, optional)"
-          inputType="number"
-          min={0}
-          step="any"
-          inputWidth={40}
-          inputParams={{
-            ...register('averagePrice', {
-              min: { value: 0, message: 'Cannot be negative' },
-            }),
-          }}
-          inputErrors={<FieldError message={errors.averagePrice?.message} />}
-        />
-        <div style={{ gridColumn: 'span 2' }}>
-          <FormInputs
-            label="Comments"
-            inputType="textarea"
-            inputWidth={90}
-            inputHeight={60}
-            inputParams={{ ...register('comment') }}
           />
         </div>
 

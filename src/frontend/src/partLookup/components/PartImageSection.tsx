@@ -47,7 +47,6 @@ export function PartImageSection({
   return (
     <AccordianMenu
       title="Attachments"
-      shrinkable
       sideTitleSection={
         <div style={{ display: 'flex', gap: '10px' }}>
           {hasImage && (
@@ -76,10 +75,19 @@ export function PartImageSection({
         style={{
           display: 'grid',
           gridTemplateColumns: '4fr',
+          alignItems: 'center',
         }}
       >
         <div style={{ gridColumn: 1 }}>
-          <div style={{ fontFamily: 'Arial, sans-serif', fontSize: '12px' }}>
+          <div
+            style={{
+              fontFamily: 'Arial, sans-serif',
+              fontSize: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <ImageLightboxComponent
               imageSrc={src}
               imageAlt={`Image of ${partName}`}

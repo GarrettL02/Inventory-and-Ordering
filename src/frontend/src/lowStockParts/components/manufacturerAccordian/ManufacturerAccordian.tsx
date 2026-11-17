@@ -12,7 +12,7 @@ export function ManufacturerAccordian({
   manufacturerPartNumber,
 }: ManufacturerAccordianProps) {
   return (
-    <AccordianMenu title="Manufacturer Information" shrinkable>
+    <AccordianMenu title="Manufacturer Information">
       <div
         style={{
           display: 'grid',

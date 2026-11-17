@@ -26,7 +26,7 @@ export function DistributorAccordian({
   } as const;
 
   return (
-    <AccordianMenu title="Distributor Information" shrinkable>
+    <AccordianMenu title="Distributor Information">
       <div
         style={{
           display: 'grid',

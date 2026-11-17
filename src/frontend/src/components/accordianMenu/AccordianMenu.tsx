@@ -31,7 +31,6 @@ export function AccordianMenu({
         borderRadius: '10px',
         backgroundColor: themeType.panelBackgroundColor,
         color: themeType.textPrimaryColor,
-        padding: '20px',
       }}
     >
       <header

@@ -33,10 +33,6 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
 
   return (
     <div
-      onMouseDown={(e) => {
-        // Only close when the backdrop itself is clicked, not the panel
-        if (onClose && e.target === e.currentTarget) onClose();
-      }}
       style={{
         position: 'fixed',
         top: 0,
@@ -61,7 +57,7 @@ export function Modal({ modalTitle, children, onClose, footer }: ModalProps) {
           background: themeType.modalBackground,
           color: themeType.textPrimaryColor,
           minHeight: '100px',
-          minWidth: '50%',
+          minWidth: '65%',
           maxWidth: '90%',
           maxHeight: '90vh',
           boxSizing: 'border-box',
