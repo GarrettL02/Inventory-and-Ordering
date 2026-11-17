@@ -1,5 +1,5 @@
 import { WarningIcon } from '../../../components/icons/WarningIcon';
-import { useTheme } from '../../../hooks/userSettings/useSettings';
+import { useTheme } from '../../../data/hooks/userSettings/useSettings';
 
 interface CurrentStockComponentProps {
   stockLevel?: number;

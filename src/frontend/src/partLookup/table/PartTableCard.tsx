@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { partTableGrid } from '../../components/table/Table';
-import { PartTableData } from '../../types/parts/Part';
-import { LowStockKebabMenu } from '../../lowStockParts/kebabMenuActions/LowStockKebabMenu';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { PartCardDetails } from './PartTableDetails';
 import { ConfirmDeletePartModal } from '../forms/ConfirmDeletePartModal';
 import { WarningIcon } from '../../components/icons/WarningIcon';
 import { PartsKebabMenu } from '../components/partsKebabMenu.tsx/PartsKebabMenu';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
+import { PartTableData } from '../../data/types/parts/Part';
 
 export interface LowStockTableCardProps {
   partData: PartTableData;

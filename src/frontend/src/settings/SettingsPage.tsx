@@ -1,6 +1,6 @@
 import { AccordianMenu } from '../components/accordianMenu/AccordianMenu';
 import { StorageLocationListComponent } from './components/StorageLocationListComponent';
-import { useTheme } from '../hooks/userSettings/useSettings';
+import { useTheme } from '../data/hooks/userSettings/useSettings';
 import { GeneralButton } from '../components/buttons/generalButton/GeneralButton';
 import { GeneralSettingsAccordian } from './components/GeneralSettingsAccordian';
 

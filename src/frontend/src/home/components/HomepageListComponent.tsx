@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { formatShortDate } from '../../functions';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 interface ItemData {
   name: string;

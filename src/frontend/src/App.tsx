@@ -1,7 +1,7 @@
 import { PageRouter } from './pageRoutes/PageRouter';
-import { AuthProvider } from './hooks/auth/useAuth';
+import { AuthProvider } from './data/hooks/auth/useAuth';
 import { ToastProvider } from './components/toast/ToastProvider';
-import { SettingsProvider } from './hooks/userSettings/useSettings';
+import { SettingsProvider } from './data/hooks/userSettings/useSettings';
 
 function App() {
   return (

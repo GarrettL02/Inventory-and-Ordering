@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useAdjustStock } from '../../hooks/stockMovements/useAdjustStock';
+import { useAdjustStock } from '../../data/hooks/stockMovements/useAdjustStock';
 import { useToast } from '../toast/ToastProvider';
 import { Modal } from '../modal/Modal';
 import { GeneralButton } from '../buttons/generalButton/GeneralButton';
 import { CancelButton } from '../buttons/cancelButton/CancelButton';
-import { PreviewAdjustStockResult } from '../../schemas/stockMovements/stockMovements.schema';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { PreviewAdjustStockResult } from '../../data/schemas/stockMovements/stockMovements.schema';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export interface StockChangeComponentProps {
   partId: number;

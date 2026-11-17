@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { KebabIcon } from './KebabIcon';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export interface MenuItem {
   label: string;

@@ -14,6 +14,7 @@ import {
   PartValuationSchema,
 } from './schema/parts.schema';
 import { TotalRowSchema } from '../common/schema/common.schema';
+import { PartDistributorService } from '../partDistributor/partDistributor.service';
 
 @Injectable()
 export class PartService {
@@ -22,6 +23,7 @@ export class PartService {
     private readonly lowStockService: LowStockService,
     private readonly stockMovementsService: StockMovementsService,
     private readonly partImagesService: PartImagesService,
+    private readonly partDistributorService: PartDistributorService,
   ) {}
 
   ///////////////////////////////////////////////////////////
@@ -227,6 +229,14 @@ export class PartService {
           userId,
         });
       }
+
+      //Adds part distributor to part based on data given from form
+      await this.partDistributorService.addPartDistributor(tx, {
+        partId,
+        distributor: input.distributorName,
+        distributorPartNumber: input.distributorPartNumber,
+        productUrl: input.partURL,
+      });
 
       // Returns null (and does nothing) when the part isn't below its minimum
       await this.lowStockService.syncForPart(

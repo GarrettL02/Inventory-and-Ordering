@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { FormInputOption } from '../form/FormInputProps';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export interface SearchableSelectProps {
   label: string;

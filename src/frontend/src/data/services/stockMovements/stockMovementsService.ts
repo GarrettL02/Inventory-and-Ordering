@@ -1,9 +1,5 @@
 import z from 'zod';
 import {
-  RecentStockMovementsData,
-  StockMovementsData,
-} from '../../types/stockMovements/stockMovements';
-import {
   AdjustStockResult,
   AdjustStockResultSchema,
   PreviewAdjustStockResult,
@@ -11,6 +7,10 @@ import {
   RecentStockMovementsDataSchema,
   StockMovementsDataSchema,
 } from '../../schemas/stockMovements/stockMovements.schema';
+import {
+  StockMovementsData,
+  RecentStockMovementsData,
+} from '../../types/stockMovements/stockMovements';
 
 const BASE_URL = '/api/stockMovements';
 

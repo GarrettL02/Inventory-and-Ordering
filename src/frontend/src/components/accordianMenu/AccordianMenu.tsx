@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 interface AccordionMenuProps {
   children: React.ReactNode;

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PaginationQuerySchema } from '../../common/schema/common.schema';
+import { DistributorInputSchema } from '../../partDistributor/schema/partDistributor.schema';
 
 ////////////////////////////////////////////////////////
 //
@@ -111,6 +112,14 @@ export const CreatePartSchema = z.object({
     .regex(/^https?:\/\/\S+$/i, 'partURL must start with http:// or https://'),
   categoryId: optionalId,
   storageLocationId: optionalId,
+  // Written to partDistributors by PartDistributorService (distributorName is
+  // turned into the stored code, e.g. "Digi-Key" -> "digikey")
+  distributorName: DistributorInputSchema,
+  distributorPartNumber: z
+    .string()
+    .trim()
+    .min(1, 'distributorPartNumber is required')
+    .max(255),
 });
 
 export type CreatePartDto = z.infer<typeof CreatePartSchema>;

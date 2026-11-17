@@ -1,8 +1,8 @@
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
-import { useSettings } from '../../hooks/userSettings/useSettings';
-import { useUpdateUserSettings } from '../../hooks/userSettings/useUpdateUserSettings';
-import { UserSettingsData } from '../../types/userSettings/userSettings';
+import { useSettings } from '../../data/hooks/userSettings/useSettings';
+import { useUpdateUserSettings } from '../../data/hooks/userSettings/useUpdateUserSettings';
 import { ToggleSwitch } from '../../components/toggleSwitch/ToggleSwitch';
+import { UserSettingsData } from '../../data/types/userSettings/userSettings';
 
 export function GeneralSettingsAccordian() {
   const { settings } = useSettings();
@@ -24,7 +24,9 @@ export function GeneralSettingsAccordian() {
         label="Dark mode"
         checked={settings.theme === 'dark'}
         disabled={loading}
-        onChange={(isOn) => handleSettingChange('theme', isOn ? 'dark' : 'light')}
+        onChange={(isOn) =>
+          handleSettingChange('theme', isOn ? 'dark' : 'light')
+        }
       />
 
       {error && <p role="alert">{error}</p>}

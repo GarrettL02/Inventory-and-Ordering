@@ -1,5 +1,5 @@
-import { UserSettingsData } from '../../types/userSettings/userSettings';
 import { UserSettingsDataSchema } from '../../schemas/userSettings/userSettings.schema';
+import { UserSettingsData } from '../../types/userSettings/userSettings';
 
 const BASE_URL = '/api/usersettings';
 

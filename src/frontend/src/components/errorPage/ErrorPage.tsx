@@ -1,6 +1,6 @@
 import { useRouteError } from 'react-router-dom';
 import { BackButton } from '../buttons/backButton/BackButton';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export function ErrorPage() {
   const themeType = useTheme();

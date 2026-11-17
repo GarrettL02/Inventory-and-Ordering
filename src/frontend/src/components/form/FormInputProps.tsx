@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export interface FormInputOption {
   value: string | number;

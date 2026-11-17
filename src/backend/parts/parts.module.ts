@@ -6,6 +6,7 @@ import { DatabaseModule } from '../databaseService/database.module';
 import { LowStockModule } from '../lowStockEvent/lowStockEvent.module';
 import { StockMovementsModule } from '../stockMovements/stockMovements.module';
 import { PartImagesModule } from '../partImages/partImages.module';
+import { PartDistributorModule } from '../partDistributor/partDistributor.module';
 
 @Module({
   //specify the controllers that will be used for PartModule specifies the routes and functions to get to the data
@@ -16,6 +17,7 @@ import { PartImagesModule } from '../partImages/partImages.module';
     LowStockModule,
     StockMovementsModule,
     PartImagesModule,
+    PartDistributorModule,
   ],
   //Specify the provider for the Module - the services the request data from the database
   providers: [PartService],

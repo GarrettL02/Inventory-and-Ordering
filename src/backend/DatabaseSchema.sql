@@ -59,13 +59,15 @@ CREATE TABLE IF NOT EXISTS parts (
     FOREIGN KEY (storageLocationId) REFERENCES storageLocations (id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Where a part can be bought. distributor is a short code such as 'digikey' or 'mouser'.
--- The list of supported distributors lives in the backend code (common/schema/distributor.schema.ts),
--- not in the database, because each one needs its own API code anyway.
+-- Where a part can be bought. distributor is the distributor's name as typed (e.g. 'eBay',
+-- 'McMaster-Carr'), except that distributors the app has an integration for are stored as a
+-- short code such as 'digikey' or 'mouser'. Those codes live in the backend code
+-- (common/schema/distributor.schema.ts), not in the database, because each one needs its
+-- own API code anyway.
 CREATE TABLE IF NOT EXISTS partDistributors (
   id                    INT UNSIGNED NOT NULL AUTO_INCREMENT,
   partId                INT UNSIGNED NOT NULL,
-  distributor           VARCHAR(32) NOT NULL,
+  distributor           VARCHAR(100) NOT NULL,
   distributorPartNumber VARCHAR(255) NULL,
   productUrl            VARCHAR(2048) NULL,
   createdAt             DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

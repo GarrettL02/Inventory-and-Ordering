@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../../hooks/userSettings/useSettings';
+import { ThemeContext } from '../../data/hooks/userSettings/useSettings';
 
 export interface TableProps {
   children: React.ReactNode;

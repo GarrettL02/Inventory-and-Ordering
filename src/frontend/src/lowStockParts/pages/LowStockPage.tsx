@@ -2,14 +2,14 @@ import { useContext, useEffect, useState } from 'react';
 import { LowStockTableCard } from '../table/LowStockTableCard';
 import { Table } from '../../components/table/Table';
 import { TableNoData } from '../../components/table/TableNoData';
-import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLowStockPartTableData';
+import { useFetchLowStockPartsTableData } from '../../data/hooks/lowStock/useFetchLowStockPartTableData';
 import { useSearchParams } from 'react-router-dom';
 import { TableDataError } from '../../components/table/TableDataError';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 //import { LowStockTableFilters } from '../tableFilters/LowStockTableFilters';
 import { CreatePartButton } from '../createPartButton/CreatePartButton';
 import { CartBar } from '../components/CartBar';
-import { ThemeContext } from '../../hooks/userSettings/useSettings';
+import { ThemeContext } from '../../data/hooks/userSettings/useSettings';
 
 export function LowStockPage() {
   const [isCartExpanded, setIsCartExpanded] = useState(false);

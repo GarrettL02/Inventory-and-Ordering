@@ -9,7 +9,7 @@ import {
   ThemeColors,
   ThemeName,
   themeStyling,
-} from '../../settings/themeStyling/themeStyling';
+} from '../../../settings/themeStyling/themeStyling';
 import { useAuth } from '../auth/useAuth';
 import { getUserSettings } from '../../services/userSettings/userSettingsService';
 import { UserSettingsData } from '../../types/userSettings/userSettings';

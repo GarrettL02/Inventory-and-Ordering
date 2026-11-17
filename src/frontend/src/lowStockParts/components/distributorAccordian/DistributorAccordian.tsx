@@ -1,18 +1,18 @@
-import { useFetchDigikey } from '../../../hooks/parts/useFetchDigikey';
+import { useFetchDigikey } from '../../../data/hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
-import { useTheme } from '../../../hooks/userSettings/useSettings';
+import { useTheme } from '../../../data/hooks/userSettings/useSettings';
 
 interface DistributorAccordianProps {
+  name: string;
+  partNumber: string;
   partId: number;
-  distributorName?: string | null;
-  partNumber?: string | null;
 }
 
 export function DistributorAccordian({
-  partId,
-  distributorName,
+  name,
   partNumber,
+  partId,
 }: DistributorAccordianProps) {
   const themeType = useTheme();
   const { digikeyData, loading, error } = useFetchDigikey(partId);
@@ -26,7 +26,29 @@ export function DistributorAccordian({
   } as const;
 
   return (
-    <AccordianMenu title="Distributor Information">
+    <AccordianMenu
+      title={`${name} Information`}
+      sideTitleSection={
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            style={{
+              background: 'none',
+              color: themeType.textMutedColor,
+              cursor: 'pointer',
+            }}
+            onClick={() => {}}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = themeType.textPrimaryColor)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = themeType.textMutedColor)
+            }
+          >
+            x
+          </button>
+        </div>
+      }
+    >
       <div
         style={{
           display: 'grid',
@@ -46,12 +68,9 @@ export function DistributorAccordian({
             rowGap: '20px',
           }}
         >
+          <ReadOnlyInfoSection title="Distributor Name" information={name} />
           <ReadOnlyInfoSection
-            title="Manufacturer"
-            information={distributorName}
-          />
-          <ReadOnlyInfoSection
-            title="Manufacturer Part Number"
+            title="Distributor Part Number"
             information={partNumber}
           />
 

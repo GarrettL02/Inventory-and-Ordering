@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/auth/useAuth';
-import { useTheme } from '../hooks/userSettings/useSettings';
+import { useAuth } from '../data/hooks/auth/useAuth';
+import { useTheme } from '../data/hooks/userSettings/useSettings';
 
 export function LoginPage() {
   const themeType = useTheme();

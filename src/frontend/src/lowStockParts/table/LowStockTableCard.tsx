@@ -1,4 +1,3 @@
-import { LowStockTableRow } from '../../types/lowStock/lowStockParts';
 import { LowStockKebabMenu } from '../kebabMenuActions/LowStockKebabMenu';
 import { partTableGrid } from '../../components/table/Table';
 import { Chip } from '../../components/chip/Chip';
@@ -6,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { ExpandableTableCard } from '../../components/table/ExpandableTableCard';
 import { LowStockTableDetails } from './LowStockTableDetails';
 import { useContext } from 'react';
-import { ThemeContext } from '../../hooks/userSettings/useSettings';
+import { ThemeContext } from '../../data/hooks/userSettings/useSettings';
+import { LowStockTableRow } from '../../data/types/lowStock/lowStockParts';
 
 export interface LowStockTableCardProps {
   lowStockPartData: LowStockTableRow;

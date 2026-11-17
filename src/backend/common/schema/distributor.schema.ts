@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 // The distributors the app supports. Adding one means adding its API code
 // anyway, so the list lives here instead of in a database table.
-// partDistributors.distributor stores one of these codes.
+// partDistributors.distributor stores one of these codes for these distributors; any other
+// distributor (eBay, McMaster-Carr, ...) is stored as the name the user typed.
 export const DISTRIBUTORS = ['digikey', 'mouser'] as const;
 
 export const DistributorSchema = z.enum(DISTRIBUTORS);

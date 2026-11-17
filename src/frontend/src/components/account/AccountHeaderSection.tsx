@@ -1,8 +1,8 @@
-import { useAuth } from '../../hooks/auth/useAuth';
+import { useAuth } from '../../data/hooks/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export function AccountHeaderSection() {
   const themeType = useTheme();

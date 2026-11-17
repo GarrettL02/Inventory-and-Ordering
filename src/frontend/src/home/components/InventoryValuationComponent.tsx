@@ -1,6 +1,6 @@
-import { useFetchPartValuation } from '../../hooks/parts/useFetchPartValuation';
+import { useFetchPartValuation } from '../../data/hooks/parts/useFetchPartValuation';
 import { HomeCard, homeCardMessageStyle } from './HomeCard';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

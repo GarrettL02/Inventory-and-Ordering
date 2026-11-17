@@ -3,7 +3,7 @@ import {
   getPartById,
   getPartValuation,
 } from '../../services/parts/partsService';
-import { PartDetails, PartValuation } from '../../types/parts/Part';
+import { PartValuation } from '../../types/parts/Part';
 
 export const useFetchPartValuation = () => {
   const [partValue, setPartValue] = useState<PartValuation>();

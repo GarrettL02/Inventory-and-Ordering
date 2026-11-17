@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useTheme } from '../../../hooks/userSettings/useSettings';
+import { useTheme } from '../../../data/hooks/userSettings/useSettings';
 
 export function BackButton() {
   const nav = useNavigate();

@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { useToast } from '../../components/toast/ToastProvider';
-import { useAddStorageLocation } from '../../hooks/storageLocation/useAddStorageLocation';
-import { useFetchAllStorageLocations } from '../../hooks/storageLocation/useFetchAllStorageLocations';
-import { StorageLocationData } from '../../types/storageLocation/storageLocation';
+import { useAddStorageLocation } from '../../data/hooks/storageLocation/useAddStorageLocation';
+import { useFetchAllStorageLocations } from '../../data/hooks/storageLocation/useFetchAllStorageLocations';
 import { TrashRemoveIcon } from '../../components/icons/TrashRemoveIcon';
 import { ConfirmDeleteStorageLocationModal } from './ConfirmDeleteStorageLocationModal';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
+import { StorageLocationData } from '../../data/types/storageLocation/storageLocation';
 
 export function StorageLocationListComponent() {
   const themeType = useTheme();

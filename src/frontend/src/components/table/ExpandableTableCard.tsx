@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { ThemeContext } from '../../hooks/userSettings/useSettings';
+import { ThemeContext } from '../../data/hooks/userSettings/useSettings';
 
 export interface ExpandableTableCardProps {
   cardContent: React.ReactNode;

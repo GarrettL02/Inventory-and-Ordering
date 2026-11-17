@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { updateUserSettings as updateUserSettingsRequest } from '../../services/userSettings/userSettingsService';
-import { UserSettingsData } from '../../types/userSettings/userSettings';
 import { useSettings } from './useSettings';
+import { UserSettingsData } from '../../types/userSettings/userSettings';
 
 // Saves any of the user's settings and tracks the request's loading / error state,
 // the same way useAddStorageLocation does for storage locations.

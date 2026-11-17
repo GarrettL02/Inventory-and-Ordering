@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
+import { useFetchPartsById } from '../../data/hooks/parts/useFetchPartsById';
 import { TableDataDropFields } from '../../components/table/TableDataDropFields';
 import { StockChangeComponent } from '../../components/stockChange/StockChangeComponent';
-import { partImageUrl } from '../../services/parts/partsService';
+import { partImageUrl } from '../../data/services/parts/partsService';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export interface PartCardDetailsProps {
   partId: number;

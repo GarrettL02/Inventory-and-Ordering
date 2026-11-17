@@ -1,9 +1,9 @@
 import { Table } from '../../components/table/Table';
-import { useFetchLowStockPartsTableData } from '../../hooks/lowStock/useFetchLowStockPartTableData';
+import { useFetchLowStockPartsTableData } from '../../data/hooks/lowStock/useFetchLowStockPartTableData';
 import { LowStockTableCard } from '../../lowStockParts/table/LowStockTableCard';
 import { TableDataLoading } from '../../components/table/TableDataLoading';
 import { TableDataError } from '../../components/table/TableDataError';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 export function OrderedPartsPage() {
   const themeType = useTheme();

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { GeneralButton } from '../../components/buttons/generalButton/GeneralButton';
 import { Lightbox } from '../../components/lightBox/LightBox';
-import { partImageUrl } from '../../services/parts/partsService';
-import { usePartImage } from '../../hooks/parts/usePartImage';
+import { partImageUrl } from '../../data/services/parts/partsService';
+import { usePartImage } from '../../data/hooks/parts/usePartImage';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ImageLightboxComponent } from '../../components/lightBox/ImageLightboxComponent';
 import { FileDrop } from '../../components/formInputs/FileDrop';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 
 interface PartImageSectionProps {
   partId: number;

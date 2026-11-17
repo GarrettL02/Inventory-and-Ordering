@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import { BackButton } from '../../components/buttons/backButton/BackButton';
 import { useEffect } from 'react';
-import { useFetchPartsById } from '../../hooks/parts/useFetchPartsById';
+import { useFetchPartsById } from '../../data/hooks/parts/useFetchPartsById';
 import { DataValidationStateWrapper } from '../../components/dataValidationStateWrapper/DataValidationStateWrapper';
 import { AccordianMenu } from '../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../components/readOnly/ReadOnlyInfoSection';
@@ -10,9 +10,10 @@ import { DistributorAccordian } from '../components/distributorAccordian/Distrib
 import { StockHistorySection } from '../../partLookup/components/StockHistorySection';
 import { PartImageSection } from '../../partLookup/components/PartImageSection';
 import { ManufacturerAccordian } from '../components/manufacturerAccordian/ManufacturerAccordian';
-import { useTheme } from '../../hooks/userSettings/useSettings';
+import { useTheme } from '../../data/hooks/userSettings/useSettings';
 import { WarningIcon } from '../../components/icons/WarningIcon';
 import { CurrentStockComponent } from '../components/currentStockComponent/CurrentStockComponent';
+import { DistributorDetailsSection } from '../components/distributorAccordian/DistributorsDetailsSection';
 
 // Big heading that starts each of the two page sections
 const sectionHeadingStyle = {
@@ -178,43 +179,7 @@ export function PartDetailsPage() {
             </section>
 
             {/**================ Distributor Details section ================**/}
-            <section style={{ marginTop: '30px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderBottom: `1px solid ${themeType.borderColor}`,
-                }}
-              >
-                <h1 style={sectionHeadingStyle}>Distributor(s) Details</h1>
-                <button
-                  style={{
-                    background: 'none',
-                    color: themeType.textPrimaryColor,
-                    cursor: 'pointer',
-                  }}
-                >
-                  + Add Distributor
-                </button>
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '20px',
-                  marginTop: '20px',
-                }}
-              >
-                {parts?.manufacturerPartNumber && (
-                  <DistributorAccordian
-                    partId={parts.id}
-                    partNumber={parts?.manufacturerPartNumber}
-                    distributorName={parts?.manufacturerName}
-                  />
-                )}
-              </div>
-            </section>
+            <DistributorDetailsSection partId={partId} />
           </div>
         </>
       </DataValidationStateWrapper>

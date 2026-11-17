@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { StockMovementsData } from '../../types/stockMovements/stockMovements';
-import { getStockMovementsData } from '../../services/stockMovements/stockMovementsService';
+import { PartDistributorData } from '../../types/partDistributors/partDistributors';
+import { getPartDistributorById } from '../../services/partDistributors/partDistributorsService';
 
-export const useFetchStockMovements = (partId: number) => {
-  const [stockMovementData, setstockMovementData] = useState<
-    StockMovementsData[]
+export const useFetchPartDistributorById = (partId: number) => {
+  const [partDistributorData, setPartDistributorData] = useState<
+    PartDistributorData[]
   >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +20,8 @@ export const useFetchStockMovements = (partId: number) => {
       silentRefresh.current = false;
       setError(null);
       try {
-        const data = await getStockMovementsData(partId);
-        setstockMovementData(data.data);
+        const data = await getPartDistributorById(partId);
+        setPartDistributorData(data);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -29,10 +29,10 @@ export const useFetchStockMovements = (partId: number) => {
       }
     };
     fetchData();
-  }, [partId, refreshKey]);
+  }, [refreshKey]);
 
   return {
-    stockMovementData,
+    partDistributorData,
     loading,
     error,
     refetch: () => {

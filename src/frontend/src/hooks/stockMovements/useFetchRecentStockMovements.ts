@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { RecentStockMovementsData } from '../../types/stockMovements/stockMovements';
-import { getRecentStockMovementsData } from '../../services/stockMovements/stockMovementsService';
+import { RecentStockMovementsData } from '../../data/types/stockMovements/stockMovements';
+import { getRecentStockMovementsData } from '../../data/services/stockMovements/stockMovementsService';
 
 export const useFetchRecentStockMovements = () => {
   const [stockMovementData, setstockMovementData] = useState<

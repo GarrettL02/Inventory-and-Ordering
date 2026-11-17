@@ -1,15 +1,16 @@
 import { z } from 'zod';
 import { PartViewSchema } from '../../schemas/parts/partsView.schema';
+
+import {
+  PartTableDataSchema,
+  PartValuationSchema,
+} from '../../schemas/parts/parts.schema';
 import {
   AddNewPartFormData,
   PartDetails,
   PartTableData,
   PartValuation,
 } from '../../types/parts/Part';
-import {
-  PartTableDataSchema,
-  PartValuationSchema,
-} from '../../schemas/parts/parts.schema';
 
 const BASE_URL = '/api/parts';
 
