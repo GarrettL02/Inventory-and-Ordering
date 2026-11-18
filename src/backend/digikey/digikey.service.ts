@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.service';
+import { UserSettingsService } from '../userSettings/userSettings.service';
 import {
   DigikeyKeywordResponseSchema,
   DigikeyProduct,
@@ -30,7 +31,10 @@ export class DigikeyService {
     { productNumber: string | null; expiresAt: number }
   >();
 
-  constructor(private readonly db: InventoryDatabaseService) {}
+  constructor(
+    private readonly db: InventoryDatabaseService,
+    private readonly userSettingsService: UserSettingsService,
+  ) {}
 
   // Build an error that includes what DigiKey said, so the backend log explains the failure
   private async failure(what: string, res: Response): Promise<Error> {
@@ -215,11 +219,21 @@ export class DigikeyService {
   //
   //  getForPart()
   //  Get DigiKey product information for a given part ID, found by
-  //  searching DigiKey with the part's manufacturer part number
+  //  searching DigiKey with the part's manufacturer part number.
+  //  Makes no DigiKey call (state 'disabled') when the user has turned
+  //  distributor lookups off, or when no DigiKey credentials are set up
   //
   /////////////////////////////////////////////////////////
-  async getForPart(partId: number): Promise<DigikeyResult> {
+  async getForPart(userId: number, partId: number): Promise<DigikeyResult> {
     try {
+      const { data: settings } =
+        await this.userSettingsService.getUserSettings(userId);
+      const hasCredentials =
+        process.env.DIGIKEY_CLIENT_ID && process.env.DIGIKEY_CLIENT_SECRET;
+      if (!settings.distributorLookups || !hasCredentials) {
+        return { state: 'disabled' };
+      }
+
       const manufacturerPartNumber =
         await this.getManufacturerPartNumber(partId);
       if (!manufacturerPartNumber) return { state: 'no-part-number' };

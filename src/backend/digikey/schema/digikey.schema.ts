@@ -79,4 +79,5 @@ export type DigikeyResult =
   | { state: 'ok'; data: DigikeyProduct }
   | { state: 'no-part-number' } // the part has no manufacturer part number to search with
   | { state: 'not-found' } // DigiKey has no exact match for it
-  | { state: 'unavailable'; message: string };
+  | { state: 'unavailable'; message: string }
+  | { state: 'disabled' }; // lookups are turned off (user setting) or DigiKey isn't set up

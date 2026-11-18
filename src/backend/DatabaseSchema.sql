@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS schemaMigrations (
 CREATE TABLE IF NOT EXISTS userSettings (
   userId    INT UNSIGNED NOT NULL,
   theme     ENUM('light','dark') NOT NULL DEFAULT 'light',
+  distributorLookups TINYINT(1) NOT NULL DEFAULT 1,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (userId),
   CONSTRAINT fk_userSettings_user

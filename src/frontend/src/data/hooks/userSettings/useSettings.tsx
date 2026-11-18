@@ -25,7 +25,10 @@ type ThemeContextValue = {
 };
 
 //used before the saved settings load, and when logged out
-const DEFAULT_USER_SETTINGS: UserSettingsData = { theme: 'light' };
+const DEFAULT_USER_SETTINGS: UserSettingsData = {
+  theme: 'light',
+  distributorLookups: true,
+};
 
 //makes a context for user settings (theme is derived from them)
 export const ThemeContext = createContext<ThemeContextValue | undefined>(

@@ -4,6 +4,13 @@ import { useUpdateUserSettings } from '../../data/hooks/userSettings/useUpdateUs
 import { ToggleSwitch } from '../../components/toggleSwitch/ToggleSwitch';
 import { UserSettingsData } from '../../data/types/userSettings/userSettings';
 
+interface UserSettingsProps {
+  label: string;
+  checked: boolean;
+  disabled: boolean;
+  onChange: (isOn: boolean) => void;
+}
+
 export function GeneralSettingsAccordian() {
   const { settings } = useSettings();
   const { updateUserSettings, loading, error, clearError } =
@@ -18,16 +25,37 @@ export function GeneralSettingsAccordian() {
     updateUserSettings({ [key]: value } as Partial<UserSettingsData>);
   }
 
+  // List of user setting that will get formatted below. Add new user settings buttons here
+  const userSettings: UserSettingsProps[] = [
+    {
+      label: 'Dark Mode',
+      checked: settings.theme === 'dark',
+      disabled: loading,
+      onChange: (isOn: boolean) =>
+        handleSettingChange('theme', isOn ? 'dark' : 'light'),
+    },
+    {
+      label:
+        'Distributor Lookups: Allows API calls to distributor platforms to get data about parts',
+      checked: settings.distributorLookups,
+      disabled: loading,
+      onChange: (isOn: boolean) =>
+        handleSettingChange('distributorLookups', isOn),
+    },
+  ];
+
   return (
     <AccordianMenu title={'General Settings'}>
-      <ToggleSwitch
-        label="Dark mode"
-        checked={settings.theme === 'dark'}
-        disabled={loading}
-        onChange={(isOn) =>
-          handleSettingChange('theme', isOn ? 'dark' : 'light')
-        }
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {userSettings.map((setting) => (
+          <ToggleSwitch
+            label={setting.label}
+            checked={setting.checked}
+            disabled={setting.disabled}
+            onChange={(isOn) => setting.onChange(isOn)}
+          />
+        ))}
+      </div>
 
       {error && <p role="alert">{error}</p>}
     </AccordianMenu>

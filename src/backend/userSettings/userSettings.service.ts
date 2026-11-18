@@ -14,6 +14,7 @@ import { InventoryDatabaseService } from '../databaseService/inventoryDatabase.s
 // TypeScript will error if you add a setting to the schema but forget it here
 const SETTING_COLUMNS = {
   theme: 'theme',
+  distributorLookups: 'distributorLookups',
 } as const satisfies Record<keyof UserSettings, string>;
 
 @Injectable()
@@ -43,7 +44,10 @@ export class UserSettingsService {
   async updateSettings(userId: number, input: UpdateUserSettingsDto) {
     const entries = Object.entries(input) as [keyof UserSettings, unknown][];
     const columns = entries.map(([key]) => SETTING_COLUMNS[key]);
-    const values = entries.map(([, value]) => value);
+    // MySQL stores booleans as 0/1
+    const values = entries.map(([, value]) =>
+      typeof value === 'boolean' ? Number(value) : value,
+    );
 
     const sql = `
       INSERT INTO userSettings (userId, ${columns.join(', ')})

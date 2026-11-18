@@ -56,6 +56,7 @@ export function DistributorDetailsSection({
             partId={distributor.partId}
             name={distributor.distributor}
             partNumber={distributor.distributorPartNumber}
+            productUrl={distributor.productURL}
           />
         ))}
       </div>

@@ -18,5 +18,6 @@ export const DigikeyResultSchema = z.discriminatedUnion('state', [
   z.object({ state: z.literal('no-part-number') }),
   z.object({ state: z.literal('not-found') }),
   z.object({ state: z.literal('unavailable'), message: z.string() }),
+  z.object({ state: z.literal('disabled') }),
 ]);
 export type DigikeyResult = z.infer<typeof DigikeyResultSchema>;

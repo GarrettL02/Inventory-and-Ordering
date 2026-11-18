@@ -1,22 +1,41 @@
 import { useFetchDigikey } from '../../../data/hooks/parts/useFetchDigikey';
 import { AccordianMenu } from '../../../components/accordianMenu/AccordianMenu';
 import { ReadOnlyInfoSection } from '../../../components/readOnly/ReadOnlyInfoSection';
-import { useTheme } from '../../../data/hooks/userSettings/useSettings';
+import {
+  useSettings,
+  useTheme,
+} from '../../../data/hooks/userSettings/useSettings';
+import { capitalizeString } from '../../../functions';
 
 interface DistributorAccordianProps {
+  partId: number;
   name: string;
   partNumber: string;
-  partId: number;
+  productUrl: string;
 }
 
 export function DistributorAccordian({
+  partId,
   name,
   partNumber,
-  partId,
+  productUrl,
 }: DistributorAccordianProps) {
   const themeType = useTheme();
-  const { digikeyData, loading, error } = useFetchDigikey(partId);
+  const { settings } = useSettings();
+  const { digikeyData, loading, error } = useFetchDigikey(
+    partId,
+    settings.distributorLookups,
+  );
   const hasDigikeyData = digikeyData?.state === 'ok';
+  const formattedName = capitalizeString(name);
+
+  // The page link is the one saved on the part, so it shows even without DigiKey data;
+  // DigiKey's own link is only a fallback. The datasheet only comes from DigiKey.
+  const pageUrl =
+    productUrl ||
+    (digikeyData?.state === 'ok' ? digikeyData.data.productUrl : null);
+  const datasheetUrl =
+    digikeyData?.state === 'ok' ? digikeyData.data.datasheetUrl : null;
 
   // Status / loading / error text that spans the whole fields grid
   const messageStyle = {
@@ -27,7 +46,7 @@ export function DistributorAccordian({
 
   return (
     <AccordianMenu
-      title={`${name} Information`}
+      title={`${formattedName} Information`}
       sideTitleSection={
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -68,12 +87,19 @@ export function DistributorAccordian({
             rowGap: '20px',
           }}
         >
-          <ReadOnlyInfoSection title="Distributor Name" information={name} />
+          <ReadOnlyInfoSection
+            title="Distributor Name"
+            information={formattedName}
+          />
           <ReadOnlyInfoSection
             title="Distributor Part Number"
             information={partNumber}
           />
 
+          {(!settings.distributorLookups ||
+            digikeyData?.state === 'disabled') && (
+            <div style={messageStyle}>DigiKey lookups are turned off.</div>
+          )}
           {loading && <div style={messageStyle}>Loading DigiKey data...</div>}
           {error && (
             <div style={{ ...messageStyle, color: themeType.errorTextColor }}>
@@ -146,7 +172,7 @@ export function DistributorAccordian({
         )}
       </div>
 
-      {digikeyData?.state === 'ok' && (
+      {(pageUrl || datasheetUrl) && (
         <div
           style={{
             marginTop: '24px',
@@ -171,50 +197,48 @@ export function DistributorAccordian({
               marginTop: '10px',
             }}
           >
-            <button
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer',
-                color: themeType.textMutedColor,
-                fontWeight: 600,
-                fontSize: '12px',
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = themeType.textPrimaryColor)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = themeType.textMutedColor)
-              }
-              onClick={() =>
-                digikeyData?.data.productUrl &&
-                window.open(digikeyData.data.productUrl, '_blank')
-              }
-            >
-              DigiKey Page ↗
-            </button>
-            <button
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer',
-                color: themeType.textMutedColor,
-                fontWeight: 600,
-                fontSize: '12px',
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = themeType.textPrimaryColor)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = themeType.textMutedColor)
-              }
-              onClick={() =>
-                digikeyData?.data.datasheetUrl &&
-                window.open(digikeyData.data.datasheetUrl, '_blank')
-              }
-            >
-              {partNumber} Datasheet ↗
-            </button>
+            {pageUrl && (
+              <button
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  cursor: 'pointer',
+                  color: themeType.textMutedColor,
+                  fontWeight: 600,
+                  fontSize: '12px',
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = themeType.textPrimaryColor)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = themeType.textMutedColor)
+                }
+                onClick={() => window.open(pageUrl, '_blank')}
+              >
+                {formattedName} Page ↗
+              </button>
+            )}
+            {datasheetUrl && (
+              <button
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  cursor: 'pointer',
+                  color: themeType.textMutedColor,
+                  fontWeight: 600,
+                  fontSize: '12px',
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = themeType.textPrimaryColor)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = themeType.textMutedColor)
+                }
+                onClick={() => window.open(datasheetUrl, '_blank')}
+              >
+                {partNumber} Datasheet ↗
+              </button>
+            )}
           </div>
         </div>
       )}
